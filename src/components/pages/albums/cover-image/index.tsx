@@ -1,4 +1,4 @@
-import AddImageMenu from "~/components/add-image/menu";
+import AddImageMenu from "~/components/image/add-image/menu";
 
 type Props = { coverImageId?: string };
 

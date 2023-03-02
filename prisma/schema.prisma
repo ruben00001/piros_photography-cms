@@ -74,7 +74,7 @@ model Album {
     title String @unique
     published Boolean @default(false)
     coverImage Image ? @relation(fields: [coverImageId ], references: [id]) 
-    coverImageId String 
+    coverImageId String ?
 }
 
 model AlbumImage {
@@ -88,12 +88,18 @@ model AlbumImage {
     albums Album[]
 }
 
+model ImageTag {
+    id        String   @id @default(cuid())
+    text String
+    images Image[]
+}
+
 model Image {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     cloudinary_public_id String
-    tags String[]
+    tags ImageTag[]
     albumImages AlbumImage[]
     albumCoverImages Album[]
 }

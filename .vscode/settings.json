@@ -1,3 +1,7 @@
 {
-  "window.title": "piros photography - cms"
+  "window.title": "piros photography - cms",
+  "editor.acceptSuggestionOnEnter": "on",
+  "emmet.triggerExpansionOnTab": false,
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "workbench.editor.labelFormat": "short"
 }
