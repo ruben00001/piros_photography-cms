@@ -1,13 +1,14 @@
-// create album with title
-// editing images can be done on album page
-
 import { Album } from "@prisma/client";
 import { type FormEvent, useState } from "react";
+import CoverImage from "~/components/pages/albums/cover-image";
 import { api } from "~/utils/api";
 
 // edit title + subtitle of page
 
 // test album title has to be unique (as defined on prisma)
+
+// show  published status
+// show date created?
 
 const Albums = () => {
   const { isFetchedAfterMount, isInitialLoading, isError } =
@@ -85,6 +86,7 @@ const Album = ({ album }: { album: Album }) => {
     <div className="border p-4">
       {/* <h2>{album.title}</h2> */}
       <AlbumTitleInput albumId={album.id} albumTitle={album.title} />
+      <CoverImage />
     </div>
   );
 };
