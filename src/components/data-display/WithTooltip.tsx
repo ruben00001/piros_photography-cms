@@ -51,14 +51,14 @@ const WithTooltip = ({
               type === "extended-info"
                 ? "border border-info text-info-content"
                 : type === "action"
-                ? "border border-accent text-accent-content"
+                ? "bg-neutral text-neutral-content"
                 : "bg-neutral-focus text-white"
             }`}
           >
             {text}
           </div>
         ) : (
-          <div className="gap-xxs flex w-[30ch] flex-col whitespace-normal border border-gray-600 bg-[#fafafa] py-0.5 px-2 text-left text-gray-700">
+          <div className="flex w-[30ch] flex-col gap-xxs whitespace-normal border border-gray-600 bg-[#fafafa] py-0.5 px-2 text-left text-gray-700">
             <p className="font-medium capitalize">{text.header}</p>
             <p className="text-gray-600">{text.body}</p>
           </div>

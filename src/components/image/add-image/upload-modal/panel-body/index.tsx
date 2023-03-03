@@ -12,7 +12,7 @@ const PanelBody = () => {
       {imageFile ? <ImageFileDisplay file={imageFile} /> : null}
       <ImageFileInput isFile={Boolean(imageFile)} setFile={setImageFile} />
       {imageFile ? (
-        <div className="mt-sm">
+        <div className="mt-md">
           <Tags
             tags={[
               { id: "abeth", text: "hello" },
@@ -21,6 +21,20 @@ const PanelBody = () => {
           />
         </div>
       ) : null}
+      <div className="mt-lg flex items-center justify-between pt-sm">
+        <button
+          className="btn-outline btn-sm btn rounded-md font-normal capitalize"
+          type="button"
+        >
+          Cancel
+        </button>
+        <button
+          className="btn-secondary btn-sm btn rounded-md font-normal capitalize"
+          type="button"
+        >
+          Submit
+        </button>
+      </div>
     </div>
   );
 };
@@ -97,10 +111,10 @@ const ImageFileInput = ({
   return (
     <div>
       <label
-        className="inline-flex cursor-pointer items-center gap-2 rounded-sm border border-base-300 py-1 px-sm text-sm text-gray-500"
+        className="inline-flex cursor-pointer items-center gap-2 rounded-sm border border-base-300 py-1 px-sm text-sm text-gray-500 transition-colors duration-75 ease-in-out hover:bg-base-200"
         htmlFor={uploadInputId}
       >
-        <span className="text-neutral">
+        <span className="text-gray-400">
           <FileImageIcon weight="bold" />
         </span>
         <span className="text-sm text-neutral">
