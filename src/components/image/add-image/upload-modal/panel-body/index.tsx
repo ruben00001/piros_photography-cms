@@ -31,7 +31,7 @@ const PanelBody = () => {
         </button>
         {!imageFile ? null : (
           <button className="my-btn my-btn-action" type="button">
-            Submit
+            Upload
           </button>
         )}
       </div>
