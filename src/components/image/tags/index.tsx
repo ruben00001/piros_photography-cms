@@ -51,7 +51,7 @@ const Tag = ({
 
   return (
     <div className="group relative rounded-md border border-base-200 transition-colors duration-75 ease-in-out hover:border-base-300">
-      <div className="py-0.5 px-1 transition-colors duration-75 ease-in-out group-hover:bg-base-200">
+      <div className="py-1 px-2 transition-colors duration-75 ease-in-out group-hover:bg-base-200">
         <p className="text-sm text-gray-600 transition-colors duration-75 ease-in-out group-hover:text-gray-800">
           {tag.text}
         </p>
@@ -60,8 +60,8 @@ const Tag = ({
         callbackToConfirm={removeKeyword}
         type="moderate"
       > */}
-        <WithTooltip text="delete tag from image" type="action">
-          <span className="absolute top-0 right-0 z-10 -translate-y-1.5 translate-x-1.5 cursor-pointer text-xs text-gray-400 opacity-0 transition-all duration-75 ease-in-out hover:scale-110 hover:text-warning group-hover:opacity-100">
+        <WithTooltip text="remove tag from image" type="action">
+          <span className="absolute top-0 right-0 z-10 origin-bottom-left -translate-y-3 translate-x-3 cursor-pointer rounded-full bg-white p-1 text-xs text-gray-400 opacity-0 transition-all duration-75 ease-in-out hover:scale-110 hover:bg-warning hover:text-warning-content group-hover:opacity-100">
             <RemoveIcon />
           </span>
         </WithTooltip>

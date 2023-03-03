@@ -23,17 +23,17 @@ const PanelBody = () => {
       ) : null}
       <div className="mt-lg flex items-center justify-between pt-sm">
         <button
-          className="btn-outline btn-sm btn rounded-md font-normal capitalize"
+          className="my-btn my-btn-neutral"
+          // className="btn-outline btn-sm btn rounded-md font-normal capitalize"
           type="button"
         >
-          Cancel
+          {!imageFile ? "close" : "cancel"}
         </button>
-        <button
-          className="btn-secondary btn-sm btn rounded-md font-normal capitalize"
-          type="button"
-        >
-          Submit
-        </button>
+        {!imageFile ? null : (
+          <button className="my-btn my-btn-action" type="button">
+            Submit
+          </button>
+        )}
       </div>
     </div>
   );
@@ -111,7 +111,7 @@ const ImageFileInput = ({
   return (
     <div>
       <label
-        className="inline-flex cursor-pointer items-center gap-2 rounded-sm border border-base-300 py-1 px-sm text-sm text-gray-500 transition-colors duration-75 ease-in-out hover:bg-base-200"
+        className="inline-flex cursor-pointer items-center gap-2 rounded-sm border border-base-300 py-1 py-1 px-sm text-sm text-gray-500 transition-colors duration-75 ease-in-out hover:bg-base-200"
         htmlFor={uploadInputId}
       >
         <span className="text-gray-400">
