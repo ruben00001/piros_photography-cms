@@ -1,11 +1,39 @@
+import { type ImageTag } from "@prisma/client";
 import Image from "next/image";
 import { type ChangeEvent, useState } from "react";
+import { z } from "zod";
+import { uid } from "uid";
+
 import { FileImageIcon } from "~/components/Icon";
 import Tags from "~/components/image/tags";
 
+// input/search for tag
+// don't allow duplication
+// - on add + in prisma schema
+
+const useTags = () => {
+  const [tags, setTags] = useState<ImageTag[]>([]);
+
+  const addTag = z
+    .function()
+    .args(z.object({ text: z.string() }))
+    .implement(({ text }) => {
+      setTags((tags) => {
+        const updatedTags = [...tags, { id: uid(), text }].sort((a, b) =>
+          a.text < b.text ? -1 : a.text > b.text ? 1 : 0
+        );
+
+        return updatedTags;
+      });
+    });
+
+  return [tags, { addTag }] as const;
+};
+
 const PanelBody = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [keywords, setKeywords] = useState<string[]>([]);
+
+  const [tags] = useTags();
 
   return (
     <div className="">
@@ -13,12 +41,7 @@ const PanelBody = () => {
       <ImageFileInput isFile={Boolean(imageFile)} setFile={setImageFile} />
       {imageFile ? (
         <div className="mt-md">
-          <Tags
-            tags={[
-              { id: "abeth", text: "hello" },
-              { id: "occece", text: "okay" },
-            ]}
-          />
+          <Tags tags={tags} />
         </div>
       ) : null}
       <div className="mt-lg flex items-center justify-between pt-sm">

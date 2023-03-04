@@ -26,6 +26,7 @@
     "react-dom": "18.2.0",
     "react-popper-tooltip": "^4.4.2",
     "superjson": "1.9.1",
+    "uid": "^2.0.1",
     "zod": "^3.20.6"
   },
   "devDependencies": {

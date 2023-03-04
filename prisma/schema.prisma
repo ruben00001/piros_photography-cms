@@ -90,7 +90,7 @@ model AlbumImage {
 
 model ImageTag {
     id        String   @id @default(cuid())
-    text String
+    text String @unique
     images Image[]
 }
 
