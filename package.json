@@ -19,6 +19,7 @@
     "@trpc/next": "^10.9.0",
     "@trpc/react-query": "^10.9.0",
     "@trpc/server": "^10.9.0",
+    "immer": "^9.0.19",
     "next": "^13.2.1",
     "next-auth": "^4.19.0",
     "phosphor-react": "^1.4.1",
@@ -27,7 +28,8 @@
     "react-popper-tooltip": "^4.4.2",
     "superjson": "1.9.1",
     "uid": "^2.0.1",
-    "zod": "^3.20.6"
+    "zod": "^3.20.6",
+    "zustand": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",

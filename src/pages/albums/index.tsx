@@ -99,7 +99,6 @@ const AlbumTitleInput = ({
   albumTitle: string;
 }) => {
   const [inputText, setInputText] = useState(albumTitle);
-  console.log("inputText:", inputText);
 
   const {
     refetch: checkTitleIsUnique,

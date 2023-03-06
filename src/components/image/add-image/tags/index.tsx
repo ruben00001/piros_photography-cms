@@ -1,24 +1,44 @@
 import { type ImageTag } from "@prisma/client";
-import { useState } from "react";
-import { z } from "zod";
+import produce from "immer";
+import { create } from "zustand";
 
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { RemoveIcon } from "~/components/Icon";
-import InputSelect from "~/components/image/tags/input-select";
+import InputSelect from "~/components/image/add-image/tags/input-select";
 import { api } from "~/utils/api";
 
-const Tags = () => {
-  const [addedTagIds, setAddedTagIds] = useState<string[]>([]);
-  console.log("addedTagIds:", addedTagIds);
+// const addTag = z.function().args(z.object({ newId: z.string() }));
 
-  const addTag = z
-    .function()
-    .args(z.object({ newId: z.string() }))
-    .implement(({ newId }) => {
-      setAddedTagIds((tagIds) => {
-        return [...tagIds, newId];
+type TagIdState = {
+  ids: string[];
+  addTag: (tagId: string) => void;
+  removeTag: (tagId: string) => void;
+};
+const useTagIdsStore = create<TagIdState>()((set) => ({
+  ids: [],
+
+  addTag: (tagIdToAdd) =>
+    set((state) => {
+      const updated = produce(state.ids, (draft) => {
+        draft.push(tagIdToAdd);
       });
-    });
+
+      return { ids: updated };
+    }),
+
+  removeTag: (tagIdToRemove) =>
+    set((state) => {
+      const updated = produce(state.ids, (draft) => {
+        const index = draft.findIndex((tagId) => tagId === tagIdToRemove);
+        if (index !== -1) draft.splice(index, 1);
+      });
+
+      return { ids: updated };
+    }),
+}));
+
+const Tags = () => {
+  const { ids: addedTagIds, addTag } = useTagIdsStore();
 
   const { data: addedTags } = api.imageTag.getByIds.useQuery({
     ids: addedTagIds,
@@ -51,7 +71,7 @@ const Tags = () => {
       ) : null}
       <div>
         <TagsInputSelect
-          addTagToImage={(tagId) => addTag({ newId: tagId })}
+          addTagToImage={(tagId) => addTag(tagId)}
           addedTags={addedTags}
         />
       </div>
@@ -61,13 +81,8 @@ const Tags = () => {
 
 export default Tags;
 
-const Tag = ({
-  tag,
-}: {
-  tag: ImageTag;
-  // removeKeyword: () => void;
-}) => {
-  // const [containerIsHovered, hoverHandlers] = useHovered();
+const Tag = ({ tag }: { tag: ImageTag }) => {
+  const { removeTag } = useTagIdsStore();
 
   return (
     <div className="group relative rounded-md border border-base-200 transition-colors duration-75 ease-in-out hover:border-base-300">
@@ -81,7 +96,10 @@ const Tag = ({
         type="moderate"
       > */}
         <WithTooltip text="remove tag from image" type="action">
-          <span className="absolute top-0 right-0 z-10 origin-bottom-left -translate-y-3 translate-x-3 cursor-pointer rounded-full bg-white p-1 text-xs text-gray-400 opacity-0 transition-all duration-75 ease-in-out hover:scale-110 hover:bg-warning hover:text-warning-content group-hover:opacity-100">
+          <span
+            className="absolute top-0 right-0 z-10 origin-bottom-left -translate-y-3 translate-x-3 cursor-pointer rounded-full bg-white p-1 text-xs text-gray-400 opacity-0 transition-all duration-75 ease-in-out hover:scale-110 hover:bg-warning hover:text-warning-content group-hover:opacity-100"
+            onClick={() => removeTag(tag.id)}
+          >
             <RemoveIcon />
           </span>
         </WithTooltip>

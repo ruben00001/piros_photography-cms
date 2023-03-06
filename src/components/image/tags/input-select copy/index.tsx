@@ -8,7 +8,7 @@ import { useState } from "react";
 import { arrayDivergence, arrOfObjsIncludesValue } from "~/helpers/data";
 import useHovered from "~/hooks/useHovered";
 import { api } from "~/utils/api";
-import { PlusIcon } from "../../../Icon";
+import { PlusIcon } from "../../../../Icon";
 
 type Props<
   TItem extends { id: string } & { [key: string]: string },
@@ -96,7 +96,7 @@ function Input<
     refetch: checkInputValueIsUnique,
     data: inputValueIsUnique,
     isFetching: isFetchingCheckInputValueIsUnique,
-  } = api.imageTag.findTagWithText.useQuery(
+  } = api.imageTag.checkTextIsUnique.useQuery(
     { text: input.value },
     { enabled: false }
   );
@@ -120,8 +120,7 @@ function Input<
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          handleSubmit();
+          void handleSubmit();
         }}
       >
         <div className="relative">

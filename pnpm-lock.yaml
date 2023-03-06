@@ -24,6 +24,7 @@ specifiers:
   eslint-config-next: ^13.2.1
   eslint-config-prettier: ^8.6.0
   husky: ^8.0.3
+  immer: ^9.0.19
   lint-staged: ^13.1.2
   next: ^13.2.1
   next-auth: ^4.19.0
@@ -41,6 +42,7 @@ specifiers:
   typescript: ^4.9.5
   uid: ^2.0.1
   zod: ^3.20.6
+  zustand: ^4.3.6
 
 dependencies:
   '@headlessui/react': 1.7.12_biqbaboplfbrettd7655fr4n2y
@@ -52,6 +54,7 @@ dependencies:
   '@trpc/next': 10.13.2_on4hsjlpaeklsiwsrnt5ejxhsq
   '@trpc/react-query': 10.13.2_4d7irbdidsmzpcceffzhg76qwi
   '@trpc/server': 10.13.2
+  immer: 9.0.19
   next: 13.2.1_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.19.2_qgtcjgzkkjtbiyvnx7d32fl5vu
   phosphor-react: 1.4.1_react@18.2.0
@@ -61,6 +64,7 @@ dependencies:
   superjson: 1.9.1
   uid: 2.0.1
   zod: 3.20.6
+  zustand: 4.3.6_immer@9.0.19+react@18.2.0
 
 devDependencies:
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.7
@@ -1895,6 +1899,10 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
+  /immer/9.0.19:
+    resolution: {integrity: sha512-eY+Y0qcsB4TZKwgQzLaE/lqYMlKhv5J9dyd2RhhtGhNo2njPXDqU9XPfcNfa3MIDsdtZt5KlkIsirlo4dHsWdQ==}
+    dev: false
+
   /import-fresh/3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -3577,4 +3585,21 @@ packages:
 
   /zod/3.20.6:
     resolution: {integrity: sha512-oyu0m54SGCtzh6EClBVqDDlAYRz4jrVtKwQ7ZnsEmMI9HnzuZFj8QFwAY1M5uniIYACdGvv0PBWPF2kO0aNofA==}
+    dev: false
+
+  /zustand/4.3.6_immer@9.0.19+react@18.2.0:
+    resolution: {integrity: sha512-6J5zDxjxLE+yukC2XZWf/IyWVKnXT9b9HUv09VJ/bwGCpKNcaTqp7Ws28Xr8jnbvnZcdRaidztAPsXFBIqufiw==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      immer: '>=9.0'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      immer: 9.0.19
+      react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false

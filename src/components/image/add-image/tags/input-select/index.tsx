@@ -158,7 +158,6 @@ function Select({ input, allImageTags, parent }: SelectProps) {
   const [isHovered, { hoverHandlers }] = useHovered();
 
   const show = isHovered || input.isFocused;
-  console.log("parent:", parent);
 
   const unrelatedData = arrayDivergence(allImageTags, parent.imageTags);
 

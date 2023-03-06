@@ -5,7 +5,7 @@ import { z } from "zod";
 import { uid } from "uid";
 
 import { FileImageIcon } from "~/components/Icon";
-import Tags from "~/components/image/tags";
+import Tags from "~/components/image/add-image/tags";
 
 // input/search for tag
 // don't allow duplication
