@@ -12,4 +12,8 @@
   .my-btn-action {
     @apply bg-secondary text-secondary-content hover:bg-secondary-focus;
   }
+
+  .my-hover-bg {
+    @apply transition-colors duration-75 ease-in-out hover:bg-base-200;
+  }
 }

@@ -66,7 +66,7 @@ export default UploadModal;
 export const Panel = forwardRef<HTMLDivElement, { closeModal: () => void }>(
   ({ closeModal }, ref) => (
     <Dialog.Panel
-      className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+      className="w-full max-w-xl transform  rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
       ref={ref}
     >
       <Dialog.Title
@@ -76,7 +76,7 @@ export const Panel = forwardRef<HTMLDivElement, { closeModal: () => void }>(
         Upload Image
       </Dialog.Title>
       <div className="mt-md">
-        <PanelBody />
+        <PanelBody closeModal={closeModal} />
       </div>
 
       {/* <div className="mt-4">

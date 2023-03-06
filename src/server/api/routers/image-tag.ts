@@ -4,7 +4,7 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const imageTagRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.imageTag.findMany();
+    return ctx.prisma.imageTag.findMany({ orderBy: { text: "asc" } });
   }),
   getByIds: protectedProcedure
     .input(z.object({ ids: z.array(z.string()) }))

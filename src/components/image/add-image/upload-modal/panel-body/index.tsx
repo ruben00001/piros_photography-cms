@@ -1,39 +1,11 @@
-import { type ImageTag } from "@prisma/client";
 import Image from "next/image";
 import { type ChangeEvent, useState } from "react";
-import { z } from "zod";
-import { uid } from "uid";
 
 import { FileImageIcon } from "~/components/Icon";
 import Tags from "~/components/image/add-image/tags";
 
-// input/search for tag
-// don't allow duplication
-// - on add + in prisma schema
-
-const useTags = () => {
-  const [tags, setTags] = useState<ImageTag[]>([]);
-
-  const addTag = z
-    .function()
-    .args(z.object({ text: z.string() }))
-    .implement(({ text }) => {
-      setTags((tags) => {
-        const updatedTags = [...tags, { id: uid(), text }].sort((a, b) =>
-          a.text < b.text ? -1 : a.text > b.text ? 1 : 0
-        );
-
-        return updatedTags;
-      });
-    });
-
-  return [tags, { addTag }] as const;
-};
-
-const PanelBody = () => {
+const PanelBody = ({ closeModal }: { closeModal: () => void }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
-
-  const [tags] = useTags();
 
   return (
     <div className="">
@@ -41,14 +13,14 @@ const PanelBody = () => {
       <ImageFileInput isFile={Boolean(imageFile)} setFile={setImageFile} />
       {imageFile ? (
         <div className="mt-md">
-          <Tags tags={tags} />
+          <Tags />
         </div>
       ) : null}
       <div className="mt-lg flex items-center justify-between pt-sm">
         <button
           className="my-btn my-btn-neutral"
-          // className="btn-outline btn-sm btn rounded-md font-normal capitalize"
           type="button"
+          onClick={closeModal}
         >
           {!imageFile ? "close" : "cancel"}
         </button>
@@ -134,11 +106,11 @@ const ImageFileInput = ({
   return (
     <div>
       <label
-        className="inline-flex cursor-pointer items-center gap-2 rounded-sm border border-base-300 py-1 py-1 px-sm text-sm text-gray-500 transition-colors duration-75 ease-in-out hover:bg-base-200"
+        className="my-hover-bg group inline-flex cursor-pointer items-center gap-2 rounded-sm border border-base-300 py-1 px-sm"
         htmlFor={uploadInputId}
       >
-        <span className="text-gray-400">
-          <FileImageIcon weight="bold" />
+        <span className="text-base-300 group-hover:text-base-content">
+          <FileImageIcon />
         </span>
         <span className="text-sm text-neutral">
           {!isFile ? "Choose file" : "Change file"}
