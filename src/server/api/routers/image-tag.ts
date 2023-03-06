@@ -6,6 +6,16 @@ export const imageTagRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.imageTag.findMany();
   }),
+  getByIds: protectedProcedure
+    .input(z.object({ ids: z.array(z.string()) }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.imageTag.findMany({
+        where: {
+          id: { in: input.ids },
+        },
+        orderBy: { text: "asc" },
+      });
+    }),
 
   create: protectedProcedure
     .input(z.object({ text: z.string() }))
@@ -28,13 +38,13 @@ export const imageTagRouter = createTRPCRouter({
       });
     }),
 
-  checkTextIsUnique: protectedProcedure
+  findTagWithText: protectedProcedure
     .input(z.object({ text: z.string() }))
     .query(async ({ ctx, input }) => {
       const matchingTag = await ctx.prisma.imageTag.findUnique({
         where: { text: input.text },
       });
 
-      return Boolean(!matchingTag);
+      return { isTag: Boolean(matchingTag), matchingTag };
     }),
 });

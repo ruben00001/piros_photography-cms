@@ -1,15 +1,33 @@
 import { type ImageTag } from "@prisma/client";
+import { useState } from "react";
+import { z } from "zod";
 
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { RemoveIcon } from "~/components/Icon";
+import InputSelect from "~/components/image/tags/input-select";
+import { api } from "~/utils/api";
 
-const Tags = ({
-  tags,
-}: // removeKeyword,
-{
-  tags: ImageTag[];
-  // removeKeyword: (id: string) => void;
-}) => {
+const Tags = () => {
+  const [addedTagIds, setAddedTagIds] = useState<string[]>([]);
+  console.log("addedTagIds:", addedTagIds);
+
+  const addTag = z
+    .function()
+    .args(z.object({ newId: z.string() }))
+    .implement(({ newId }) => {
+      setAddedTagIds((tagIds) => {
+        return [...tagIds, newId];
+      });
+    });
+
+  const { data: addedTags } = api.imageTag.getByIds.useQuery({
+    ids: addedTagIds,
+  });
+
+  if (!addedTags) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col gap-sm border-t border-t-base-200 pt-sm">
       <div>
@@ -20,20 +38,22 @@ const Tags = ({
           <span className="text-sm italic text-gray-400">Optional</span>
         </div>
         <p className="mt-xxs text-sm text-gray-400">
-          {!tags.length ? "None yet. " : null}
+          {!addedTags.length ? "None yet. " : null}
           Tags can be used to search for images in the future.
         </p>
       </div>
-      <div className="mt-xxxs flex items-center gap-sm">
-        {tags.length
-          ? tags.map((tag) => (
-              <Tag
-                tag={tag}
-                // removeKeyword={() => removeKeyword(keyword.id)}
-                key={tag.id}
-              />
-            ))
-          : null}
+      {addedTags.length ? (
+        <div className="mt-xxxs flex items-center gap-sm">
+          {addedTags.map((tag) => (
+            <Tag tag={tag} key={tag.id} />
+          ))}
+        </div>
+      ) : null}
+      <div>
+        <TagsInputSelect
+          addTagToImage={(tagId) => addTag({ newId: tagId })}
+          addedTags={addedTags}
+        />
       </div>
     </div>
   );
@@ -68,5 +88,20 @@ const Tag = ({
         {/* </WithWarning> */}
       </div>
     </div>
+  );
+};
+
+const TagsInputSelect = ({
+  addTagToImage,
+  addedTags,
+}: {
+  addedTags: ImageTag[];
+  addTagToImage: (tagId: string) => void;
+}) => {
+  return (
+    <InputSelect
+      parent={{ addTagTo: addTagToImage, imageTags: addedTags }}
+      placeholder="Enter tag"
+    />
   );
 };

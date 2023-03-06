@@ -1,4 +1,11 @@
-import { Upload, Image, FileImage, FileMinus, Trash } from "phosphor-react";
+import {
+  Upload,
+  Image,
+  FileImage,
+  FileMinus,
+  Trash,
+  Plus,
+} from "phosphor-react";
 
 export {
   Upload as UploadIcon,
@@ -6,4 +13,5 @@ export {
   FileImage as FileImageIcon,
   FileMinus as RemoveIcon,
   Trash as DeleteIcon,
+  Plus as PlusIcon,
 };
