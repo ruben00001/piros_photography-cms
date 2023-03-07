@@ -71,6 +71,7 @@ const FetchedAlbumsEmpty = () => {
 
 const FetchedAlbumsPopulated = () => {
   const { data: albums } = api.album.getAll.useQuery();
+  console.log("albums:", albums);
 
   return (
     <div className="grid grid-cols-2 gap-4">

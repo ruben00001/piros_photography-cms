@@ -3,6 +3,7 @@ import { type ChangeEvent, useState } from "react";
 
 import { FileImageIcon } from "~/components/Icon";
 import Tags from "~/components/image/add-image/tags";
+import { handleUploadImage } from "~/helpers/cloudinary";
 
 const PanelBody = ({ closeModal }: { closeModal: () => void }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -70,33 +71,24 @@ const ImageFileInput = ({
     const files = e.target.files;
 
     if (!files) {
-      // toast.error("No file selected.");
       return;
     }
 
     const file = files[0];
 
     if (!file) {
-      // toast.error("No file selected.");
       return;
     }
 
     const isImage = file.name.match(/.(jpg|jpeg|png|webp|avif|gif|tiff)$/i);
 
     if (!isImage) {
-      // toast.error("Invalid file (needs to be an image).");
       return;
     }
 
     const isAcceptedImage = file.name.match(/.(jpg|jpeg|png|webp)$/i);
 
     if (!isAcceptedImage) {
-      /*       toast.error(
-        "Invalid image type. Needs to be of type .jpg, .jpeg, .png or .webp",
-        {
-          autoClose: 10000,
-        }
-      ); */
       return;
     }
 

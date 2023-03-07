@@ -1,11 +1,11 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { forwardRef, Fragment } from "react";
+import { useModalVisibilityContext } from "~/context/ModalVisibilityState";
 
 import PanelBody from "./panel-body";
-import useUploadModalVisibilityState from "./useVisibilityState";
 
 const UploadModal = () => {
-  const { closeModal, isOpen } = useUploadModalVisibilityState();
+  const { closeModal, isOpen } = useModalVisibilityContext();
 
   return (
     <>
@@ -33,7 +33,7 @@ const UploadModal = () => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Panel closeModal={closeModal} />
+                <Panel />
               </Transition.Child>
             </div>
           </div>
@@ -46,8 +46,10 @@ const UploadModal = () => {
 export default UploadModal;
 
 // eslint-disable-next-line react/display-name
-export const Panel = forwardRef<HTMLDivElement, { closeModal: () => void }>(
-  ({ closeModal }, ref) => (
+export const Panel = forwardRef<HTMLDivElement>((_, ref) => {
+  const { closeModal } = useModalVisibilityContext();
+
+  return (
     <Dialog.Panel
       className="w-full max-w-xl transform  rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
       ref={ref}
@@ -61,46 +63,6 @@ export const Panel = forwardRef<HTMLDivElement, { closeModal: () => void }>(
       <div className="mt-md">
         <PanelBody closeModal={closeModal} />
       </div>
-
-      {/* <div className="mt-4">
-        <button
-          type="button"
-          className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-          onClick={closeModal}
-        >
-          Close
-        </button>
-      </div> */}
-    </Dialog.Panel>
-  )
-);
-
-/* const Panel = ({ closeModal }: { closeModal: () => void }) => {
-  return (
-    <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-      <Dialog.Title
-        as="h3"
-        className="text-lg font-medium leading-6 text-gray-900"
-      >
-        Upload Image
-      </Dialog.Title>
-      <div className="mt-2">
-        <p className="text-sm text-gray-500">
-          Your payment has been successfully submitted. We’ve sent you an email
-          with all of the details of your order.
-        </p>
-      </div>
-
-      <div className="mt-4">
-        <button
-          type="button"
-          className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-          onClick={closeModal}
-        >
-          Close
-        </button>
-      </div>
     </Dialog.Panel>
   );
-};
- */
+});

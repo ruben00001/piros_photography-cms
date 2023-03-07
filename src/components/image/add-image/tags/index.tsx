@@ -117,9 +117,6 @@ const TagsInputSelect = ({
   addTagToImage: (tagId: string) => void;
 }) => {
   return (
-    <InputSelect
-      parent={{ addTagTo: addTagToImage, imageTags: addedTags }}
-      placeholder="Enter tag"
-    />
+    <InputSelect parent={{ addTagTo: addTagToImage, imageTags: addedTags }} />
   );
 };
