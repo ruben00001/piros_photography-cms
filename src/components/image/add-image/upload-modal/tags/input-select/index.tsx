@@ -118,7 +118,7 @@ function Input({ input, parent }: InputProps) {
             id={inputId}
             value={input.value}
             onChange={(e) => input.updateValue(e.target.value)}
-            placeholder="Enter tag..."
+            placeholder="Add tag..."
             type="text"
             autoComplete="off"
             onFocus={() => input.setIsFocused(true)}

@@ -5,6 +5,7 @@ import {
   FileMinus,
   Trash,
   Plus,
+  Check,
 } from "phosphor-react";
 
 export {
@@ -14,4 +15,5 @@ export {
   FileMinus as RemoveIcon,
   Trash as DeleteIcon,
   Plus as PlusIcon,
+  Check as TickIcon,
 };

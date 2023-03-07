@@ -3,7 +3,10 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const albumRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.album.findMany();
+    return ctx.prisma.album.findMany({
+      orderBy: { index: "asc" },
+      include: { coverImage: true },
+    });
   }),
 
   create: protectedProcedure
@@ -41,5 +44,22 @@ export const albumRouter = createTRPCRouter({
       });
 
       return Boolean(!matchingAlbum);
+    }),
+
+  updateCoverImage: protectedProcedure
+    .input(z.object({ albumId: z.string(), imageId: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.album.update({
+        where: {
+          id: input.albumId,
+        },
+        data: {
+          coverImage: {
+            connect: {
+              id: input.imageId,
+            },
+          },
+        },
+      });
     }),
 });

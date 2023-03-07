@@ -1,8 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { forwardRef, Fragment } from "react";
+import { Fragment } from "react";
 import { useModalVisibilityContext } from "~/context/ModalVisibilityState";
 
-import PanelBody from "./panel-body";
+import Panel from "./panel";
 
 const UploadModal = () => {
   const { closeModal, isOpen } = useModalVisibilityContext();
@@ -44,25 +44,3 @@ const UploadModal = () => {
 };
 
 export default UploadModal;
-
-// eslint-disable-next-line react/display-name
-export const Panel = forwardRef<HTMLDivElement>((_, ref) => {
-  const { closeModal } = useModalVisibilityContext();
-
-  return (
-    <Dialog.Panel
-      className="w-full max-w-xl transform  rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
-      ref={ref}
-    >
-      <Dialog.Title
-        as="h3"
-        className="border-b border-b-base-300 pb-sm leading-6 text-base-content"
-      >
-        Upload Image
-      </Dialog.Title>
-      <div className="mt-md">
-        <PanelBody closeModal={closeModal} />
-      </div>
-    </Dialog.Panel>
-  );
-});

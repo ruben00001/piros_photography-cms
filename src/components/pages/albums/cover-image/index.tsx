@@ -1,9 +1,13 @@
+import { CldImage } from "next-cloudinary";
+
 import AddImageMenu from "~/components/image/add-image/menu";
+import { useAlbumStateContext } from "~/context/AlbumState";
 
-type Props = { coverImageId?: string };
+const CoverImage = () => {
+  const album = useAlbumStateContext();
+  console.log("album:", album);
 
-const CoverImage = ({ coverImageId }: Props) => {
-  return <div>{!coverImageId ? <Unpopulated /> : <Populated />}</div>;
+  return <div>{!album.coverImageId ? <Unpopulated /> : <Populated />}</div>;
 };
 
 export default CoverImage;
@@ -19,8 +23,26 @@ const Unpopulated = () => {
   );
 };
 
+// how to include image in original fetch
+
 const Populated = () => {
-  return <div></div>;
+  const album = useAlbumStateContext();
+  console.log("album:", album);
+  if (!album.coverImage) {
+    // would really be an error if there was a coverimageId but no cover image
+    return null;
+  }
+
+  return (
+    <div>
+      <CldImage
+        width={500}
+        height={500}
+        src={album.coverImage.cloudinary_public_id}
+        alt=""
+      />
+    </div>
+  );
 };
 
 /* const ImageNotFound = () => {

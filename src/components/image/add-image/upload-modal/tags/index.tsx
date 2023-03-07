@@ -1,44 +1,15 @@
 import { type ImageTag } from "@prisma/client";
-import produce from "immer";
-import { create } from "zustand";
 
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { RemoveIcon } from "~/components/Icon";
-import InputSelect from "~/components/image/add-image/tags/input-select";
+import InputSelect from "~/components/image/add-image/upload-modal/tags/input-select";
+import { useStringArrStateContext as useTagsIdContext } from "~/context/StringArrState";
 import { api } from "~/utils/api";
 
 // const addTag = z.function().args(z.object({ newId: z.string() }));
 
-type TagIdState = {
-  ids: string[];
-  addTag: (tagId: string) => void;
-  removeTag: (tagId: string) => void;
-};
-const useTagIdsStore = create<TagIdState>()((set) => ({
-  ids: [],
-
-  addTag: (tagIdToAdd) =>
-    set((state) => {
-      const updated = produce(state.ids, (draft) => {
-        draft.push(tagIdToAdd);
-      });
-
-      return { ids: updated };
-    }),
-
-  removeTag: (tagIdToRemove) =>
-    set((state) => {
-      const updated = produce(state.ids, (draft) => {
-        const index = draft.findIndex((tagId) => tagId === tagIdToRemove);
-        if (index !== -1) draft.splice(index, 1);
-      });
-
-      return { ids: updated };
-    }),
-}));
-
 const Tags = () => {
-  const { ids: addedTagIds, addTag } = useTagIdsStore();
+  const { strings: addedTagIds, addString: addTag } = useTagsIdContext();
 
   const { data: addedTags } = api.imageTag.getByIds.useQuery({
     ids: addedTagIds,
@@ -82,7 +53,7 @@ const Tags = () => {
 export default Tags;
 
 const Tag = ({ tag }: { tag: ImageTag }) => {
-  const { removeTag } = useTagIdsStore();
+  const { removeString: removeTag } = useTagsIdContext();
 
   return (
     <div className="group relative rounded-md border border-base-200 transition-colors duration-75 ease-in-out hover:border-base-300">

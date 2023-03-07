@@ -25,13 +25,18 @@ export const imageRouter = createTRPCRouter({
     .input(
       z.object({
         cloudinary_public_id: z.string(),
-        keywords: z.optional(z.array(z.string())),
+        tagIds: z.optional(z.array(z.string())),
       })
     )
-    .mutation(({ ctx, input: { cloudinary_public_id } }) => {
+    .mutation(async ({ ctx, input }) => {
+      const tags = input.tagIds?.map((tagId) => ({ id: tagId }));
+
       return ctx.prisma.image.create({
         data: {
-          cloudinary_public_id,
+          cloudinary_public_id: input.cloudinary_public_id,
+          tags: {
+            connect: tags,
+          },
         },
       });
     }),

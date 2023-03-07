@@ -1,6 +1,6 @@
-import { Album } from "@prisma/client";
 import { type FormEvent, useState } from "react";
 import CoverImage from "~/components/pages/albums/cover-image";
+import { AlbumStateProvider, useAlbumStateContext } from "~/context/AlbumState";
 import { api } from "~/utils/api";
 
 // edit title + subtitle of page
@@ -71,35 +71,31 @@ const FetchedAlbumsEmpty = () => {
 
 const FetchedAlbumsPopulated = () => {
   const { data: albums } = api.album.getAll.useQuery();
-  console.log("albums:", albums);
 
   return (
     <div className="grid grid-cols-2 gap-4">
       {albums?.map((album) => (
-        <Album album={album} key={album.id} />
+        <AlbumStateProvider album={album} key={album.id}>
+          <Album />
+        </AlbumStateProvider>
       ))}
     </div>
   );
 };
 
-const Album = ({ album }: { album: Album }) => {
+const Album = () => {
   return (
     <div className="border p-4">
-      {/* <h2>{album.title}</h2> */}
-      <AlbumTitleInput albumId={album.id} albumTitle={album.title} />
+      <AlbumTitleInput />
       <CoverImage />
     </div>
   );
 };
 
-const AlbumTitleInput = ({
-  albumId,
-  albumTitle,
-}: {
-  albumId: string;
-  albumTitle: string;
-}) => {
-  const [inputText, setInputText] = useState(albumTitle);
+const AlbumTitleInput = () => {
+  const album = useAlbumStateContext();
+
+  const [inputText, setInputText] = useState(album.title);
 
   const {
     refetch: checkTitleIsUnique,
@@ -121,7 +117,7 @@ const AlbumTitleInput = ({
       return;
     }
 
-    updateTitle.mutate({ albumId, updatedTitle: inputText });
+    updateTitle.mutate({ albumId: album.id, updatedTitle: inputText });
   };
 
   const isError = titleIsUnique === false;

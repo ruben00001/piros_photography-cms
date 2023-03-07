@@ -1,11 +1,11 @@
 import { z } from "zod";
 import imageCompression from "browser-image-compression";
 
-import { env } from "~/env.mjs";
+// import { env } from "~/env.mjs";
 
 export const uploadImageToCloudinary = async (formData: FormData) => {
   const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+    `https://api.cloudinary.com/v1_1/${"dmez60vl2"}/image/upload`,
     {
       method: "POST",
       body: formData,
@@ -51,27 +51,22 @@ export const createCloudinaryImageFormData = z
     return formData;
   });
 
-export const handleUploadImage = async (
-  file: File,
-  createSignatureData: () => Promise<{ signature: string; timestamp: number }>,
-  createFormData: typeof createCloudinaryImageFormData
-) => {
-  try {
-    const { signature, timestamp } = await createSignatureData();
+export const handleUploadImage = async ({
+  file,
+  signatureData,
+}: {
+  file: File;
+  signatureData: { signature: string; timestamp: number };
+}) => {
+  const formData = await createCloudinaryImageFormData({
+    file,
+    ...signatureData,
+    upload_preset: "signed",
+  });
 
-    const formData = await createFormData({
-      file,
-      signature,
-      timestamp,
-      upload_preset: "signed",
-    });
+  const uploadRes = await uploadImageToCloudinary(formData);
 
-    const uploadRes = await uploadImageToCloudinary(formData);
+  const { cloudinary_public_id } = uploadRes;
 
-    const { cloudinary_public_id } = uploadRes;
-
-    return { cloudinary_public_id };
-  } catch (error) {
-    return error;
-  }
+  return { cloudinary_public_id };
 };
