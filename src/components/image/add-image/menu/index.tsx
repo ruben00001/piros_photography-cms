@@ -1,10 +1,12 @@
 import { Fragment, type ReactElement } from "react";
 import { Menu, Transition } from "@headlessui/react";
+
 import { ImageIcon, UploadIcon } from "~/components/Icon";
-import UploadModal, { useUploadModal } from "../upload-modal";
+import UploadModal from "../upload-modal";
+import useUploadModalVisibilityState from "../upload-modal/useVisibilityState";
 
 const AddImageMenu = ({ children }: { children: ReactElement }) => {
-  const [uploadModalIsOpen, { closeModal, openModal }] = useUploadModal();
+  const { openModal: openUploadModal } = useUploadModalVisibilityState();
 
   return (
     <div className="relative z-10">
@@ -30,7 +32,7 @@ const AddImageMenu = ({ children }: { children: ReactElement }) => {
               <MenuItem>
                 <button
                   className="flex items-center gap-4"
-                  onClick={openModal}
+                  onClick={openUploadModal}
                   type="button"
                 >
                   <span>
@@ -43,7 +45,7 @@ const AddImageMenu = ({ children }: { children: ReactElement }) => {
           </Menu.Items>
         </Transition>
       </Menu>
-      <UploadModal closeModal={closeModal} isOpen={uploadModalIsOpen} />
+      <UploadModal />
     </div>
   );
 };

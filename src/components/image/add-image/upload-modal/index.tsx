@@ -1,31 +1,14 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { forwardRef, Fragment, useState } from "react";
+import { forwardRef, Fragment } from "react";
+
 import PanelBody from "./panel-body";
+import useUploadModalVisibilityState from "./useVisibilityState";
 
-export const useUploadModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const UploadModal = () => {
+  const { closeModal, isOpen } = useUploadModalVisibilityState();
 
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  return [isOpen, { openModal, closeModal }] as const;
-};
-
-const UploadModal = ({
-  closeModal,
-  isOpen,
-}: {
-  isOpen: boolean;
-  closeModal: () => void;
-}) => {
   return (
     <>
-      {/* <div onClick={openModal}>{children}</div> */}
       <Transition show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
