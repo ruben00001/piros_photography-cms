@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
-import { CldImage } from "next-cloudinary";
 import { forwardRef } from "react";
+import MyCldImage from "~/components/image/MyCldImage";
 import { api } from "~/utils/api";
 
 // eslint-disable-next-line react/display-name
@@ -35,15 +35,18 @@ const UploadedImages = () => {
       ) : isError ? (
         <p>There was an error fetching images.</p>
       ) : !allImages ? null : (
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-4 gap-sm">
           {allImages.map((dbImage) => (
-            <div className="border-4" key={dbImage.id}>
-              <CldImage
-                width={400}
-                height={400}
-                alt=""
-                src={dbImage.cloudinary_public_id}
-              />
+            <div
+              className="rounded-lg border border-base-200 p-sm"
+              key={dbImage.id}
+            >
+              <div className="aspect-square">
+                <MyCldImage
+                  src={dbImage.cloudinary_public_id}
+                  fit="object-contain"
+                />
+              </div>
             </div>
           ))}
         </div>
