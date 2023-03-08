@@ -1,7 +1,8 @@
 import { type FormEvent, useState } from "react";
-import CoverImage from "~/components/pages/albums/cover-image";
-import { AlbumStateProvider, useAlbumStateContext } from "~/context/AlbumState";
+
+import { AlbumProvider, useAlbumContext } from "~/context/AlbumState";
 import { api } from "~/utils/api";
+import CoverImage from "~/components/pages/albums/cover-image";
 
 // edit title + subtitle of page
 
@@ -75,9 +76,9 @@ const FetchedAlbumsPopulated = () => {
   return (
     <div className="grid grid-cols-2 gap-4">
       {albums?.map((album) => (
-        <AlbumStateProvider album={album} key={album.id}>
+        <AlbumProvider album={album} key={album.id}>
           <Album />
-        </AlbumStateProvider>
+        </AlbumProvider>
       ))}
     </div>
   );
@@ -93,7 +94,7 @@ const Album = () => {
 };
 
 const AlbumTitleInput = () => {
-  const album = useAlbumStateContext();
+  const album = useAlbumContext();
 
   const [inputText, setInputText] = useState(album.title);
 

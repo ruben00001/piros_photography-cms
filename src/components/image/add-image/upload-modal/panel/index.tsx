@@ -12,7 +12,7 @@ import { useUploadModalVisibilityContext } from "~/context/UploadModalVisibility
 import { handleUploadImage } from "~/helpers/cloudinary";
 import { api } from "~/utils/api";
 import Spinner from "~/components/Spinner";
-import { useAlbumStateContext } from "~/context/AlbumState";
+import { useAlbumContext } from "~/context/AlbumState";
 
 // adding tags to image on create hasn't worked
 // create uploaded images component. maybe tags are on them, but not showing in db?
@@ -51,7 +51,7 @@ const UploadFunctionality = () => {
 
   const { closeModal } = useUploadModalVisibilityContext();
   const { strings: tagIds } = useTagsIdContext();
-  const album = useAlbumStateContext();
+  const album = useAlbumContext();
 
   const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
     enabled: false,

@@ -1,11 +1,34 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { toast } from "react-toastify";
+
+import { useAlbumContext } from "~/context/AlbumState";
 import { useUploadedModalVisibilityStore } from "~/context/UploadedModalVisibilityState_ZustandAttempt";
+import { api } from "~/utils/api";
+import Toast from "~/components/data-display/Toast";
 
 import Panel from "./panel";
 
 const UploadedModal = () => {
   const { closeModal, isOpen } = useUploadedModalVisibilityStore();
+
+  const { id: albumId } = useAlbumContext();
+
+  const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
+    enabled: false,
+  });
+
+  const updateCoverImageMutation = api.album.updateCoverImage.useMutation({
+    onSuccess: async () => {
+      toast(<Toast text="updated album cover image" type="success" />);
+      // better flow would be to indicate refetch pending on actual album
+      await refetchAlbums();
+      closeModal();
+    },
+  });
+
+  const updateCoverImage = (imageId: string) =>
+    updateCoverImageMutation.mutate({ albumId, imageId });
 
   return (
     <>
@@ -33,7 +56,7 @@ const UploadedModal = () => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Panel />
+                <Panel updateCoverImage={updateCoverImage} />
               </Transition.Child>
             </div>
           </div>

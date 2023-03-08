@@ -1,12 +1,21 @@
 import { CldImage } from "next-cloudinary";
 import { useState } from "react";
 import ContainerDimension from "../ContainerDimension";
+import { SpinnerIcon } from "../Icon";
 
 const MyCldImage = ({ src, fit }: { src: string; fit: "object-contain" }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [blurImgIsLoaded, setBlurImgIsLoaded] = useState(false);
+  const [qualityImgIsLoaded, setQualityImgIsLoaded] = useState(false);
 
   return (
     <div className="relative h-full">
+      <div
+        className={`my-abs-center transition-opacity ${
+          !blurImgIsLoaded ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <SpinnerIcon />
+      </div>
       <ContainerDimension>
         {({ height, width }) => (
           <>
@@ -17,9 +26,9 @@ const MyCldImage = ({ src, fit }: { src: string; fit: "object-contain" }) => {
               quality={1}
               src={src}
               className={`absolute z-10 h-full w-full transition-opacity duration-100 ease-out ${
-                !isLoaded ? "opacity-100" : "opacity-0"
+                !qualityImgIsLoaded ? "opacity-100" : "opacity-0"
               } ${fit}`}
-              onLoad={() => setIsLoaded(true)}
+              onLoad={() => setBlurImgIsLoaded(true)}
               alt=""
             />
             <CldImage
@@ -27,7 +36,7 @@ const MyCldImage = ({ src, fit }: { src: string; fit: "object-contain" }) => {
               height={height}
               src={src}
               className={`absolute h-full w-full object-contain ${fit}`}
-              onLoad={() => setIsLoaded(true)}
+              onLoad={() => setQualityImgIsLoaded(true)}
               alt=""
             />
           </>

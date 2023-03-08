@@ -35,7 +35,4 @@ const useThisContext = () => {
   return context;
 };
 
-export {
-  Provider as AlbumStateProvider,
-  useThisContext as useAlbumStateContext,
-};
+export { Provider as AlbumProvider, useThisContext as useAlbumContext };

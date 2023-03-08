@@ -6,6 +6,9 @@ import {
   Trash,
   Plus,
   Check,
+  Spinner,
+  Warning,
+  WarningCircle,
 } from "phosphor-react";
 
 export {
@@ -16,4 +19,8 @@ export {
   Trash as DeleteIcon,
   Plus as PlusIcon,
   Check as TickIcon,
+  Spinner as SpinnerIcon,
+  Warning as AlertIcon,
+  WarningCircle as ErrorIcon,
+  Check as SuccessIcon,
 };

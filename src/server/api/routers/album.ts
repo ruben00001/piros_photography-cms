@@ -9,6 +9,12 @@ export const albumRouter = createTRPCRouter({
     });
   }),
 
+  /*   getOne: protectedProcedure
+    .input(z.object({ albumId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.album.findUnique({ where: { id: input.albumId } });
+    }),
+ */
   create: protectedProcedure
     .input(z.object({ title: z.string(), index: z.optional(z.number()) }))
     .mutation(async ({ ctx, input }) => {

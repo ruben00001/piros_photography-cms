@@ -3,5 +3,6 @@
   "editor.acceptSuggestionOnEnter": "on",
   "emmet.triggerExpansionOnTab": false,
   "editor.acceptSuggestionOnCommitCharacter": false,
-  "workbench.editor.labelFormat": "short"
+  "workbench.editor.labelFormat": "short",
+  "css.lint.unknownAtRules": "ignore"
 }

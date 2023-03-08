@@ -17,3 +17,9 @@
     @apply transition-colors duration-75 ease-in-out hover:bg-base-200;
   }
 }
+
+@layer utilities {
+  .my-abs-center {
+    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
+  }
+}

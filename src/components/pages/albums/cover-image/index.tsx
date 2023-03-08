@@ -1,11 +1,10 @@
 import { CldImage } from "next-cloudinary";
 
 import AddImageMenu from "~/components/image/add-image/menu";
-import { useAlbumStateContext } from "~/context/AlbumState";
+import { useAlbumContext } from "~/context/AlbumState";
 
 const CoverImage = () => {
-  const album = useAlbumStateContext();
-  console.log("album:", album);
+  const album = useAlbumContext();
 
   return <div>{!album.coverImageId ? <Unpopulated /> : <Populated />}</div>;
 };
@@ -26,8 +25,8 @@ const Unpopulated = () => {
 // how to include image in original fetch
 
 const Populated = () => {
-  const album = useAlbumStateContext();
-  console.log("album:", album);
+  const album = useAlbumContext();
+
   if (!album.coverImage) {
     // would really be an error if there was a coverimageId but no cover image
     return null;
