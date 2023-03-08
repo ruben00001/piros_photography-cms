@@ -35,7 +35,6 @@ const Provider = ({
   );
 };
 
-// should use zod for instead of checkObjectHasField?
 const useThisContext = () => {
   const context = useContext(Context);
 
@@ -50,6 +49,6 @@ const useThisContext = () => {
 };
 
 export {
-  Provider as ModalVisibilityProvider,
-  useThisContext as useModalVisibilityContext,
+  Provider as UploadModalVisibilityProvider,
+  useThisContext as useUploadModalVisibilityContext,
 };

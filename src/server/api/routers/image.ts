@@ -4,8 +4,11 @@ import { v2 as cloudinary } from "cloudinary";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const imageRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(() => {
-    return "";
+  getAll: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.image.findMany({
+      orderBy: { updatedAt: "asc" },
+      include: { tags: true },
+    });
   }),
 
   createSignature: protectedProcedure

@@ -1,11 +1,11 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import { useModalVisibilityContext } from "~/context/ModalVisibilityState";
+import { useUploadModalVisibilityContext } from "~/context/UploadModalVisibilityState";
 
 import Panel from "./panel";
 
 const UploadModal = () => {
-  const { closeModal, isOpen } = useModalVisibilityContext();
+  const { closeModal, isOpen } = useUploadModalVisibilityContext();
 
   return (
     <>

@@ -8,7 +8,7 @@ import {
   StringArrStateProvider as TagsIdProvider,
   useStringArrStateContext as useTagsIdContext,
 } from "~/context/StringArrState";
-import { useModalVisibilityContext } from "~/context/ModalVisibilityState";
+import { useUploadModalVisibilityContext } from "~/context/UploadModalVisibilityState";
 import { handleUploadImage } from "~/helpers/cloudinary";
 import { api } from "~/utils/api";
 import Spinner from "~/components/Spinner";
@@ -49,7 +49,7 @@ const UploadFunctionality = () => {
     "idle" | "pending" | "error" | "success"
   >("idle");
 
-  const { closeModal } = useModalVisibilityContext();
+  const { closeModal } = useUploadModalVisibilityContext();
   const { strings: tagIds } = useTagsIdContext();
   const album = useAlbumStateContext();
 
