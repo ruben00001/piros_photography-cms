@@ -11,6 +11,7 @@ const TextInput = ({
   wrapperAdditionalClasses = "",
   showBorderOnBlur,
   showPressEnter,
+  isChange,
 }: {
   value: string;
   setValue: (value: string) => void;
@@ -22,6 +23,7 @@ const TextInput = ({
   inputAdditionalClasses?: string;
   showBorderOnBlur?: true;
   showPressEnter?: true;
+  isChange?: boolean;
 }) => {
   const [localIsFocused, setLocalIsFocused] = useState(false);
 
@@ -54,7 +56,7 @@ const TextInput = ({
           }
         }}
       ></input>
-      {showPressEnter && localIsFocused && value.length ? (
+      {showPressEnter && isChange && localIsFocused && value.length ? (
         <div className="absolute -bottom-1 right-0 translate-y-full rounded-sm bg-white bg-opacity-80 py-xxxs px-xs">
           <p className="text-xs text-base-content">Press enter to submit</p>
         </div>

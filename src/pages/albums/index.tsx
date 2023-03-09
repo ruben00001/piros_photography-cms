@@ -167,6 +167,7 @@ const AlbumTitleInput = () => {
             !isError ? "" : "border border-my-error-content"
           }`}
           showPressEnter
+          isChange={isChange}
         />
         <label className="label">
           {titleIsUnique === false ? (

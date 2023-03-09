@@ -7,7 +7,13 @@ import UploadedModal from "../uploaded-modal";
 import { UploadModalVisibilityProvider } from "~/context/UploadModalVisibilityState";
 import { UploadedModalVisibilityProvider } from "~/context/UploadedModalVisibilityState_ZustandAttempt";
 
-const AddImageMenu = ({ children }: { children: ReactElement }) => {
+const AddImageMenu = ({
+  children,
+  buttonClasses,
+}: {
+  children: ReactElement;
+  buttonClasses?: string;
+}) => {
   return (
     <UploadModalVisibilityProvider>
       {({ openModal: openUploadModal }) => (
@@ -15,7 +21,7 @@ const AddImageMenu = ({ children }: { children: ReactElement }) => {
           {({ openModal: openUploadedModal }) => (
             <div className="relative z-10">
               <Menu>
-                <Menu.Button>{children}</Menu.Button>
+                <Menu.Button className={buttonClasses}>{children}</Menu.Button>
                 <Transition
                   as={Fragment}
                   enter="transition ease-out duration-100"
