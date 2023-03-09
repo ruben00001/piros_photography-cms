@@ -3,7 +3,7 @@ import { Menu, Transition } from "@headlessui/react";
 
 import { ImageIcon, UploadIcon } from "~/components/Icon";
 import { useUploadModalVisibilityContext } from "~/context/UploadModalVisibilityState";
-import { useUploadedModalVisibilityStore } from "~/context/UploadedModalVisibilityState_ZustandAttempt";
+import { useUploadedModalVisibilityStore } from "~/context/UploadedModalVisibilityState";
 
 const AddImageMenu = ({
   children,
@@ -12,7 +12,7 @@ const AddImageMenu = ({
 }: {
   children: ReactElement;
   buttonClasses?: string;
-  onImageModalVisibilityChange?: { open: () => void; close: () => void };
+  onImageModalVisibilityChange?: { open: () => void };
 }) => {
   const { openModal: openUploadModal } = useUploadModalVisibilityContext();
   const { openModal: openUploadedModal } = useUploadedModalVisibilityStore();
@@ -37,15 +37,13 @@ const AddImageMenu = ({
                   <div
                     className="flex cursor-pointer items-center gap-4"
                     onClick={() => {
-                      const args: Parameters<typeof openUploadedModal>[0] =
-                        onImageModalVisibilityChange
-                          ? {
-                              onOpen() {
-                                onImageModalVisibilityChange.open();
-                              },
-                            }
-                          : undefined;
-                      openUploadedModal(args);
+                      openUploadedModal(
+                        onImageModalVisibilityChange && {
+                          onOpen() {
+                            onImageModalVisibilityChange.open();
+                          },
+                        }
+                      );
                     }}
                   >
                     <span>

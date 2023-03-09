@@ -5,7 +5,7 @@ import { ImageIcon, UploadIcon } from "~/components/Icon";
 import UploadModal from "../upload-modal";
 import UploadedModal from "../uploaded-modal";
 import { UploadModalVisibilityProvider } from "~/context/UploadModalVisibilityState";
-import { UploadedModalVisibilityProvider } from "~/context/UploadedModalVisibilityState_ZustandAttempt";
+import { UploadedModalVisibilityProvider } from "~/context/UploadedModalVisibilityState";
 
 const AddImageMenu = ({
   children,

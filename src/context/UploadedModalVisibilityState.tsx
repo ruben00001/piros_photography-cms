@@ -1,52 +1,47 @@
-import { createContext, type ReactElement, useContext, useState } from "react";
+import { createContext, type ReactElement, useContext } from "react";
+import { createStore, useStore } from "zustand";
 
-type UploadedModalVisibilityState = {
+type ModalVisibilityState = {
   isOpen: boolean;
-  openModal: () => void;
+  openModal: (arg0?: { onOpen: () => void }) => void;
   closeModal: () => void;
 };
 
-const Context = createContext<UploadedModalVisibilityState | null>(null);
+const store = createStore<ModalVisibilityState>()((set) => ({
+  isOpen: false,
 
-const Provider = ({
+  openModal: (arg0) => {
+    set(() => ({ isOpen: true }));
+    if (arg0) {
+      arg0.onOpen();
+    }
+  },
+
+  closeModal: () => {
+    set(() => ({ isOpen: false }));
+  },
+}));
+
+const MyContext = createContext<typeof store | null>(null);
+
+export const UploadedModalVisibilityProvider = ({
   children,
 }: {
-  children:
-    | ReactElement
-    | ((args: UploadedModalVisibilityState) => ReactElement);
+  children: ReactElement | ((args: ModalVisibilityState) => ReactElement);
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  const value: UploadedModalVisibilityState = { isOpen, openModal, closeModal };
+  const myStore = useStore(store);
 
   return (
-    <Context.Provider value={value}>
-      {typeof children === "function" ? children(value) : children}
-    </Context.Provider>
+    <MyContext.Provider value={store}>
+      {typeof children === "function" ? children(myStore) : children}
+    </MyContext.Provider>
   );
 };
 
-const useThisContext = () => {
-  const context = useContext(Context);
-
-  if (!context) {
-    throw new Error(
-      "useUploadedModalVisibilityContext must be used within its provider!"
-    );
+export const useUploadedModalVisibilityStore = () => {
+  const store = useContext(MyContext);
+  if (!store) {
+    throw new Error("Missing UploadedModalVisibility Provider");
   }
-
-  return context;
-};
-
-export {
-  Provider as UploadedModalVisibilityProvider,
-  useThisContext as useUploadedModalVisibilityContext,
+  return useStore(store);
 };

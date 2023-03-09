@@ -7,7 +7,7 @@ import TextInput from "~/components/forms/TextInput";
 import { toast } from "react-toastify";
 import Toast from "~/components/data-display/Toast";
 import { UploadModalVisibilityProvider } from "~/context/UploadModalVisibilityState";
-import { UploadedModalVisibilityProvider } from "~/context/UploadedModalVisibilityState_ZustandAttempt";
+import { UploadedModalVisibilityProvider } from "~/context/UploadedModalVisibilityState";
 // import UploadModal from "~/components/image/add-image/upload-modal";
 import UploadedModal from "~/components/image/add-image/uploaded-modal";
 import { AlbumsProvider, useAlbumsContext } from "~/context/AlbumsState";

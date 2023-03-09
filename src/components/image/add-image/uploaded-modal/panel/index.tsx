@@ -6,7 +6,7 @@ import WithTooltip from "~/components/data-display/WithTooltip";
 
 import MyCldImage from "~/components/image/MyCldImage";
 import SearchInput from "~/components/SearchInput";
-import { useUploadedModalVisibilityStore } from "~/context/UploadedModalVisibilityState_ZustandAttempt";
+import { useUploadedModalVisibilityStore } from "~/context/UploadedModalVisibilityState";
 import { fuzzySearch } from "~/helpers/query";
 import { api } from "~/utils/api";
 // import { type Image } from "~/utils/router-output-types";

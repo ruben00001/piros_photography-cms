@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
-import { useUploadedModalVisibilityStore } from "~/context/UploadedModalVisibilityState_ZustandAttempt";
+import { useUploadedModalVisibilityStore } from "~/context/UploadedModalVisibilityState";
 
 import Panel from "./panel";
 
