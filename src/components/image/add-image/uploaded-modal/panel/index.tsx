@@ -6,6 +6,7 @@ import WithTooltip from "~/components/data-display/WithTooltip";
 
 import MyCldImage from "~/components/image/MyCldImage";
 import SearchInput from "~/components/SearchInput";
+import { useUploadedModalVisibilityStore } from "~/context/UploadedModalVisibilityState_ZustandAttempt";
 import { fuzzySearch } from "~/helpers/query";
 import { api } from "~/utils/api";
 // import { type Image } from "~/utils/router-output-types";
@@ -17,6 +18,8 @@ export const Panel = forwardRef<
   HTMLDivElement,
   { updateCoverImage: UpdateCoverImage }
 >(({ updateCoverImage }, ref) => {
+  const { closeModal } = useUploadedModalVisibilityStore();
+
   return (
     <Dialog.Panel
       className="relative w-[90vw] max-w-[1200px] transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
@@ -33,6 +36,15 @@ export const Panel = forwardRef<
         <ImagesStatusWrapper>
           <Images updateCoverImage={updateCoverImage} />
         </ImagesStatusWrapper>
+      </div>
+      <div className="mt-xl">
+        <button
+          className="my-btn my-btn-neutral"
+          type="button"
+          onClick={closeModal}
+        >
+          close
+        </button>
       </div>
     </Dialog.Panel>
   );
@@ -62,7 +74,6 @@ const Images = ({
   updateCoverImage: UpdateCoverImage;
 }) => {
   const [tagQuery, setTagQuery] = useState("");
-  console.log("tagQuery:", tagQuery);
 
   const { data: allImages } = api.image.getAll.useQuery();
 
@@ -100,7 +111,6 @@ const ImagesGrid = ({
     keys: ["tags.text"],
     pattern: query,
   });
-  console.log("imagesByQuery:", imagesByQuery);
 
   return !imagesByQuery.length ? (
     <p className="text-gray-600">No matches</p>

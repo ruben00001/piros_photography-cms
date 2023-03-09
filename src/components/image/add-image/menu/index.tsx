@@ -75,7 +75,7 @@ const MenuItem = ({
       {({ active }) => (
         <button
           className={`${
-            active ? "bg-violet-500 text-white" : "text-gray-900"
+            active ? "bg-base-200" : ""
           } group flex w-full items-center gap-4 rounded-md px-2 py-2 text-sm`}
         >
           {children}

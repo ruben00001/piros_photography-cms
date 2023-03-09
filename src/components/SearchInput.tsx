@@ -26,7 +26,7 @@ const SearchInput = ({
         <input
           type="text"
           id={inputId}
-          className="block w-full max-w-[500px] rounded-md border border-gray-300 px-xs py-xs pl-10 text-sm text-gray-900 outline-none transition-colors focus-within:bg-gray-50"
+          className="block w-full max-w-[500px] rounded-md border border-base-300 px-xs py-xs pl-10 text-sm text-gray-900 outline-none transition-colors focus-within:bg-gray-50"
           placeholder={placeholder}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
