@@ -9,6 +9,10 @@ export function fuzzySearch<TEntity extends { id: string }>({
   keys: string[];
   pattern: string;
 }) {
+  if (!pattern.length) {
+    return entities;
+  }
+
   const fuse = new Fuse(entities, {
     includeScore: true,
     keys: keys,
@@ -17,5 +21,5 @@ export function fuzzySearch<TEntity extends { id: string }>({
 
   const searchResult = fuse.search(pattern);
 
-  return searchResult;
+  return searchResult.map((item) => item.item);
 }

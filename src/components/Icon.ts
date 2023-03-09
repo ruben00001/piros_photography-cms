@@ -9,6 +9,7 @@ import {
   Spinner,
   Warning,
   WarningCircle,
+  MagnifyingGlass,
 } from "phosphor-react";
 
 export {
@@ -23,4 +24,5 @@ export {
   Warning as AlertIcon,
   WarningCircle as ErrorIcon,
   Check as SuccessIcon,
+  MagnifyingGlass as SearchIcon,
 };

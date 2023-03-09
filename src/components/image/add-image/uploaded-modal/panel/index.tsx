@@ -1,13 +1,14 @@
 import { Dialog } from "@headlessui/react";
-import { forwardRef } from "react";
+import { forwardRef, useState, type ReactElement } from "react";
 import { toast } from "react-toastify";
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
 
 import MyCldImage from "~/components/image/MyCldImage";
+import SearchInput from "~/components/SearchInput";
 import { fuzzySearch } from "~/helpers/query";
 import { api } from "~/utils/api";
-import { type Image } from "~/utils/router-output-types";
+// import { type Image } from "~/utils/router-output-types";
 
 type UpdateCoverImage = (imageId: string) => void;
 
@@ -29,7 +30,9 @@ export const Panel = forwardRef<
         Uploaded Images
       </Dialog.Title>
       <div className="mt-md">
-        <UploadedImagesWrapper updateCoverImage={updateCoverImage} />
+        <ImagesStatusWrapper>
+          <Images updateCoverImage={updateCoverImage} />
+        </ImagesStatusWrapper>
       </div>
     </Dialog.Panel>
   );
@@ -37,12 +40,8 @@ export const Panel = forwardRef<
 
 export default Panel;
 
-const UploadedImagesWrapper = ({
-  updateCoverImage,
-}: {
-  updateCoverImage: UpdateCoverImage;
-}) => {
-  const { data: allImages, isError, isLoading } = api.image.getAll.useQuery();
+const ImagesStatusWrapper = ({ children }: { children: ReactElement }) => {
+  const { isError, isLoading } = api.image.getAll.useQuery();
 
   return (
     <div>
@@ -50,32 +49,64 @@ const UploadedImagesWrapper = ({
         <p>Loading...</p>
       ) : isError ? (
         <p>There was an error fetching images.</p>
-      ) : !allImages ? null : (
-        <UploadedImages
-          images={allImages}
-          updateCoverImage={updateCoverImage}
-        />
+      ) : (
+        children
       )}
     </div>
   );
 };
 
-const UploadedImages = ({
+const Images = ({
   updateCoverImage,
-  images: allImages,
 }: {
   updateCoverImage: UpdateCoverImage;
-  images: Image[];
 }) => {
-  const filteredByQuery = fuzzySearch({
-    entities: allImages,
-    keys: ["tags.text"],
-    pattern: "oud",
-  });
+  const [tagQuery, setTagQuery] = useState("");
+  console.log("tagQuery:", tagQuery);
+
+  const { data: allImages } = api.image.getAll.useQuery();
 
   return (
+    <div>
+      {!allImages?.length ? null : (
+        <SearchInput
+          placeholder="Search by tag"
+          inputValue={tagQuery}
+          setInputValue={setTagQuery}
+        />
+      )}
+      <div className="mt-md">
+        <ImagesGrid query={tagQuery} updateCoverImage={updateCoverImage} />
+      </div>
+    </div>
+  );
+};
+
+const ImagesGrid = ({
+  query,
+  updateCoverImage,
+}: {
+  query: string;
+  updateCoverImage: UpdateCoverImage;
+}) => {
+  const { data: allImages } = api.image.getAll.useQuery();
+
+  if (!allImages) {
+    return <p>Something went wrong...</p>;
+  }
+
+  const imagesByQuery = fuzzySearch({
+    entities: allImages,
+    keys: ["tags.text"],
+    pattern: query,
+  });
+  console.log("imagesByQuery:", imagesByQuery);
+
+  return !imagesByQuery.length ? (
+    <p className="text-gray-600">No matches</p>
+  ) : (
     <div className="grid cursor-pointer grid-cols-4 gap-sm">
-      {allImages.map((dbImage) => (
+      {imagesByQuery.map((dbImage) => (
         <WithTooltip text="click to add" type="action" key={dbImage.id}>
           <div
             className="my-hover-bg rounded-lg border border-base-200 p-sm"
