@@ -89,7 +89,7 @@ const FetchedAlbumsPopulated = () => {
 
 const Album = () => {
   return (
-    <div className="rounded-lg border border-transparent p-sm  transition-colors duration-75 ease-in-out focus-within:border-base-300 hover:border-base-300">
+    <div className="rounded-lg border border-transparent p-sm  transition-colors duration-75 ease-in-out focus-within:border-base-300 hover:border-base-200">
       <AlbumTitleInput />
       <CoverImage />
     </div>

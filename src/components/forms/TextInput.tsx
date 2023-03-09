@@ -57,7 +57,7 @@ const TextInput = ({
         }}
       ></input>
       {showPressEnter && isChange && localIsFocused && value.length ? (
-        <div className="absolute -bottom-1 right-0 translate-y-full rounded-sm bg-white bg-opacity-80 py-xxxs px-xs">
+        <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-80 py-xxxs px-xs">
           <p className="text-xs text-base-content">Press enter to submit</p>
         </div>
       ) : null}
