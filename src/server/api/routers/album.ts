@@ -45,8 +45,13 @@ export const albumRouter = createTRPCRouter({
   checkTitleIsUnique: protectedProcedure
     .input(z.object({ title: z.string() }))
     .query(async ({ ctx, input }) => {
-      const matchingAlbum = await ctx.prisma.album.findUnique({
-        where: { title: input.title },
+      const matchingAlbum = await ctx.prisma.album.findFirst({
+        where: {
+          title: {
+            equals: input.title,
+            mode: "insensitive",
+          },
+        },
       });
 
       return Boolean(!matchingAlbum);

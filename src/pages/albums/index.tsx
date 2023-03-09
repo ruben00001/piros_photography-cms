@@ -1,8 +1,11 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useState, useRef } from "react";
 
 import { AlbumProvider, useAlbumContext } from "~/context/AlbumState";
 import { api } from "~/utils/api";
 import CoverImage from "~/components/pages/albums/cover-image";
+import TextInput from "~/components/forms/TextInput";
+import { toast } from "react-toastify";
+import Toast from "~/components/data-display/Toast";
 
 // edit title + subtitle of page
 
@@ -74,7 +77,7 @@ const FetchedAlbumsPopulated = () => {
   const { data: albums } = api.album.getAll.useQuery();
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-xl">
       {albums?.map((album) => (
         <AlbumProvider album={album} key={album.id}>
           <Album />
@@ -86,7 +89,7 @@ const FetchedAlbumsPopulated = () => {
 
 const Album = () => {
   return (
-    <div className="border p-4">
+    <div className="rounded-lg border border-transparent p-sm  transition-colors duration-75 ease-in-out focus-within:border-base-300 hover:border-base-300">
       <AlbumTitleInput />
       <CoverImage />
     </div>
@@ -98,19 +101,29 @@ const AlbumTitleInput = () => {
 
   const [inputText, setInputText] = useState(album.title);
 
+  const prevTitleValueRef = useRef(album.title);
+  const prevTitleValue = prevTitleValueRef.current;
+  const isChange = prevTitleValue !== inputText;
+
   const {
     refetch: checkTitleIsUnique,
     data: titleIsUnique,
-    isFetching: isFetchingCheckTitleIsUnique,
+    // isFetching: isFetchingCheckTitleIsUnique,
   } = api.album.checkTitleIsUnique.useQuery(
     { title: inputText },
     { enabled: false }
   );
 
+  const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
+    enabled: false,
+  });
+
   const updateTitle = api.album.updateTitle.useMutation();
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    if (!isChange) {
+      return;
+    }
 
     const { data: titleIsUnique } = await checkTitleIsUnique();
 
@@ -118,35 +131,55 @@ const AlbumTitleInput = () => {
       return;
     }
 
-    updateTitle.mutate({ albumId: album.id, updatedTitle: inputText });
+    updateTitle.mutate(
+      { albumId: album.id, updatedTitle: inputText },
+      {
+        onSuccess: () => {
+          prevTitleValueRef.current = inputText;
+          toast(<Toast text="Title updated" type="success" />);
+          void refetchAlbums();
+        },
+      }
+    );
   };
 
   const isError = titleIsUnique === false;
 
+  const containerRef = useRef<HTMLFormElement>(null);
+
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <form className="relative" onSubmit={onSubmit}>
+    <form
+      className="relative"
+      onSubmit={(e) => {
+        e.preventDefault();
+        void handleSubmit();
+      }}
+      ref={containerRef}
+    >
       <div className="form-control w-full max-w-xs">
-        <input
-          type="text"
-          placeholder="Album title"
-          className={`input pl-0 ${!isError ? "" : "input-error"}`}
-          onChange={(e) => setInputText(e.currentTarget.value)}
+        <TextInput
+          setValue={(value) => setInputText(value)}
           value={inputText}
-          required
+          placeholder="Album title"
+          inputAdditionalClasses="font-bold text-lg text-black uppercase"
+          wrapperAdditionalClasses={`${
+            !isError ? "" : "border border-my-error-content"
+          }`}
+          showPressEnter
         />
         <label className="label">
           {titleIsUnique === false ? (
-            <span className="label-text-alt text-error">
+            <span className="label-text-alt text-my-error-content">
               Title is already used. Album titles must be unique.
             </span>
           ) : null}
         </label>
-        {isFetchingCheckTitleIsUnique ? (
+        {/*         {isFetchingCheckTitleIsUnique ? (
           <div className="absolute left-0 top-0 z-10 grid h-full w-full place-items-center bg-gray-100 bg-opacity-70">
             <p className="loading">Checking...</p>
           </div>
-        ) : null}
+        ) : null} */}
       </div>
     </form>
   );

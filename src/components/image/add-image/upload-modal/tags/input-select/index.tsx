@@ -10,6 +10,7 @@ import { arrayDivergence } from "~/helpers/data";
 import useHovered from "~/hooks/useHovered";
 import { api } from "~/utils/api";
 import WithTooltip from "~/components/data-display/WithTooltip";
+import TextInput from "~/components/forms/TextInput";
 
 type Props = {
   parent: {
@@ -111,25 +112,15 @@ function Input({ input, parent }: InputProps) {
         }}
       >
         <div className="relative">
-          <input
-            className={`rounded-sm border py-1 text-sm text-base-content outline-none focus:border-base-300 focus:px-xs ${
-              input.value.length ? "border-base-300" : "border-transparent "
-            }`}
-            id={inputId}
+          <TextInput
+            setValue={(value) => input.updateValue(value)}
             value={input.value}
-            onChange={(e) => input.updateValue(e.target.value)}
+            id={inputId}
             placeholder="Add tag..."
-            type="text"
-            autoComplete="off"
             onFocus={() => input.setIsFocused(true)}
             onBlur={() => input.setIsFocused(false)}
+            showBorderOnBlur
           />
-          {/*           <label
-            className="absolute left-2 top-1/2 -translate-y-1/2 text-sm text-base-300"
-            htmlFor={inputId}
-          >
-            <PlusIcon />
-          </label> */}
         </div>
       </form>
     </div>
