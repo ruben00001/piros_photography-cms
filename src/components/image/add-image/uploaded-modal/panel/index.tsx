@@ -11,13 +11,13 @@ import { fuzzySearch } from "~/helpers/query";
 import { api } from "~/utils/api";
 // import { type Image } from "~/utils/router-output-types";
 
-type UpdateCoverImage = (imageId: string) => void;
+type OnSelectImage = (imageId: string) => void;
 
 // eslint-disable-next-line react/display-name
 export const Panel = forwardRef<
   HTMLDivElement,
-  { updateCoverImage: UpdateCoverImage }
->(({ updateCoverImage }, ref) => {
+  { onSelectImage: OnSelectImage }
+>(({ onSelectImage: updateCoverImage }, ref) => {
   const { closeModal } = useUploadedModalVisibilityStore();
 
   return (
@@ -34,14 +34,14 @@ export const Panel = forwardRef<
       </Dialog.Title>
       <div className="mt-md">
         <ImagesStatusWrapper>
-          <Images updateCoverImage={updateCoverImage} />
+          <Images onSelectImage={updateCoverImage} />
         </ImagesStatusWrapper>
       </div>
       <div className="mt-xl">
         <button
           className="my-btn my-btn-neutral"
           type="button"
-          onClick={closeModal}
+          onClick={() => closeModal()}
         >
           close
         </button>
@@ -68,11 +68,7 @@ const ImagesStatusWrapper = ({ children }: { children: ReactElement }) => {
   );
 };
 
-const Images = ({
-  updateCoverImage,
-}: {
-  updateCoverImage: UpdateCoverImage;
-}) => {
+const Images = ({ onSelectImage }: { onSelectImage: OnSelectImage }) => {
   const [tagQuery, setTagQuery] = useState("");
 
   const { data: allImages } = api.image.getAll.useQuery();
@@ -87,7 +83,7 @@ const Images = ({
         />
       )}
       <div className="mt-md">
-        <ImagesGrid query={tagQuery} updateCoverImage={updateCoverImage} />
+        <ImagesGrid query={tagQuery} onSelectImage={onSelectImage} />
       </div>
     </div>
   );
@@ -95,12 +91,14 @@ const Images = ({
 
 const ImagesGrid = ({
   query,
-  updateCoverImage,
+  onSelectImage,
 }: {
   query: string;
-  updateCoverImage: UpdateCoverImage;
+  onSelectImage: OnSelectImage;
 }) => {
   const { data: allImages } = api.image.getAll.useQuery();
+
+  const { closeModal } = useUploadedModalVisibilityStore();
 
   if (!allImages) {
     return <p>Something went wrong...</p>;
@@ -120,7 +118,10 @@ const ImagesGrid = ({
         <WithTooltip text="click to add" type="action" key={dbImage.id}>
           <div
             className="my-hover-bg rounded-lg border border-base-200 p-sm"
-            onClick={() => updateCoverImage(dbImage.id)}
+            onClick={() => {
+              onSelectImage(dbImage.id);
+              closeModal();
+            }}
           >
             <div className="aspect-square">
               <MyCldImage

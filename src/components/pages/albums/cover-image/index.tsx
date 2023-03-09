@@ -4,6 +4,7 @@ import { ImageIcon } from "~/components/Icon";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import MyCldImage from "~/components/image/MyCldImage";
 import { useAlbumsContext } from "~/context/AlbumsState";
+import { type ReactElement } from "react";
 
 const CoverImage = () => {
   const album = useAlbumContext();
@@ -17,11 +18,28 @@ const CoverImage = () => {
 
 export default CoverImage;
 
+const CoverImageMenu = ({ children }: { children: ReactElement }) => {
+  const album = useAlbumContext();
+  const { setActiveAlbumId } = useAlbumsContext();
+
+  return (
+    <AddImageMenu
+      buttonClasses="w-full"
+      onImageModalVisibilityChange={{
+        close: () => setActiveAlbumId(null),
+        open: () => setActiveAlbumId(album.id),
+      }}
+    >
+      {children}
+    </AddImageMenu>
+  );
+};
+
 const Unpopulated = () => {
   return (
-    <AddImageMenu buttonClasses="w-full">
+    <CoverImageMenu>
       <ImagePlaceholder />
-    </AddImageMenu>
+    </CoverImageMenu>
   );
 };
 
@@ -37,11 +55,8 @@ const ImagePlaceholder = () => {
   );
 };
 
-// how to include image in original fetch
-
 const Populated = () => {
   const album = useAlbumContext();
-  const { setActiveAlbumId } = useAlbumsContext();
 
   if (!album.coverImage) {
     // would really be an error if there was a coverimageId but no cover image
@@ -49,13 +64,7 @@ const Populated = () => {
   }
 
   return (
-    <AddImageMenu
-      buttonClasses="w-full"
-      onChangeVisibility={{
-        close: () => setActiveAlbumId(null),
-        open: () => setActiveAlbumId(album.id),
-      }}
-    >
+    <CoverImageMenu>
       <WithTooltip text="Click to change image">
         <div className="z-30">
           <MyCldImage
@@ -67,6 +76,6 @@ const Populated = () => {
           />
         </div>
       </WithTooltip>
-    </AddImageMenu>
+    </CoverImageMenu>
   );
 };

@@ -12,12 +12,10 @@ const UploadedModal = ({
 }) => {
   const { closeModal, isOpen } = useUploadedModalVisibilityStore();
 
-  // const { id: albumId } = useAlbumContext();
-
   return (
     <>
       <Transition show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-10" onClose={() => closeModal()}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -40,7 +38,7 @@ const UploadedModal = ({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Panel updateCoverImage={onSelectImage} />
+                <Panel onSelectImage={onSelectImage} />
               </Transition.Child>
             </div>
           </div>

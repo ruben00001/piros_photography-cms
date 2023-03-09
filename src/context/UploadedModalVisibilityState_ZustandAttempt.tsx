@@ -3,8 +3,8 @@ import { createStore, useStore } from "zustand";
 
 type ModalVisibilityState = {
   isOpen: boolean;
-  openModal: (arg0: { onOpen: () => void }) => void;
-  closeModal: (arg0: { onClose: () => void }) => void;
+  openModal: (arg0?: { onOpen: () => void }) => void;
+  closeModal: (arg0?: { onClose: () => void }) => void;
 };
 
 const store = createStore<ModalVisibilityState>()((set) => ({
@@ -13,6 +13,8 @@ const store = createStore<ModalVisibilityState>()((set) => ({
   openModal: (arg0) => {
     set(() => ({ isOpen: true }));
     if (arg0) {
+      console.log("ON OPEN");
+
       arg0.onOpen();
     }
   },
