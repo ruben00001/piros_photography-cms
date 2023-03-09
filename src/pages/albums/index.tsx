@@ -1,4 +1,4 @@
-import { type FormEvent, useState, useRef } from "react";
+import { type FormEvent, useState, useRef, type ReactElement } from "react";
 
 import { AlbumProvider, useAlbumContext } from "~/context/AlbumState";
 import { api } from "~/utils/api";
@@ -6,6 +6,11 @@ import CoverImage from "~/components/pages/albums/cover-image";
 import TextInput from "~/components/forms/TextInput";
 import { toast } from "react-toastify";
 import Toast from "~/components/data-display/Toast";
+import { UploadModalVisibilityProvider } from "~/context/UploadModalVisibilityState";
+import { UploadedModalVisibilityProvider } from "~/context/UploadedModalVisibilityState_ZustandAttempt";
+// import UploadModal from "~/components/image/add-image/upload-modal";
+import UploadedModal from "~/components/image/add-image/uploaded-modal";
+import { AlbumsProvider, useAlbumsContext } from "~/context/AlbumsState";
 
 // edit title + subtitle of page
 
@@ -14,7 +19,25 @@ import Toast from "~/components/data-display/Toast";
 // show  published status
 // show date created?
 
-const Albums = () => {
+const PageBody = () => {
+  return (
+    <div className="p-8">
+      <InitialFetchStatusWrapper>
+        <PageSuccessContentWrapper>
+          <PageSuccessContent />
+        </PageSuccessContentWrapper>
+      </InitialFetchStatusWrapper>
+    </div>
+  );
+};
+
+export default PageBody;
+
+const InitialFetchStatusWrapper = ({
+  children,
+}: {
+  children: ReactElement;
+}) => {
   const { isFetchedAfterMount, isInitialLoading, isError } =
     api.album.getAll.useQuery();
 
@@ -25,13 +48,11 @@ const Albums = () => {
       ) : !isFetchedAfterMount && isError ? (
         <InitialLoadingError />
       ) : (
-        <OnInitialSuccessContent />
+        children
       )}
     </div>
   );
 };
-
-export default Albums;
 
 const Loading = () => {
   return <div className="loading">Loading...</div>;
@@ -41,14 +62,50 @@ const InitialLoadingError = () => {
   return <div>Initial loading error</div>;
 };
 
-const OnInitialSuccessContent = () => {
+const PageSuccessContentWrapper = ({
+  children,
+}: {
+  children: ReactElement;
+}) => {
   return (
-    <div>
-      <AddAlbumModal />
-      <div className="mt-8">
-        <FetchedAlbums />
+    <UploadModalVisibilityProvider>
+      <UploadedModalVisibilityProvider>
+        <AlbumsProvider>{children}</AlbumsProvider>
+      </UploadedModalVisibilityProvider>
+    </UploadModalVisibilityProvider>
+  );
+};
+
+const PageSuccessContent = () => {
+  const { activeAlbumId } = useAlbumsContext();
+
+  const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
+    enabled: false,
+  });
+
+  const updateCoverImageMutation = api.album.updateCoverImage.useMutation({
+    onSuccess: async () => {
+      toast(<Toast text="updated album cover image" type="success" />);
+      // better flow would be to indicate refetch pending on actual album
+      await refetchAlbums();
+    },
+  });
+
+  const updateCoverImage = (imageId: string) =>
+    activeAlbumId &&
+    updateCoverImageMutation.mutate({ albumId: activeAlbumId, imageId });
+
+  return (
+    <>
+      <div>
+        <AddAlbumModal />
+        <div className="mt-8">
+          <FetchedAlbums />
+        </div>
       </div>
-    </div>
+      <UploadedModal onSelectImage={updateCoverImage} />
+      {/* <UploadModal /> */}
+    </>
   );
 };
 

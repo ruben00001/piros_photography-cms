@@ -3,6 +3,7 @@ import { useAlbumContext } from "~/context/AlbumState";
 import { ImageIcon } from "~/components/Icon";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import MyCldImage from "~/components/image/MyCldImage";
+import { useAlbumsContext } from "~/context/AlbumsState";
 
 const CoverImage = () => {
   const album = useAlbumContext();
@@ -40,6 +41,7 @@ const ImagePlaceholder = () => {
 
 const Populated = () => {
   const album = useAlbumContext();
+  const { setActiveAlbumId } = useAlbumsContext();
 
   if (!album.coverImage) {
     // would really be an error if there was a coverimageId but no cover image
@@ -47,7 +49,13 @@ const Populated = () => {
   }
 
   return (
-    <AddImageMenu buttonClasses="w-full">
+    <AddImageMenu
+      buttonClasses="w-full"
+      onChangeVisibility={{
+        close: () => setActiveAlbumId(null),
+        open: () => setActiveAlbumId(album.id),
+      }}
+    >
       <WithTooltip text="Click to change image">
         <div className="z-30">
           <MyCldImage

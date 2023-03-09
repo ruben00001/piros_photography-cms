@@ -3,16 +3,24 @@ import { createStore, useStore } from "zustand";
 
 type ModalVisibilityState = {
   isOpen: boolean;
-  openModal: () => void;
-  closeModal: () => void;
+  openModal: (arg0: { onOpen: () => void }) => void;
+  closeModal: (arg0: { onClose: () => void }) => void;
 };
 
 const store = createStore<ModalVisibilityState>()((set) => ({
   isOpen: false,
 
-  openModal: () => set(() => ({ isOpen: true })),
+  openModal: (arg0) => {
+    set(() => ({ isOpen: true }));
+    if (arg0) {
+      arg0.onOpen();
+    }
+  },
 
-  closeModal: () => set(() => ({ isOpen: false })),
+  closeModal: (arg0) => {
+    set(() => ({ isOpen: false }));
+    arg0 && arg0.onClose();
+  },
 }));
 
 const MyContext = createContext<typeof store | null>(null);

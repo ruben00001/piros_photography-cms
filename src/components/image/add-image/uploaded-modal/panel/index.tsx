@@ -126,6 +126,7 @@ const ImagesGrid = ({
               <MyCldImage
                 src={dbImage.cloudinary_public_id}
                 fit="object-contain"
+                heightSetByContainer
               />
             </div>
           </div>
