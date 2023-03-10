@@ -1,4 +1,4 @@
-import { type FormEvent, useState, useRef, type ReactElement } from "react";
+import { useState, useRef, type ReactElement } from "react";
 
 import { AlbumProvider, useAlbumContext } from "~/context/AlbumState";
 import { api } from "~/utils/api";
@@ -15,6 +15,7 @@ import UploadModal from "~/components/image/add-image/upload-modal";
 import AlbumMenu from "./album/Menu";
 import { WarningModalProvider } from "~/components/warning-modal/Context";
 import WarningModal from "~/components/warning-modal";
+import AddAlbumModal, { AddAlbumModalButton } from "./AddAlbumModal";
 
 // edit title + subtitle of page
 
@@ -143,11 +144,12 @@ const PageSuccessContent = () => {
   return (
     <>
       <div>
-        <AddAlbumModal />
+        <AddAlbumModalButton />
         <div className="mt-8">
           <FetchedAlbums />
         </div>
       </div>
+      <AddAlbumModal />
       <UploadedModal onSelectImage={updateCoverImage} />
       <UploadModal createDbImageFunc={createDbImageAndAddToAlbum} />
       <WarningModal
@@ -308,102 +310,6 @@ const AlbumTitleInput = () => {
             <p className="loading">Checking...</p>
           </div>
         ) : null} */}
-      </div>
-    </form>
-  );
-};
-
-const AddAlbumModal = () => {
-  return (
-    <>
-      <label htmlFor="my-modal-4" className="btn">
-        add album
-      </label>
-      <input type="checkbox" id="my-modal-4" className="modal-toggle" />
-      <label htmlFor="my-modal-4" className="modal cursor-pointer">
-        <AddAlbumModalContent />
-      </label>
-    </>
-  );
-};
-
-// optional cover image on create
-
-const AddAlbumModalContent = () => {
-  return (
-    <label className="modal-box relative" htmlFor="">
-      <h3 className="text-lg font-bold">Add album</h3>
-      <AddAlbumModalForm />
-    </label>
-  );
-};
-
-const AddAlbumModalForm = () => {
-  const [inputText, setInputText] = useState("");
-
-  const {
-    refetch: checkTitleIsUnique,
-    data: titleIsUnique,
-    isFetching: isFetchingCheckTitleIsUnique,
-  } = api.album.checkTitleIsUnique.useQuery(
-    { title: inputText },
-    { enabled: false }
-  );
-
-  const isError = titleIsUnique === false;
-
-  const { refetch: refetchAlbums } = api.album.getAll.useQuery();
-
-  const createAlbum = api.album.create.useMutation({
-    onSuccess: () => {
-      void refetchAlbums();
-    },
-  });
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const { data: titleIsUnique } = await checkTitleIsUnique();
-
-    if (!titleIsUnique) {
-      return;
-    }
-
-    createAlbum.mutate({ title: inputText });
-  };
-
-  return (
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <form onSubmit={onSubmit}>
-      <div className="form-control w-full max-w-xs">
-        <label className="label">
-          <span className="label-text"></span>
-          <span className="label-text text-xs uppercase text-info">
-            album title
-          </span>
-        </label>
-        <input
-          type="text"
-          placeholder="Type here"
-          className={`minput-bordered input-bordered input w-full max-w-xs ${
-            !isError ? "" : "input-error"
-          }`}
-          onChange={(e) => setInputText(e.currentTarget.value)}
-          value={inputText}
-          required
-        />
-        <label className="label">
-          {titleIsUnique === false ? (
-            <span className="label-text-alt text-error">
-              Title is already used. Album titles must be unique.
-            </span>
-          ) : null}
-        </label>
-        {isFetchingCheckTitleIsUnique ? (
-          <div className="absolute left-0 top-0 z-10 grid h-full w-full place-items-center bg-gray-100 bg-opacity-70">
-            <p className="loading">Checking...</p>
-          </div>
-        ) : null}
       </div>
     </form>
   );

@@ -25,7 +25,7 @@ const WarningModal = ({
     >
       <div
         id="alert-additional-content-4"
-        className="min-w-[300px] max-w-xl rounded-lg border border-my-alert-content bg-white p-4 text-my-alert-content"
+        className="min-w-[300px] max-w-xl rounded-lg border border-my-alert-content bg-white p-4 text-my-alert-content shadow-lg"
         role="alert"
       >
         <div className="flex items-center">

@@ -22,7 +22,7 @@ const MyModal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-white/60" aria-hidden="true" />
+          <div className="fixed inset-0 bg-gray-100/70" aria-hidden="true" />
         </Transition.Child>
         <div className="fixed inset-0 grid place-items-center p-4">
           <Transition.Child

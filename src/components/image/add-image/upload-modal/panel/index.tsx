@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { type ChangeEvent, useState, forwardRef } from "react";
 import { Dialog } from "@headlessui/react";
+import { toast } from "react-toastify";
 
 import { FileImageIcon, TickIcon } from "~/components/Icon";
 import Tags from "~/components/image/add-image/upload-modal/tags";
@@ -13,7 +14,6 @@ import { handleUploadImage } from "~/helpers/cloudinary";
 import { api } from "~/utils/api";
 import Spinner from "~/components/Spinner";
 import { useUploadModalContext } from "~/context/UploadModalState";
-import { toast } from "react-toastify";
 import Toast from "~/components/data-display/Toast";
 
 // .env cloudinary

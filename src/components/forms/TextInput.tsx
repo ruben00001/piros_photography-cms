@@ -61,7 +61,7 @@ const TextInput = ({
       ></input>
       {showPressEnterMessage ? (
         <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-60 py-xxxs px-xs">
-          <p className="text-xs text-base-content">Press enter to submit</p>
+          <p className="text-xs text-gray-500">Press enter to submit</p>
         </div>
       ) : null}
     </div>
