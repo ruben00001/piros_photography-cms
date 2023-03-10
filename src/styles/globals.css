@@ -16,6 +16,13 @@
   .my-hover-bg {
     @apply transition-colors duration-75 ease-in-out hover:bg-base-200;
   }
+  .my-group-hover-child-opacity {
+    @apply opacity-0 transition-opacity duration-75 ease-in-out group-hover:opacity-100;
+  }
+
+  .my-overlay-light {
+    background-color: rgba(237, 242, 247, 0.2);
+  }
 }
 
 @layer utilities {

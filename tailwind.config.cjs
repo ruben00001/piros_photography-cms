@@ -23,6 +23,7 @@ const config = {
         ["my-error"]: "hsl(28 94.4% 92.9%)",
         ["my-error-content"]: "hsl(16 100% 56.1%)",
         ["my-subtle-info"]: "hsl(217 10 64)",
+        ["overlay-light"]: "rgba(237, 242, 247, 0.2)",
       },
     },
   },

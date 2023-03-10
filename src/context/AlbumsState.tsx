@@ -17,8 +17,6 @@ const Provider = ({
   const [activeAlbumId, setActiveAlbumId] =
     useState<AlbumsState["activeAlbumId"]>(null);
 
-  console.log("activeAlbumId:", activeAlbumId);
-
   const value: AlbumsState = {
     activeAlbumId,
     setActiveAlbumId,

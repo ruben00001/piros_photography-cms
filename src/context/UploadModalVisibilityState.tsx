@@ -1,54 +1,47 @@
-import { createContext, type ReactElement, useContext, useState } from "react";
-import { checkObjectHasField } from "~/helpers/general";
+import { createContext, type ReactElement, useContext } from "react";
+import { createStore, useStore } from "zustand";
 
-type UploadModalVisibilityState = {
+type ModalVisibilityState = {
   isOpen: boolean;
-  openModal: () => void;
+  openModal: (arg0?: { onOpen: () => void }) => void;
   closeModal: () => void;
 };
 
-const Context = createContext<UploadModalVisibilityState>(
-  {} as UploadModalVisibilityState
-);
+const store = createStore<ModalVisibilityState>()((set) => ({
+  isOpen: false,
 
-const Provider = ({
+  openModal: (arg0) => {
+    set(() => ({ isOpen: true }));
+    if (arg0) {
+      arg0.onOpen();
+    }
+  },
+
+  closeModal: () => {
+    set(() => ({ isOpen: false }));
+  },
+}));
+
+const MyContext = createContext<typeof store | null>(null);
+
+export const UploadModalVisibilityProvider = ({
   children,
 }: {
-  children: ReactElement | ((args: UploadModalVisibilityState) => ReactElement);
+  children: ReactElement | ((args: ModalVisibilityState) => ReactElement);
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  const value: UploadModalVisibilityState = { isOpen, openModal, closeModal };
+  const myStore = useStore(store);
 
   return (
-    <Context.Provider value={value}>
-      {typeof children === "function" ? children(value) : children}
-    </Context.Provider>
+    <MyContext.Provider value={store}>
+      {typeof children === "function" ? children(myStore) : children}
+    </MyContext.Provider>
   );
 };
 
-const useThisContext = () => {
-  const context = useContext(Context);
-
-  const contextIsPopulated = checkObjectHasField(context);
-  if (!contextIsPopulated) {
-    throw new Error(
-      "useModalVisibilityContext must be used within its provider!"
-    );
+export const useUploadModalVisibilityContext = () => {
+  const store = useContext(MyContext);
+  if (!store) {
+    throw new Error("Missing UploadedModalVisibility Provider");
   }
-
-  return context;
-};
-
-export {
-  Provider as UploadModalVisibilityProvider,
-  useThisContext as useUploadModalVisibilityContext,
+  return useStore(store);
 };

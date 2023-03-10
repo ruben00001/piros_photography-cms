@@ -71,6 +71,7 @@ type InputProps = {
   allImageTags: ImageTag[];
 };
 
+// have handled tag already on parent??
 function Input({ input, parent }: InputProps) {
   const { refetch: refetchImageTags } = api.imageTag.getAll.useQuery();
 
@@ -120,6 +121,7 @@ function Input({ input, parent }: InputProps) {
             onFocus={() => input.setIsFocused(true)}
             onBlur={() => input.setIsFocused(false)}
             showBorderOnBlur
+            showPressEnter
           />
         </div>
       </form>

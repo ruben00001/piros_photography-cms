@@ -6,7 +6,7 @@ import WithTooltip from "~/components/data-display/WithTooltip";
 
 import MyCldImage from "~/components/image/MyCldImage";
 import SearchInput from "~/components/SearchInput";
-import { useUploadedModalVisibilityStore } from "~/context/UploadedModalVisibilityState";
+import { useUploadedModalVisibilityContext } from "~/context/UploadedModalVisibilityState";
 import { fuzzySearch } from "~/helpers/query";
 import { api } from "~/utils/api";
 // import { type Image } from "~/utils/router-output-types";
@@ -18,7 +18,7 @@ export const Panel = forwardRef<
   HTMLDivElement,
   { onSelectImage: OnSelectImage }
 >(({ onSelectImage: updateCoverImage }, ref) => {
-  const { closeModal } = useUploadedModalVisibilityStore();
+  const { closeModal } = useUploadedModalVisibilityContext();
 
   return (
     <Dialog.Panel
@@ -98,7 +98,7 @@ const ImagesGrid = ({
 }) => {
   const { data: allImages } = api.image.getAll.useQuery();
 
-  const { closeModal } = useUploadedModalVisibilityStore();
+  const { closeModal } = useUploadedModalVisibilityContext();
 
   if (!allImages) {
     return <p>Something went wrong...</p>;

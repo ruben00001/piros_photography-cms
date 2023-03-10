@@ -18,7 +18,13 @@ const CoverImage = () => {
 
 export default CoverImage;
 
-const CoverImageMenu = ({ children }: { children: ReactElement }) => {
+const CoverImageMenu = ({
+  children,
+  tooltipText,
+}: {
+  children: ReactElement;
+  tooltipText: string;
+}) => {
   const album = useAlbumContext();
   const { setActiveAlbumId } = useAlbumsContext();
 
@@ -26,18 +32,19 @@ const CoverImageMenu = ({ children }: { children: ReactElement }) => {
     <AddImageMenu
       buttonClasses="w-full"
       onImageModalVisibilityChange={{
-        close: () => setActiveAlbumId(null),
         open: () => setActiveAlbumId(album.id),
       }}
     >
-      {children}
+      <WithTooltip text={tooltipText} type="action">
+        {children}
+      </WithTooltip>
     </AddImageMenu>
   );
 };
 
 const Unpopulated = () => {
   return (
-    <CoverImageMenu>
+    <CoverImageMenu tooltipText="add image">
       <ImagePlaceholder />
     </CoverImageMenu>
   );
@@ -45,13 +52,11 @@ const Unpopulated = () => {
 
 const ImagePlaceholder = () => {
   return (
-    <WithTooltip text="Add image" type="action">
-      <div className="grid aspect-video place-items-center rounded-md bg-gray-300 transition-colors duration-150 ease-in-out hover:bg-gray-200">
-        <div className="text-5xl text-gray-100">
-          <ImageIcon />
-        </div>
+    <div className="grid aspect-video place-items-center rounded-md bg-gray-300 transition-colors duration-150 ease-in-out hover:bg-gray-200">
+      <div className="text-5xl text-gray-100">
+        <ImageIcon />
       </div>
-    </WithTooltip>
+    </div>
   );
 };
 
@@ -64,18 +69,16 @@ const Populated = () => {
   }
 
   return (
-    <CoverImageMenu>
-      <WithTooltip text="Click to change image">
-        <div className="z-30">
-          <MyCldImage
-            fit="object-cover"
-            heightSetByContainer={{ isSetByContainer: false, approxVal: 800 }}
-            src={album.coverImage.cloudinary_public_id}
-            imgAdditionalClasses="transition-transform duration-200 ease-in-out group-hover:scale-95"
-            wrapperAdditionalClasses="overflow-hidden transition-colors duration-150 ease-in-out hover:rounded-md hover:bg-gray-100 "
-          />
-        </div>
-      </WithTooltip>
+    <CoverImageMenu tooltipText="Click to change image">
+      <div className="">
+        <MyCldImage
+          fit="object-cover"
+          heightSetByContainer={{ isSetByContainer: false, approxVal: 800 }}
+          src={album.coverImage.cloudinary_public_id}
+          imgAdditionalClasses="transition-transform duration-200 ease-in-out group-hover:scale-95"
+          wrapperAdditionalClasses="overflow-hidden transition-colors duration-150 ease-in-out hover:rounded-md hover:bg-gray-100 "
+        />
+      </div>
     </CoverImageMenu>
   );
 };

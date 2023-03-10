@@ -11,6 +11,10 @@ import { UploadedModalVisibilityProvider } from "~/context/UploadedModalVisibili
 // import UploadModal from "~/components/image/add-image/upload-modal";
 import UploadedModal from "~/components/image/add-image/uploaded-modal";
 import { AlbumsProvider, useAlbumsContext } from "~/context/AlbumsState";
+import UploadModal from "~/components/image/add-image/upload-modal";
+import AlbumMenu from "./album/Menu";
+import { WarningModalProvider } from "~/components/warning-modal/Context";
+import WarningModal from "~/components/warning-modal";
 
 // edit title + subtitle of page
 
@@ -70,14 +74,20 @@ const PageSuccessContentWrapper = ({
   return (
     <UploadModalVisibilityProvider>
       <UploadedModalVisibilityProvider>
-        <AlbumsProvider>{children}</AlbumsProvider>
+        <AlbumsProvider>
+          {({ setActiveAlbumId }) => (
+            <WarningModalProvider onClose={() => setActiveAlbumId(null)}>
+              {children}
+            </WarningModalProvider>
+          )}
+        </AlbumsProvider>
       </UploadedModalVisibilityProvider>
     </UploadModalVisibilityProvider>
   );
 };
 
 const PageSuccessContent = () => {
-  const { activeAlbumId } = useAlbumsContext();
+  const activeAlbum = useAlbumsContext();
 
   const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
     enabled: false,
@@ -92,8 +102,43 @@ const PageSuccessContent = () => {
   });
 
   const updateCoverImage = (imageId: string) =>
-    activeAlbumId &&
-    updateCoverImageMutation.mutate({ albumId: activeAlbumId, imageId });
+    activeAlbum.activeAlbumId &&
+    updateCoverImageMutation.mutate({
+      albumId: activeAlbum.activeAlbumId,
+      imageId,
+    });
+
+  const createDbImageAndAddToAlbumMutation =
+    api.imageAndAlbumTransaction.createImageAndAddToAlbum.useMutation({
+      onSuccess: async () => {
+        await refetchAlbums();
+      },
+    });
+
+  const createDbImageAndAddToAlbum = ({
+    cloudinary_public_id,
+    tagIds,
+    onSuccess,
+  }: {
+    cloudinary_public_id: string;
+    tagIds?: string[];
+    onSuccess: () => void;
+  }) =>
+    activeAlbum.activeAlbumId &&
+    createDbImageAndAddToAlbumMutation.mutate(
+      {
+        albumId: activeAlbum.activeAlbumId,
+        cloudinary_public_id,
+        tagIds,
+      },
+      { onSuccess }
+    );
+
+  const deleteAlbumMutation = api.album.delete.useMutation({
+    onSuccess: async () => {
+      await refetchAlbums();
+    },
+  });
 
   return (
     <>
@@ -104,7 +149,31 @@ const PageSuccessContent = () => {
         </div>
       </div>
       <UploadedModal onSelectImage={updateCoverImage} />
-      {/* <UploadModal /> */}
+      <UploadModal createDbImageFunc={createDbImageAndAddToAlbum} />
+      <WarningModal
+        text={{
+          body: "Are you sure? This can't be undone.",
+          title: "Delete album",
+        }}
+        onConfirm={({ closeModal }) =>
+          activeAlbum.activeAlbumId &&
+          deleteAlbumMutation.mutate(
+            { albumId: activeAlbum.activeAlbumId },
+            {
+              onSuccess: () => {
+                setTimeout(() => {
+                  deleteAlbumMutation.reset();
+                  closeModal();
+                }, 600);
+                setTimeout(() => {
+                  toast(<Toast text="Album deleted" type="success" />);
+                }, 750);
+              },
+            }
+          )
+        }
+        invokedFuncStatus={deleteAlbumMutation.status}
+      />
     </>
   );
 };
@@ -146,7 +215,8 @@ const FetchedAlbumsPopulated = () => {
 
 const Album = () => {
   return (
-    <div className="rounded-lg border border-transparent p-sm  transition-colors duration-75 ease-in-out focus-within:border-base-300 hover:border-base-200">
+    <div className="group/album relative rounded-lg border border-transparent p-sm transition-colors duration-75 ease-in-out focus-within:border-base-300 hover:border-base-200">
+      <AlbumMenu />
       <AlbumTitleInput />
       <CoverImage />
     </div>

@@ -10,6 +10,7 @@ import {
   Warning,
   WarningCircle,
   MagnifyingGlass,
+  DotsThreeOutline,
 } from "phosphor-react";
 
 export {
@@ -25,4 +26,5 @@ export {
   WarningCircle as ErrorIcon,
   Check as SuccessIcon,
   MagnifyingGlass as SearchIcon,
+  DotsThreeOutline as MenuIcon,
 };

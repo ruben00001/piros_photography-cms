@@ -12,12 +12,11 @@ import { useUploadModalVisibilityContext } from "~/context/UploadModalVisibility
 import { handleUploadImage } from "~/helpers/cloudinary";
 import { api } from "~/utils/api";
 import Spinner from "~/components/Spinner";
-import { useAlbumContext } from "~/context/AlbumState";
+import { useUploadModalContext } from "~/context/UploadModalState";
+import { toast } from "react-toastify";
+import Toast from "~/components/data-display/Toast";
 
-// adding tags to image on create hasn't worked
-// create uploaded images component. maybe tags are on them, but not showing in db?
 // .env cloudinary
-// potentially check out nice components https://flowbite.com/docs/components/toast/
 
 // eslint-disable-next-line react/display-name
 export const Panel = forwardRef<HTMLDivElement>((_, ref) => {
@@ -51,24 +50,8 @@ const UploadFunctionality = () => {
 
   const { closeModal } = useUploadModalVisibilityContext();
   const { strings: tagIds } = useTagsIdContext();
-  const album = useAlbumContext();
 
-  const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
-    enabled: false,
-  });
-
-  const createDbImageAndAddToAlbum =
-    api.imageAndAlbumTransaction.createImageAndAddToAlbum.useMutation({
-      onSuccess: async () => {
-        setCreateImageStatus("success");
-
-        await refetchAlbums();
-
-        setTimeout(() => {
-          closeModal();
-        }, 600);
-      },
-    });
+  const { createDbImageFunc } = useUploadModalContext();
 
   const { refetch: fetchSignature } = api.image.createSignature.useQuery(
     {
@@ -96,10 +79,19 @@ const UploadFunctionality = () => {
         signatureData,
       });
 
-      createDbImageAndAddToAlbum.mutate({
+      createDbImageFunc({
         cloudinary_public_id,
+        onSuccess: () => {
+          setCreateImageStatus("success");
+
+          setTimeout(() => {
+            closeModal();
+
+            toast(<Toast text="uploaded image" type="success" />);
+            toast(<Toast text="updated album cover image" type="success" />);
+          }, 800);
+        },
         tagIds,
-        albumId: album.id,
       });
     } catch (error) {
       setCreateImageStatus("error");

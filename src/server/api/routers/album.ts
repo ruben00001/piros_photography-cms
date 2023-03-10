@@ -73,4 +73,14 @@ export const albumRouter = createTRPCRouter({
         },
       });
     }),
+
+  delete: protectedProcedure
+    .input(z.object({ albumId: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.album.delete({
+        where: {
+          id: input.albumId,
+        },
+      });
+    }),
 });

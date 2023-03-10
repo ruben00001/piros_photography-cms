@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
-import { useUploadedModalVisibilityStore } from "~/context/UploadedModalVisibilityState";
+import { useUploadedModalVisibilityContext } from "~/context/UploadedModalVisibilityState";
 
 import Panel from "./panel";
 
@@ -10,7 +10,7 @@ const UploadedModal = ({
 }: {
   onSelectImage: (imageId: string) => void;
 }) => {
-  const { closeModal, isOpen } = useUploadedModalVisibilityStore();
+  const { closeModal, isOpen } = useUploadedModalVisibilityContext();
 
   return (
     <>

@@ -2,7 +2,8 @@ const Spinner = () => {
   return (
     <svg
       aria-hidden="true"
-      className="mr-2 h-8 w-8 animate-spin fill-secondary text-gray-200 dark:text-gray-600"
+      className={`h-7 w-7 animate-spin fill-gray-400 text-gray-200`}
+      // className={`animate-spin text-gray-200 ${fill} ${height} ${width}`}
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

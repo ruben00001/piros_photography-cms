@@ -10,8 +10,8 @@ const TextInput = ({
   inputAdditionalClasses = "",
   wrapperAdditionalClasses = "",
   showBorderOnBlur,
-  showPressEnter,
-  isChange,
+  showPressEnter: showPressEnterControl,
+  isChange = true,
 }: {
   value: string;
   setValue: (value: string) => void;
@@ -27,9 +27,12 @@ const TextInput = ({
 }) => {
   const [localIsFocused, setLocalIsFocused] = useState(false);
 
+  const showPressEnterMessage =
+    showPressEnterControl && isChange && localIsFocused && value.length;
+
   return (
     <div
-      className={`relative z-10 box-content flex h-[28px] w-full max-w-[300px] items-stretch rounded-sm  border transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
+      className={`relative z-10 box-content flex h-[28px] w-[300px] max-w-full items-stretch rounded-sm  border transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
         showBorderOnBlur && value.length
           ? "border-base-300"
           : "border-transparent"
@@ -56,8 +59,8 @@ const TextInput = ({
           }
         }}
       ></input>
-      {showPressEnter && isChange && localIsFocused && value.length ? (
-        <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-80 py-xxxs px-xs">
+      {showPressEnterMessage ? (
+        <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-60 py-xxxs px-xs">
           <p className="text-xs text-base-content">Press enter to submit</p>
         </div>
       ) : null}
