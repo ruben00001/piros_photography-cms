@@ -16,6 +16,9 @@ import AlbumMenu from "./album/Menu";
 import { WarningModalProvider } from "~/components/warning-modal/Context";
 import WarningModal from "~/components/warning-modal";
 import AddAlbumModal, { AddAlbumModalButton } from "./AddAlbumModal";
+import DndSortableContext from "~/components/dnd-kit/DndSortableContext";
+import { getReorderedEntities, mapIds } from "~/helpers/process-data";
+import DndSortableElement from "~/components/dnd-kit/DndSortableElement";
 
 // edit title + subtitle of page
 
@@ -183,9 +186,13 @@ const PageSuccessContent = () => {
 const FetchedAlbums = () => {
   const { data: albums } = api.album.getAll.useQuery();
 
+  if (!albums) {
+    return <p>Something went wrong</p>;
+  }
+
   return (
     <div>
-      {!albums?.length ? <FetchedAlbumsEmpty /> : <FetchedAlbumsPopulated />}
+      {!albums.length ? <FetchedAlbumsEmpty /> : <FetchedAlbumsPopulated />}
     </div>
   );
 };
@@ -204,13 +211,87 @@ const FetchedAlbumsEmpty = () => {
 const FetchedAlbumsPopulated = () => {
   const { data: albums } = api.album.getAll.useQuery();
 
+  if (!albums) {
+    return <p>Something went wrong</p>;
+  }
+
+  const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
+    enabled: false,
+  });
+
+  const utils = api.useContext();
+
+  const reOrder = api.album.reorder.useMutation({
+    // TODO: below not working updating state
+    /*     onMutate: async ({ activeAlbum, albums, overAlbum }) => {
+      await utils.album.getAll.cancel();
+
+      const prevData = utils.album.getAll.getData();
+
+      const updatedEntities = getReorderedEntities({
+        active: activeAlbum,
+        over: overAlbum,
+        entities: albums,
+      });
+
+      utils.album.getAll.setData(undefined, (currData) => {
+        if (!currData) {
+          return prevData;
+        }
+
+        const updatedData = currData.map((album) =>
+          !mapIds(updatedEntities).includes(album.id)
+            ? album
+            : {
+                ...album,
+                index: updatedEntities.find(({ id }) => id === album.id)!.index,
+              }
+        );
+
+        console.log("updatedData:", updatedData);
+
+        return updatedData;
+      });
+
+      return prevData;
+    }, */
+    onSuccess: async () => {
+      await refetchAlbums();
+      toast(<Toast text="Albums reordered" type="success" />);
+    },
+  });
+
   return (
     <div className="grid grid-cols-2 gap-xl">
-      {albums?.map((album) => (
-        <AlbumProvider album={album} key={album.id}>
-          <Album />
-        </AlbumProvider>
-      ))}
+      <DndSortableContext
+        elementIds={mapIds(albums)}
+        onReorder={({ activeId, overId }) =>
+          reOrder.mutate({
+            activeAlbum: {
+              id: activeId,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              index: albums.find((album) => album.id === activeId)!.index,
+            },
+            albums: albums.map((album) => ({
+              id: album.id,
+              index: album.index,
+            })),
+            overAlbum: {
+              id: overId,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              index: albums.find((album) => album.id === overId)!.index,
+            },
+          })
+        }
+      >
+        {albums?.map((album) => (
+          <DndSortableElement elementId={album.id} key={album.id}>
+            <AlbumProvider album={album}>
+              <Album />
+            </AlbumProvider>
+          </DndSortableElement>
+        ))}
+      </DndSortableContext>
     </div>
   );
 };

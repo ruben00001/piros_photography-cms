@@ -11,6 +11,7 @@ import {
   WarningCircle,
   MagnifyingGlass,
   DotsThreeOutline,
+  DotsSixVertical,
 } from "phosphor-react";
 
 export {
@@ -27,4 +28,5 @@ export {
   Check as SuccessIcon,
   MagnifyingGlass as SearchIcon,
   DotsThreeOutline as MenuIcon,
+  DotsSixVertical as GrabHandleIcon,
 };

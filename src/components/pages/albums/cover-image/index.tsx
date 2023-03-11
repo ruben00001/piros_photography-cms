@@ -36,7 +36,7 @@ const CoverImageMenu = ({
       }}
     >
       <WithTooltip text={tooltipText} type="action">
-        {children}
+        <div>{children}</div>
       </WithTooltip>
     </AddImageMenu>
   );
@@ -44,7 +44,7 @@ const CoverImageMenu = ({
 
 const Unpopulated = () => {
   return (
-    <CoverImageMenu tooltipText="add image">
+    <CoverImageMenu tooltipText="Click to add image">
       <ImagePlaceholder />
     </CoverImageMenu>
   );

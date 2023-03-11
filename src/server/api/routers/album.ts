@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getReorderedEntities } from "~/helpers/process-data";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const albumRouter = createTRPCRouter({
@@ -82,5 +83,30 @@ export const albumRouter = createTRPCRouter({
           id: input.albumId,
         },
       });
+    }),
+
+  reorder: protectedProcedure
+    .input(
+      z.object({
+        albums: z.array(z.object({ id: z.string(), index: z.number() })),
+        activeAlbum: z.object({ id: z.string(), index: z.number() }),
+        overAlbum: z.object({ id: z.string(), index: z.number() }),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const updateFuncs = getReorderedEntities({
+        active: input.activeAlbum,
+        over: input.overAlbum,
+        entities: input.albums,
+      }).map((album) =>
+        ctx.prisma.album.update({
+          where: {
+            id: album.id,
+          },
+          data: { index: album.index },
+        })
+      );
+
+      return ctx.prisma.$transaction(updateFuncs);
     }),
 });
