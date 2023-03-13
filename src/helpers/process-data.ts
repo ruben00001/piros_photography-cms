@@ -46,3 +46,10 @@ export function getReorderedEntities<
     return [...nonActiveEntitiesUpdated, activeEntityUpdated];
   }
 }
+
+export function sortByIndex<TEntity extends { index: number }>(
+  a: TEntity,
+  b: TEntity
+) {
+  return a.index - b.index;
+}

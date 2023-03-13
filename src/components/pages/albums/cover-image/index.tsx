@@ -26,18 +26,20 @@ const CoverImageMenu = ({
   tooltipText: string;
 }) => {
   const album = useAlbumContext();
-  const { setActiveAlbumId } = useAlbumsContext();
+  const { setActiveAlbum } = useAlbumsContext();
 
   return (
     <AddImageMenu
       buttonClasses="w-full"
       onImageModalVisibilityChange={{
-        open: () => setActiveAlbumId(album.id),
+        open: () => setActiveAlbum(album),
       }}
     >
-      <WithTooltip text={tooltipText} type="action">
-        <div>{children}</div>
-      </WithTooltip>
+      {({ isOpen }) => (
+        <WithTooltip text={tooltipText} type="action" isDisabled={isOpen}>
+          <div>{children}</div>
+        </WithTooltip>
+      )}
     </AddImageMenu>
   );
 };

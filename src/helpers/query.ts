@@ -23,3 +23,11 @@ export function fuzzySearch<TEntity extends { id: string }>({
 
   return searchResult.map((item) => item.item);
 }
+
+export function findEntityById<TEntity extends { id: string }>(
+  entities: TEntity[],
+  findById: string
+) {
+  const match = entities.find((entity) => entity.id === findById);
+  return match;
+}

@@ -5,7 +5,7 @@ import { Header } from "~/components/Header";
 const TempLayout = ({ children }: { children: ReactElement }) => {
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       {children}
     </div>
   );

@@ -10,7 +10,7 @@ const AddImageMenu = ({
   buttonClasses,
   onImageModalVisibilityChange,
 }: {
-  children: ReactElement;
+  children: ReactElement | ((arg0: { isOpen: boolean }) => ReactElement);
   buttonClasses?: string;
   onImageModalVisibilityChange?: { open: () => void };
 }) => {
@@ -20,61 +20,65 @@ const AddImageMenu = ({
   return (
     <div className="relative z-10">
       <Menu>
-        <>
-          <Menu.Button className={buttonClasses}>{children}</Menu.Button>
-          <Transition
-            as={Fragment}
-            enter="transition ease-out duration-100"
-            enterFrom="transform opacity-0 scale-95"
-            enterTo="transform opacity-100 scale-100"
-            leave="transition ease-in duration-75"
-            leaveFrom="transform opacity-100 scale-100"
-            leaveTo="transform opacity-0 scale-95"
-          >
-            <Menu.Items className="absolute left-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <div className="px-1 py-1 ">
-                <MenuItem>
-                  <div
-                    className="flex cursor-pointer items-center gap-4"
-                    onClick={() => {
-                      openUploadedModal(
-                        onImageModalVisibilityChange && {
-                          onOpen() {
-                            onImageModalVisibilityChange.open();
-                          },
-                        }
-                      );
-                    }}
-                  >
-                    <span>
-                      <ImageIcon />
-                    </span>
-                    <span>Use uploaded</span>
-                  </div>
-                </MenuItem>
-                <MenuItem>
-                  <div
-                    className="flex cursor-pointer items-center gap-4"
-                    onClick={() =>
-                      openUploadModal(
-                        onImageModalVisibilityChange && {
-                          onOpen() {
-                            onImageModalVisibilityChange.open();
-                          },
-                        }
-                      )
-                    }
-                  >
-                    <span>
-                      <UploadIcon />
-                    </span>
-                    <span>Upload new</span>
-                  </div>
-                </MenuItem>
-              </div>
-            </Menu.Items>
-          </Transition>
-        </>
+        {({ open: isOpen }) => (
+          <>
+            <Menu.Button className={buttonClasses}>
+              {typeof children === "function" ? children({ isOpen }) : children}
+            </Menu.Button>
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <Menu.Items className="absolute left-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="px-1 py-1 ">
+                  <MenuItem>
+                    <div
+                      className="flex cursor-pointer items-center gap-4"
+                      onClick={() => {
+                        openUploadedModal(
+                          onImageModalVisibilityChange && {
+                            onOpen() {
+                              onImageModalVisibilityChange.open();
+                            },
+                          }
+                        );
+                      }}
+                    >
+                      <span>
+                        <ImageIcon />
+                      </span>
+                      <span>Use uploaded</span>
+                    </div>
+                  </MenuItem>
+                  <MenuItem>
+                    <div
+                      className="flex cursor-pointer items-center gap-4"
+                      onClick={() =>
+                        openUploadModal(
+                          onImageModalVisibilityChange && {
+                            onOpen() {
+                              onImageModalVisibilityChange.open();
+                            },
+                          }
+                        )
+                      }
+                    >
+                      <span>
+                        <UploadIcon />
+                      </span>
+                      <span>Upload new</span>
+                    </div>
+                  </MenuItem>
+                </div>
+              </Menu.Items>
+            </Transition>
+          </>
+        )}
       </Menu>
     </div>
   );

@@ -3,9 +3,10 @@ import {
   useSortable,
   defaultAnimateLayoutChanges,
   type AnimateLayoutChanges,
+  rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import useHovered from "~/hooks/useHovered";
+
 import WithTooltip from "../data-display/WithTooltip";
 import { GrabHandleIcon } from "../Icon";
 
@@ -13,14 +14,12 @@ const DndSortableElement = ({
   isDisabled = false,
   children,
   elementId,
-  colSpan,
-  handlePos = "in",
+  wrapperClasses,
 }: {
   children: ReactElement;
   elementId: string;
   isDisabled?: boolean;
-  colSpan?: number;
-  handlePos?: "in" | "out";
+  wrapperClasses?: string;
 }): ReactElement => {
   const animateLayoutChanges: AnimateLayoutChanges = (args) =>
     defaultAnimateLayoutChanges({ ...args, wasDragging: true });
@@ -28,6 +27,7 @@ const DndSortableElement = ({
   const {
     attributes,
     listeners,
+    setActivatorNodeRef,
     setNodeRef,
     transform,
     transition,
@@ -35,58 +35,44 @@ const DndSortableElement = ({
   } = useSortable({
     id: elementId,
     disabled: isDisabled,
+    strategy: rectSortingStrategy,
     animateLayoutChanges,
   });
-  const [grabHandleIsHovered, handlehoverHandlers] = useHovered();
-  const [containerIsHovered, containerHoverHandlers] = useHovered();
 
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
   };
 
-  const handlePosStyle =
-    handlePos === "out" ? `right-0 translate-x-full` : `right-1`;
-
   return (
-    <div
-      /*       css={[
-        tw`relative z-20`,
-        colSpan && s_container(colSpan),
-        (grabHandleIsHovered || isDragging) && tw`opacity-70`,
-        tw`transition-opacity ease-in-out duration-75 hover:z-40`,
-      ]} */
-      className="relative z-20"
-      style={style}
-      ref={setNodeRef}
-      {...containerHoverHandlers}
-    >
-      {children}
+    <>
       <div
-        className="absolute top-1/2 right-0 z-30 translate-x-full -translate-y-1/2 rounded-sm py-1"
-        /*         css={[
-          tw`absolute top-1/2 z-30 -translate-y-1/2 rounded-sm py-1`,
-          handlePosStyle,
-          grabHandleIsHovered && tw`bg-white`,
-          s_transition.toggleVisiblity(containerIsHovered),
-        ]} */
+        className={`group/dndElement relative transition-opacity duration-100 ease-in-out ${
+          isDragging ? "z-50 opacity-40" : ""
+        } ${wrapperClasses}`}
+        style={style}
+        ref={setNodeRef}
       >
-        <WithTooltip text="drag to change position" isDisabled={isDragging}>
-          <button
-            className="text-2xl"
-            style={{
-              cursor: isDragging ? "grabbing" : "grab",
-            }}
-            type="button"
-            {...attributes}
-            {...listeners}
-            {...handlehoverHandlers}
-          >
-            <GrabHandleIcon />
-          </button>
-        </WithTooltip>
+        {children}
+        <div className="absolute top-1/2 right-0 z-30 translate-x-full -translate-y-1/2 rounded-sm py-1 opacity-0 hover:opacity-100 group-hover/dndElement:opacity-100">
+          <WithTooltip text="drag to change position" isDisabled={isDragging}>
+            <button
+              className="text-2xl"
+              style={{
+                cursor: isDragging ? "grabbing" : "grab",
+              }}
+              type="button"
+              {...attributes}
+              {...listeners}
+              ref={setActivatorNodeRef}
+            >
+              <GrabHandleIcon />
+            </button>
+          </WithTooltip>
+        </div>
       </div>
-    </div>
+      {isDragging ? <div className="fixed inset-0 z-40 "></div> : null}
+    </>
   );
 };
 

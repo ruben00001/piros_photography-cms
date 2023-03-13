@@ -11,6 +11,7 @@ import useHovered from "~/hooks/useHovered";
 import { api } from "~/utils/api";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import TextInput from "~/components/forms/TextInput";
+import { findEntityById } from "~/helpers/query";
 
 type Props = {
   parent: {
@@ -71,7 +72,6 @@ type InputProps = {
   allImageTags: ImageTag[];
 };
 
-// have handled tag already on parent??
 function Input({ input, parent }: InputProps) {
   const { refetch: refetchImageTags } = api.imageTag.getAll.useQuery();
 
@@ -83,14 +83,13 @@ function Input({ input, parent }: InputProps) {
     },
   });
 
-  const { refetch: fetchFindTagWithText } =
-    api.imageTag.findTagWithText.useQuery(
-      { text: input.value },
-      { enabled: false }
-    );
+  const { refetch: findTagWithText } = api.imageTag.findTagWithText.useQuery(
+    { text: input.value },
+    { enabled: false }
+  );
 
   const handleSubmit = async () => {
-    const matchingTagQuery = await fetchFindTagWithText();
+    const matchingTagQuery = await findTagWithText();
 
     if (matchingTagQuery.data === undefined) {
       // show error in ui
@@ -99,9 +98,19 @@ function Input({ input, parent }: InputProps) {
 
     if (!matchingTagQuery.data.matchingTag) {
       createImageTag.mutate({ text: input.value });
-    } else {
-      parent.addTagTo(matchingTagQuery.data.matchingTag.id);
+      return;
     }
+
+    const tagIsRelatedParent = findEntityById(
+      parent.imageTags,
+      matchingTagQuery.data.matchingTag.id
+    );
+
+    if (tagIsRelatedParent) {
+      return;
+    }
+
+    parent.addTagTo(matchingTagQuery.data.matchingTag.id);
   };
 
   return (

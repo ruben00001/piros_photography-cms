@@ -1,4 +1,8 @@
-import { getReorderedEntities, sliceEntities } from "~/helpers/process-data";
+import {
+  getReorderedEntities,
+  sliceEntities,
+  sortByIndex,
+} from "~/helpers/process-data";
 
 describe("sliceEntities", () => {
   it("returns slice of array from index 0 up to and including index 2", () => {
@@ -44,5 +48,13 @@ describe("getReorderedEntities", () => {
       { id: "d", index: 2 },
       { id: "b", index: 3 },
     ]);
+  });
+});
+
+describe("sortByIndex", () => {
+  it("used in a sort function, it returns a simple array in ascending orderd", () => {
+    expect(
+      [{ index: 2 }, { index: 0 }, { index: 1 }].sort(sortByIndex)
+    ).toEqual([{ index: 0 }, { index: 1 }, { index: 2 }]);
   });
 });

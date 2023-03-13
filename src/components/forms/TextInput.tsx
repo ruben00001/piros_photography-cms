@@ -39,7 +39,9 @@ const TextInput = ({
       } ${wrapperAdditionalClasses}`}
     >
       <input
-        className={`absolute left-0 z-10 h-full w-full bg-transparent py-1 text-sm text-gray-600 outline-none focus:pl-xs ${inputAdditionalClasses}`}
+        className={`absolute left-0 z-10 h-full w-full bg-transparent py-1 text-sm text-gray-600 outline-none focus:pl-xs ${inputAdditionalClasses} ${
+          showBorderOnBlur && value.length ? "pl-xs" : ""
+        }`}
         id={id}
         value={value}
         onChange={(e) => setValue(e.target.value)}

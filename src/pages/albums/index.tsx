@@ -17,8 +17,14 @@ import { WarningModalProvider } from "~/components/warning-modal/Context";
 import WarningModal from "~/components/warning-modal";
 import AddAlbumModal, { AddAlbumModalButton } from "./AddAlbumModal";
 import DndSortableContext from "~/components/dnd-kit/DndSortableContext";
-import { getReorderedEntities, mapIds } from "~/helpers/process-data";
+import {
+  getReorderedEntities,
+  mapIds,
+  sortByIndex,
+} from "~/helpers/process-data";
 import DndSortableElement from "~/components/dnd-kit/DndSortableElement";
+import { findEntityById } from "~/helpers/query";
+import WithTooltip from "~/components/data-display/WithTooltip";
 
 // edit title + subtitle of page
 
@@ -79,7 +85,7 @@ const PageSuccessContentWrapper = ({
     <UploadModalVisibilityProvider>
       <UploadedModalVisibilityProvider>
         <AlbumsProvider>
-          {({ setActiveAlbumId }) => (
+          {({ setActiveAlbum: setActiveAlbumId }) => (
             <WarningModalProvider onClose={() => setActiveAlbumId(null)}>
               {children}
             </WarningModalProvider>
@@ -91,7 +97,7 @@ const PageSuccessContentWrapper = ({
 };
 
 const PageSuccessContent = () => {
-  const activeAlbum = useAlbumsContext();
+  const { activeAlbum } = useAlbumsContext();
 
   const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
     enabled: false,
@@ -106,9 +112,9 @@ const PageSuccessContent = () => {
   });
 
   const updateCoverImage = (imageId: string) =>
-    activeAlbum.activeAlbumId &&
+    activeAlbum &&
     updateCoverImageMutation.mutate({
-      albumId: activeAlbum.activeAlbumId,
+      albumId: activeAlbum.id,
       imageId,
     });
 
@@ -128,10 +134,10 @@ const PageSuccessContent = () => {
     tagIds?: string[];
     onSuccess: () => void;
   }) =>
-    activeAlbum.activeAlbumId &&
+    activeAlbum &&
     createDbImageAndAddToAlbumMutation.mutate(
       {
-        albumId: activeAlbum.activeAlbumId,
+        albumId: activeAlbum.id,
         cloudinary_public_id,
         tagIds,
       },
@@ -161,9 +167,9 @@ const PageSuccessContent = () => {
           title: "Delete album",
         }}
         onConfirm={({ closeModal }) =>
-          activeAlbum.activeAlbumId &&
+          activeAlbum &&
           deleteAlbumMutation.mutate(
-            { albumId: activeAlbum.activeAlbumId },
+            { album: { id: activeAlbum.id, index: activeAlbum.index } },
             {
               onSuccess: () => {
                 setTimeout(() => {
@@ -223,8 +229,8 @@ const FetchedAlbumsPopulated = () => {
 
   const reOrder = api.album.reorder.useMutation({
     // TODO: below not working updating state
-    /*     onMutate: async ({ activeAlbum, albums, overAlbum }) => {
-      await utils.album.getAll.cancel();
+    onMutate: ({ activeAlbum, albums, overAlbum }) => {
+      // await utils.album.getAll.cancel();
 
       const prevData = utils.album.getAll.getData();
 
@@ -239,24 +245,31 @@ const FetchedAlbumsPopulated = () => {
           return prevData;
         }
 
-        const updatedData = currData.map((album) =>
-          !mapIds(updatedEntities).includes(album.id)
-            ? album
-            : {
-                ...album,
-                index: updatedEntities.find(({ id }) => id === album.id)!.index,
-              }
-        );
-
-        console.log("updatedData:", updatedData);
+        const updatedData = currData
+          .map((album) =>
+            !mapIds(updatedEntities).includes(album.id)
+              ? album
+              : {
+                  ...album,
+                  index: updatedEntities.find(({ id }) => id === album.id)!
+                    .index,
+                }
+          )
+          .sort(sortByIndex);
 
         return updatedData;
       });
 
-      return prevData;
-    }, */
+      return { prevData };
+    },
+    onError(_err, _mutationArgs, ctx) {
+      if (!ctx?.prevData) {
+        return;
+      }
+      utils.album.getAll.setData(undefined, ctx.prevData);
+    },
     onSuccess: async () => {
-      await refetchAlbums();
+      utils.album.getAll.invalidate();
       toast(<Toast text="Albums reordered" type="success" />);
     },
   });
@@ -265,12 +278,20 @@ const FetchedAlbumsPopulated = () => {
     <div className="grid grid-cols-2 gap-xl">
       <DndSortableContext
         elementIds={mapIds(albums)}
-        onReorder={({ activeId, overId }) =>
+        onReorder={({ activeId, overId }) => {
+          const activeAlbum = findEntityById(albums, activeId)!;
+          const overAlbum = findEntityById(albums, overId)!;
+
+          const noChange = activeAlbum.id === overAlbum.id;
+
+          if (noChange) {
+            return;
+          }
+
           reOrder.mutate({
             activeAlbum: {
               id: activeId,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              index: albums.find((album) => album.id === activeId)!.index,
+              index: activeAlbum.index,
             },
             albums: albums.map((album) => ({
               id: album.id,
@@ -279,13 +300,17 @@ const FetchedAlbumsPopulated = () => {
             overAlbum: {
               id: overId,
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              index: albums.find((album) => album.id === overId)!.index,
+              index: overAlbum.index,
             },
-          })
-        }
+          });
+        }}
       >
         {albums?.map((album) => (
-          <DndSortableElement elementId={album.id} key={album.id}>
+          <DndSortableElement
+            elementId={album.id}
+            wrapperClasses="group/album relative rounded-lg border border-transparent p-sm transition-colors duration-75 ease-in-out focus-within:border-base-300 hover:border-base-200"
+            key={album.id}
+          >
             <AlbumProvider album={album}>
               <Album />
             </AlbumProvider>
@@ -298,15 +323,17 @@ const FetchedAlbumsPopulated = () => {
 
 const Album = () => {
   return (
-    <div className="group/album relative rounded-lg border border-transparent p-sm transition-colors duration-75 ease-in-out focus-within:border-base-300 hover:border-base-200">
+    <>
       <AlbumMenu />
       <AlbumTitleInput />
       <CoverImage />
-    </div>
+    </>
   );
 };
 
 const AlbumTitleInput = () => {
+  const [inputIsFocused, setInputIsFocused] = useState(false);
+
   const album = useAlbumContext();
 
   const [inputText, setInputText] = useState(album.title);
@@ -358,40 +385,43 @@ const AlbumTitleInput = () => {
   const containerRef = useRef<HTMLFormElement>(null);
 
   return (
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <form
-      className="relative"
-      onSubmit={(e) => {
-        e.preventDefault();
-        void handleSubmit();
-      }}
-      ref={containerRef}
-    >
-      <div className="form-control w-full max-w-xs">
-        <TextInput
-          setValue={(value) => setInputText(value)}
-          value={inputText}
-          placeholder="Album title"
-          inputAdditionalClasses="font-bold text-lg text-black uppercase"
-          wrapperAdditionalClasses={`${
-            !isError ? "" : "border border-my-error-content"
-          }`}
-          showPressEnter
-          isChange={isChange}
-        />
-        <label className="label">
-          {titleIsUnique === false ? (
-            <span className="label-text-alt text-my-error-content">
-              Title is already used. Album titles must be unique.
-            </span>
-          ) : null}
-        </label>
-        {/*         {isFetchingCheckTitleIsUnique ? (
+    <WithTooltip text="click to edit title" isDisabled={inputIsFocused}>
+      <form
+        className="relative"
+        onSubmit={(e) => {
+          e.preventDefault();
+          void handleSubmit();
+        }}
+        ref={containerRef}
+      >
+        <div className="form-control w-full max-w-xs">
+          <TextInput
+            setValue={(value) => setInputText(value)}
+            value={inputText}
+            placeholder="Album title"
+            inputAdditionalClasses="font-bold text-lg text-black uppercase"
+            wrapperAdditionalClasses={`${
+              !isError ? "" : "border border-my-error-content"
+            }`}
+            showPressEnter
+            isChange={isChange}
+            onBlur={() => setInputIsFocused(false)}
+            onFocus={() => setInputIsFocused(true)}
+          />
+          <label className="label">
+            {titleIsUnique === false ? (
+              <span className="label-text-alt text-my-error-content">
+                Title is already used. Album titles must be unique.
+              </span>
+            ) : null}
+          </label>
+          {/*         {isFetchingCheckTitleIsUnique ? (
           <div className="absolute left-0 top-0 z-10 grid h-full w-full place-items-center bg-gray-100 bg-opacity-70">
             <p className="loading">Checking...</p>
           </div>
         ) : null} */}
-      </div>
-    </form>
+        </div>
+      </form>
+    </WithTooltip>
   );
 };

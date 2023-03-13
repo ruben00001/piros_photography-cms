@@ -1,10 +1,11 @@
 import { createContext, type ReactElement, useContext, useState } from "react";
 
 import { checkObjectHasField } from "~/helpers/general";
+import { Album } from "~/utils/router-output-types";
 
 type AlbumsState = {
-  activeAlbumId: string | null;
-  setActiveAlbumId: (id: string | null) => void;
+  activeAlbum: Album | null;
+  setActiveAlbum: (album: Album | null) => void;
 };
 
 const Context = createContext<AlbumsState>({} as AlbumsState);
@@ -14,12 +15,12 @@ const Provider = ({
 }: {
   children: ReactElement | ((args: AlbumsState) => ReactElement);
 }) => {
-  const [activeAlbumId, setActiveAlbumId] =
-    useState<AlbumsState["activeAlbumId"]>(null);
+  const [activeAlbum, setActiveAlbum] =
+    useState<AlbumsState["activeAlbum"]>(null);
 
   const value: AlbumsState = {
-    activeAlbumId,
-    setActiveAlbumId,
+    activeAlbum,
+    setActiveAlbum,
   };
 
   return (

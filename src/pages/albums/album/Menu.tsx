@@ -31,8 +31,8 @@ const Button = () => {
 
 const Items = () => {
   const { openModal: openWarningModal } = useWarningModalContext();
-  const { id: albumId } = useAlbumContext();
-  const { setActiveAlbumId } = useAlbumsContext();
+  const album = useAlbumContext();
+  const { setActiveAlbum } = useAlbumsContext();
 
   return (
     <div className="">
@@ -41,7 +41,7 @@ const Items = () => {
           <div
             className="text-my-alert-content"
             onClick={() =>
-              openWarningModal({ onOpen: () => setActiveAlbumId(albumId) })
+              openWarningModal({ onOpen: () => setActiveAlbum(album) })
             }
           >
             <DeleteIcon />

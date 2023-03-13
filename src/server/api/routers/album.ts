@@ -76,13 +76,30 @@ export const albumRouter = createTRPCRouter({
     }),
 
   delete: protectedProcedure
-    .input(z.object({ albumId: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.prisma.album.delete({
+    .input(z.object({ album: z.object({ id: z.string(), index: z.number() }) }))
+    .mutation(async ({ ctx, input }) => {
+      const albumsToUpdateIndex = await ctx.prisma.album.findMany({
         where: {
-          id: input.albumId,
+          index: {
+            gt: input.album.index,
+          },
         },
       });
+
+      const updateFuncs = albumsToUpdateIndex.map((album) =>
+        ctx.prisma.album.update({
+          where: { id: album.id },
+          data: { index: album.index - 1 },
+        })
+      );
+
+      const deleteFunc = ctx.prisma.album.delete({
+        where: {
+          id: input.album.id,
+        },
+      });
+
+      return ctx.prisma.$transaction([...updateFuncs, deleteFunc]);
     }),
 
   reorder: protectedProcedure
