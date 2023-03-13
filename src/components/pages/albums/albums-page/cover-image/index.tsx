@@ -5,6 +5,7 @@ import WithTooltip from "~/components/data-display/WithTooltip";
 import MyCldImage from "~/components/image/MyCldImage";
 import { useAlbumsContext } from "~/context/AlbumsState";
 import { type ReactElement } from "react";
+import ImagePlaceholder from "~/components/image/Placeholder";
 
 const CoverImage = () => {
   const album = useAlbumContext();
@@ -49,16 +50,6 @@ const Unpopulated = () => {
     <CoverImageMenu tooltipText="Click to add image">
       <ImagePlaceholder />
     </CoverImageMenu>
-  );
-};
-
-const ImagePlaceholder = () => {
-  return (
-    <div className="grid aspect-video place-items-center rounded-md bg-gray-300 transition-colors duration-150 ease-in-out hover:bg-gray-200">
-      <div className="text-5xl text-gray-100">
-        <ImageIcon />
-      </div>
-    </div>
   );
 };
 

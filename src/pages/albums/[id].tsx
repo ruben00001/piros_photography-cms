@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { ReactElement, useEffect } from "react";
 import { toast } from "react-toastify";
 import Toast from "~/components/data-display/Toast";
-import AlbumPageContent from "~/components/pages/album";
+import AlbumPageContent from "~/components/pages/albums/album-page";
 import { AlbumProvider } from "~/context/AlbumState";
 import useDynamicRouteParams from "~/hooks/useDynamicRouteParams";
 import { api } from "~/utils/api";
@@ -98,7 +98,7 @@ const FetchAlbumWrapper = ({
     }
 
     setTimeout(() => {
-      toast(<Toast text="Redircetd because album not found" type="info" />);
+      toast(<Toast text="Redircted because album not found" type="info" />);
       router.push("/albums");
     }, 800);
   }, [isFetched]);

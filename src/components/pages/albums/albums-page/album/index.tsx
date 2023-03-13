@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 
 import { AlbumProvider, useAlbumContext } from "~/context/AlbumState";
 import { api } from "~/utils/api";
-import CoverImage from "~/components/pages/albums/cover-image";
+import CoverImage from "~/components/pages/albums-page/cover-image";
 import TextInput from "~/components/forms/TextInput";
 import { toast } from "react-toastify";
 import Toast from "~/components/data-display/Toast";
@@ -10,7 +10,6 @@ import DndSortableElement from "~/components/dnd-kit/DndSortableElement";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { Album } from "~/utils/router-output-types";
 import AlbumMenu from "./Menu";
-import { InfoIcon } from "~/components/Icon";
 
 const Album = ({ album }: { album: Album }) => {
   return (

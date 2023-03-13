@@ -7,12 +7,12 @@ import { useUploadedModalVisibilityContext } from "~/context/UploadedModalVisibi
 
 const AddImageMenu = ({
   children,
-  buttonClasses,
-  onImageModalVisibilityChange,
+  styles,
+  imageModals,
 }: {
   children: ReactElement | ((arg0: { isOpen: boolean }) => ReactElement);
-  buttonClasses?: string;
-  onImageModalVisibilityChange?: { open: () => void };
+  styles?: { buttonWrapper?: string };
+  imageModals?: { onVisibilityChange?: { onOpen: () => void } };
 }) => {
   const { openModal: openUploadModal } = useUploadModalVisibilityContext();
   const { openModal: openUploadedModal } = useUploadedModalVisibilityContext();
@@ -22,7 +22,7 @@ const AddImageMenu = ({
       <Menu>
         {({ open: isOpen }) => (
           <>
-            <Menu.Button className={buttonClasses}>
+            <Menu.Button className={styles?.buttonWrapper}>
               {typeof children === "function" ? children({ isOpen }) : children}
             </Menu.Button>
             <Transition
@@ -41,9 +41,9 @@ const AddImageMenu = ({
                       className="flex cursor-pointer items-center gap-4"
                       onClick={() => {
                         openUploadedModal(
-                          onImageModalVisibilityChange && {
+                          imageModals?.onVisibilityChange && {
                             onOpen() {
-                              onImageModalVisibilityChange.open();
+                              imageModals.onVisibilityChange!.onOpen();
                             },
                           }
                         );
@@ -60,9 +60,9 @@ const AddImageMenu = ({
                       className="flex cursor-pointer items-center gap-4"
                       onClick={() =>
                         openUploadModal(
-                          onImageModalVisibilityChange && {
+                          imageModals?.onVisibilityChange && {
                             onOpen() {
-                              onImageModalVisibilityChange.open();
+                              imageModals.onVisibilityChange!.onOpen();
                             },
                           }
                         )
