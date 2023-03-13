@@ -10,17 +10,18 @@ export const albumRouter = createTRPCRouter({
     });
   }),
 
-  /*   getOne: protectedProcedure
+  getOne: protectedProcedure
     .input(z.object({ albumId: z.string() }))
     .query(({ ctx, input }) => {
-      return ctx.prisma.album.findUnique({ where: { id: input.albumId } });
+      return ctx.prisma.album.findUnique({
+        where: { id: input.albumId },
+        include: { coverImage: true },
+      });
     }),
- */
+
   create: protectedProcedure
     .input(z.object({ title: z.string(), index: z.optional(z.number()) }))
     .mutation(async ({ ctx, input }) => {
-      // const count = await ctx.prisma.album.count()
-
       const index = input.index || (await ctx.prisma.album.count());
 
       return ctx.prisma.album.create({
@@ -125,5 +126,18 @@ export const albumRouter = createTRPCRouter({
       );
 
       return ctx.prisma.$transaction(updateFuncs);
+    }),
+
+  updatePublishStatus: protectedProcedure
+    .input(z.object({ albumId: z.string(), isPublished: z.boolean() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.album.update({
+        where: {
+          id: input.albumId,
+        },
+        data: {
+          published: input.isPublished,
+        },
+      });
     }),
 });

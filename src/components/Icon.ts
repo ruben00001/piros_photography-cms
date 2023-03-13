@@ -12,6 +12,7 @@ import {
   MagnifyingGlass,
   DotsThreeOutline,
   DotsSixVertical,
+  Info,
 } from "phosphor-react";
 
 export {
@@ -29,4 +30,5 @@ export {
   MagnifyingGlass as SearchIcon,
   DotsThreeOutline as MenuIcon,
   DotsSixVertical as GrabHandleIcon,
+  Info as InfoIcon,
 };

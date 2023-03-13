@@ -1,11 +1,11 @@
-import { AlertIcon, ErrorIcon, SuccessIcon } from "../Icon";
+import { AlertIcon, ErrorIcon, InfoIcon, SuccessIcon } from "../Icon";
 
 const Toast = ({
   text,
   type,
 }: {
   text: string;
-  type: "error" | "success" | "alert";
+  type: "error" | "success" | "alert" | "info";
 }) => {
   return (
     <div
@@ -18,15 +18,19 @@ const Toast = ({
             ? "bg-my-alert text-my-alert-content"
             : type === "error"
             ? "bg-my-error text-my-error-content"
-            : "bg-my-success text-my-success-content"
+            : type === "success"
+            ? "bg-my-success text-my-success-content"
+            : "bg-blue-100 text-blue-500"
         }`}
       >
         {type === "error" ? (
           <ErrorIcon />
         ) : type === "success" ? (
           <SuccessIcon />
-        ) : (
+        ) : type === "alert" ? (
           <AlertIcon />
+        ) : (
+          <InfoIcon />
         )}
       </div>
       <div className="ml-3 text-sm font-normal">{text}</div>
