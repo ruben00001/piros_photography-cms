@@ -1,28 +1,22 @@
 // crud image
 // title
 
-import UploadModal from "~/components/image/add-image/upload-modal";
-import UploadedModal from "~/components/image/add-image/uploaded-modal";
-import { UploadedModalVisibilityProvider } from "~/context/UploadedModalVisibilityState";
-import { UploadModalVisibilityProvider } from "~/context/UploadModalVisibilityState";
-import MetaPanel from "./MetaPanel";
+import PageContent from "./page-content";
+import PageInit from "./PageInit";
+import ProvidersInit from "./ProvidersInit";
 
 // album image: title, desc.
 
-const AlbumPageContent = () => {
+const AlbumPage = () => {
   return (
-    <UploadModalVisibilityProvider>
-      <UploadedModalVisibilityProvider>
-        <>
-          <div>
-            <MetaPanel />
-          </div>
-          <UploadedModal onSelectImage={() => null} />
-          <UploadModal createDbImageFunc={() => null} />
-        </>
-      </UploadedModalVisibilityProvider>
-    </UploadModalVisibilityProvider>
+    <PageInit>
+      {({ album }) => (
+        <ProvidersInit album={album}>
+          <PageContent />
+        </ProvidersInit>
+      )}
+    </PageInit>
   );
 };
 
-export default AlbumPageContent;
+export default AlbumPage;

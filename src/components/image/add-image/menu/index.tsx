@@ -18,7 +18,7 @@ const AddImageMenu = ({
   const { openModal: openUploadedModal } = useUploadedModalVisibilityContext();
 
   return (
-    <div className="relative z-10">
+    <div className="relative z-20">
       <Menu>
         {({ open: isOpen }) => (
           <>
@@ -43,6 +43,8 @@ const AddImageMenu = ({
                         openUploadedModal(
                           imageModals?.onVisibilityChange && {
                             onOpen() {
+                              console.log("HELLO");
+
                               imageModals.onVisibilityChange!.onOpen();
                             },
                           }

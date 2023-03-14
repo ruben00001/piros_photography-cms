@@ -3,6 +3,13 @@ import { getReorderedEntities } from "~/helpers/process-data";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const albumRouter = createTRPCRouter({
+  albumsPageGetAll: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.album.findMany({
+      orderBy: { index: "asc" },
+      include: { coverImage: true },
+    });
+  }),
+
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.album.findMany({
       orderBy: { index: "asc" },
@@ -11,11 +18,20 @@ export const albumRouter = createTRPCRouter({
   }),
 
   getOne: protectedProcedure
-    .input(z.object({ albumId: z.string() }))
+    .input(
+      z.object({
+        albumId: z.string(),
+        includeImages: z.optional(z.boolean()),
+      })
+    )
     .query(({ ctx, input }) => {
       return ctx.prisma.album.findUnique({
         where: { id: input.albumId },
-        include: { coverImage: true },
+        include: {
+          coverImage: true,
+          images: input.includeImages ? { include: { image: true } } : false,
+        },
+        // include: { coverImage: true, images: input.includeImages || false },
       });
     }),
 
@@ -137,6 +153,23 @@ export const albumRouter = createTRPCRouter({
         },
         data: {
           published: input.isPublished,
+        },
+      });
+    }),
+
+  addImage: protectedProcedure
+    .input(z.object({ albumId: z.string(), imageId: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.album.update({
+        where: {
+          id: input.albumId,
+        },
+        data: {
+          images: {
+            create: {
+              imageId: input.imageId,
+            },
+          },
         },
       });
     }),

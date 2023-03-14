@@ -1,6 +1,5 @@
 import { type ReactElement } from "react";
-
-import { useAlbumContext } from "~/context/AlbumState";
+import { Album as BaseAlbum, Image as BaseImage } from "@prisma/client";
 
 import AddImageMenu from "~/components/image/add-image/menu";
 import WithTooltip from "~/components/data-display/WithTooltip";
@@ -8,20 +7,17 @@ import MyCldImage from "~/components/image/MyCldImage";
 import ImagePlaceholder from "~/components/image/Placeholder";
 
 type Props = {
-  addImageMenu: { modals: { onVisibilityChange?: { onOpen: () => void } } };
+  addImageMenu?: { modals?: { onVisibilityChange?: { onOpen: () => void } } };
+  album: BaseAlbum & { coverImage: BaseImage | null };
 };
 
-const CoverImage = (props: Props) => {
-  const album = useAlbumContext();
-
-  return (
-    <div className="">
-      {!album.coverImageId ? <Unpopulated /> : <Populated />}
-    </div>
+export const CoverImage = ({ album, addImageMenu }: Props) => {
+  return !album.coverImageId ? (
+    <Unpopulated />
+  ) : (
+    <Populated album={album} addImageMenu={addImageMenu} />
   );
 };
-
-export default CoverImage;
 
 const CoverImageMenu = ({
   children,
@@ -32,12 +28,10 @@ const CoverImageMenu = ({
   tooltipText: string;
   addImageMenu: Props["addImageMenu"];
 }) => {
-  const album = useAlbumContext();
-
   return (
     <AddImageMenu
       styles={{ buttonWrapper: "w-full" }}
-      imageModals={addImageMenu.modals}
+      imageModals={addImageMenu?.modals}
     >
       {({ isOpen }) => (
         <WithTooltip text={tooltipText} type="action" isDisabled={isOpen}>
@@ -48,24 +42,38 @@ const CoverImageMenu = ({
   );
 };
 
-const Unpopulated = () => {
+const Unpopulated = ({
+  addImageMenu,
+}: {
+  addImageMenu?: Props["addImageMenu"];
+}) => {
   return (
-    <CoverImageMenu tooltipText="Click to add image">
+    <CoverImageMenu
+      addImageMenu={addImageMenu}
+      tooltipText="Click to add image"
+    >
       <ImagePlaceholder />
     </CoverImageMenu>
   );
 };
 
-const Populated = () => {
-  const album = useAlbumContext();
-
+const Populated = ({
+  addImageMenu,
+  album,
+}: {
+  addImageMenu?: Props["addImageMenu"];
+  album: Props["album"];
+}) => {
   if (!album.coverImage) {
     // would really be an error if there was a coverimageId but no cover image
     return null;
   }
 
   return (
-    <CoverImageMenu tooltipText="Click to change image">
+    <CoverImageMenu
+      addImageMenu={addImageMenu}
+      tooltipText="Click to change image"
+    >
       <div className="">
         <MyCldImage
           fit="object-cover"

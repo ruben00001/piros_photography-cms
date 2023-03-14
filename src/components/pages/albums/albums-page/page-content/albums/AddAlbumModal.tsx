@@ -53,7 +53,7 @@ export const AddAlbumModalButton = () => {
       <span className="text-sm">
         <PlusIcon weight="bold" />
       </span>
-      <span className="text-sm font-medium">New</span>
+      <span className="text-sm font-medium">New album</span>
     </button>
   );
 };
@@ -88,9 +88,7 @@ const TitleInput = () => {
     { enabled: false }
   );
 
-  // const isError = titleIsUnique === false;
-
-  const { refetch: refetchAlbums } = api.album.getAll.useQuery();
+  const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery();
 
   const createAlbum = api.album.create.useMutation({
     onSuccess: () => {

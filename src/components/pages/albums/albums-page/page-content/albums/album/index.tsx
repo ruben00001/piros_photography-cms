@@ -1,17 +1,21 @@
 import { useState, useRef } from "react";
-
-import { AlbumProvider, useAlbumContext } from "~/context/AlbumState";
-import { api } from "~/utils/api";
-import CoverImage from "~/components/pages/albums-page/cover-image";
-import TextInput from "~/components/forms/TextInput";
 import { toast } from "react-toastify";
+
+import { AlbumProvider, useAlbumContext } from "../../../_context/AlbumState";
+import { useAlbumsContext } from "../../../_context/AlbumsState";
+
+import { api, RouterOutputs } from "~/utils/api";
+
+import TextInput from "~/components/forms/TextInput";
 import Toast from "~/components/data-display/Toast";
 import DndSortableElement from "~/components/dnd-kit/DndSortableElement";
 import WithTooltip from "~/components/data-display/WithTooltip";
-import { Album } from "~/utils/router-output-types";
 import AlbumMenu from "./Menu";
+import { CoverImage } from "~/album-containers";
 
-const Album = ({ album }: { album: Album }) => {
+type AlbumType = RouterOutputs["album"]["albumsPageGetAll"][0];
+
+const Album = ({ album }: { album: AlbumType }) => {
   return (
     <DndSortableElement
       elementId={album.id}
@@ -28,11 +32,21 @@ const Album = ({ album }: { album: Album }) => {
 export default Album;
 
 const AlbumContent = () => {
+  const album = useAlbumContext();
+  const { setActiveAlbum } = useAlbumsContext();
+
   return (
     <div>
       <AlbumMenu />
       <AlbumTitleInput />
-      <CoverImage />
+      <CoverImage
+        addImageMenu={{
+          modals: {
+            onVisibilityChange: { onOpen: () => setActiveAlbum(album) },
+          },
+        }}
+        album={album}
+      />
       <MetaInfo />
     </div>
   );

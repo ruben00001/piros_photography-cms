@@ -88,7 +88,6 @@ const UploadFunctionality = () => {
             closeModal();
 
             toast(<Toast text="uploaded image" type="success" />);
-            toast(<Toast text="updated album cover image" type="success" />);
           }, 800);
         },
         tagIds,

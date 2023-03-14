@@ -10,6 +10,7 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
         albumId: z.string(),
         cloudinary_public_id: z.string(),
         tagIds: z.optional(z.array(z.string())),
+        imageType: z.union([z.literal("body"), z.literal("cover")]),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -31,13 +32,16 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
         where: {
           id: input.albumId,
         },
-        data: {
-          coverImage: {
-            connect: {
-              id: newImageId,
-            },
-          },
-        },
+        data:
+          input.imageType === "body"
+            ? { images: { create: { imageId: newImageId } } }
+            : {
+                coverImage: {
+                  connect: {
+                    id: newImageId,
+                  },
+                },
+              },
       });
 
       return ctx.prisma.$transaction([createImage, addImageToAlbum]);

@@ -1,14 +1,14 @@
 import { createContext, type ReactElement, useContext, useState } from "react";
+import { RouterOutputs } from "~/utils/api";
 
-import { checkObjectHasField } from "~/helpers/general";
-import { AlbumRouterOutputs } from "~/utils/router-output-types";
+type AlbumType = RouterOutputs["album"]["albumsPageGetAll"][0];
 
 type AlbumsState = {
-  activeAlbum: AlbumRouterOutputs | null;
-  setActiveAlbum: (album: AlbumRouterOutputs | null) => void;
+  activeAlbum: AlbumType | null;
+  setActiveAlbum: (album: AlbumType | null) => void;
 };
 
-const Context = createContext<AlbumsState>({} as AlbumsState);
+const Context = createContext<AlbumsState | null>(null);
 
 const Provider = ({
   children,
@@ -30,12 +30,10 @@ const Provider = ({
   );
 };
 
-// should use zod for instead of checkObjectHasField?
 const useThisContext = () => {
   const context = useContext(Context);
 
-  const contextIsPopulated = checkObjectHasField(context);
-  if (!contextIsPopulated) {
+  if (!context) {
     throw new Error("useAlbumsState must be used within its provider!");
   }
 

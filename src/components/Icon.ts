@@ -13,6 +13,7 @@ import {
   DotsThreeOutline,
   DotsSixVertical,
   Info,
+  FolderSimplePlus,
 } from "phosphor-react";
 
 export {
@@ -31,4 +32,5 @@ export {
   DotsThreeOutline as MenuIcon,
   DotsSixVertical as GrabHandleIcon,
   Info as InfoIcon,
+  FolderSimplePlus as AddFirstAlbumIcon,
 };

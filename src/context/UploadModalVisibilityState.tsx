@@ -22,26 +22,37 @@ const store = createStore<ModalVisibilityState>()((set) => ({
   },
 }));
 
-const MyContext = createContext<typeof store | null>(null);
+const MyContext = createContext<ModalVisibilityState | null>(null);
 
 export const UploadModalVisibilityProvider = ({
   children,
+  onClose,
 }: {
   children: ReactElement | ((args: ModalVisibilityState) => ReactElement);
+  onClose?: () => void;
 }) => {
   const myStore = useStore(store);
 
+  const value: ModalVisibilityState = {
+    closeModal: () => {
+      onClose && onClose();
+      myStore.closeModal();
+    },
+    isOpen: myStore.isOpen,
+    openModal: myStore.openModal,
+  };
+
   return (
-    <MyContext.Provider value={store}>
-      {typeof children === "function" ? children(myStore) : children}
+    <MyContext.Provider value={value}>
+      {typeof children === "function" ? children(value) : children}
     </MyContext.Provider>
   );
 };
 
 export const useUploadModalVisibilityContext = () => {
-  const store = useContext(MyContext);
-  if (!store) {
+  const value = useContext(MyContext);
+  if (!value) {
     throw new Error("Missing UploadedModalVisibility Provider");
   }
-  return useStore(store);
+  return value;
 };

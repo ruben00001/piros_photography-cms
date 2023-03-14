@@ -18,7 +18,8 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "~/album-containers": ["./src/components/pages/albums/_containers"]
     },
     "noUnusedLocals": false,
     "noUnusedParameters": false

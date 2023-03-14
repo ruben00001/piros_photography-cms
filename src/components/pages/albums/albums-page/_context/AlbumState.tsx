@@ -1,34 +1,34 @@
 import { createContext, type ReactElement, useContext } from "react";
 
-import { checkObjectHasField } from "~/helpers/general";
-import { type Album } from "~/utils/router-output-types";
+import { RouterOutputs } from "~/utils/api";
 
-type AlbumState = Album;
+// todo: Album type differs with each type of fetch; differs with what's 'included' in the fetch.
+type AlbumType = RouterOutputs["album"]["albumsPageGetAll"][0];
 
-const Context = createContext<AlbumState>({} as AlbumState);
+type Value = AlbumType;
 
-const Provider = ({
+const Context = createContext<Value | null>(null);
+
+function Provider({
   children,
   album,
 }: {
-  children: ReactElement | ((args: AlbumState) => ReactElement);
-  album: Album;
-}) => {
-  const value: AlbumState = album;
+  children: ReactElement | ((args: Value) => ReactElement);
+  album: AlbumType;
+}) {
+  const value: Value = album;
 
   return (
     <Context.Provider value={value}>
       {typeof children === "function" ? children(value) : children}
     </Context.Provider>
   );
-};
+}
 
-// should use zod for instead of checkObjectHasField?
 const useThisContext = () => {
   const context = useContext(Context);
 
-  const contextIsPopulated = checkObjectHasField(context);
-  if (!contextIsPopulated) {
+  if (!context) {
     throw new Error("useAlbumState must be used within its provider!");
   }
 
