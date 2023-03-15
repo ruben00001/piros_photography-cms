@@ -10,7 +10,14 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
         albumId: z.string(),
         cloudinary_public_id: z.string(),
         tagIds: z.optional(z.array(z.string())),
-        imageType: z.union([z.literal("body"), z.literal("cover")]),
+        imageType: z.union([
+          z.literal("body-add"),
+          z.literal("cover"),
+          z.object({
+            replace: z.object({ where: z.object({ id: z.string() }) }),
+          }),
+        ]),
+        index: z.number(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -28,13 +35,15 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
         },
       });
 
-      const addImageToAlbum = ctx.prisma.album.update({
+      /*       const addImageToAlbum = ctx.prisma.album.update({
         where: {
           id: input.albumId,
         },
         data:
-          input.imageType === "body"
-            ? { images: { create: { imageId: newImageId } } }
+          input.imageType === "body-add"
+            ? {
+                images: { create: { imageId: newImageId, index: input.index } },
+              }
             : {
                 coverImage: {
                   connect: {
@@ -44,6 +53,57 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
               },
       });
 
-      return ctx.prisma.$transaction([createImage, addImageToAlbum]);
+      const updateAlbumImage =
+        typeof input.imageType === "object" &&
+        ctx.prisma.album.update({
+          where: {
+            id: input.albumId,
+          },
+          data: {
+            images: {
+              update: {
+                where: { id: input.imageType.replace.where.id },
+                data: { imageId: newImageId },
+              },
+            },
+          },
+        }); */
+
+      const updateAlbumImages =
+        typeof input.imageType === "object"
+          ? ctx.prisma.album.update({
+              where: {
+                id: input.albumId,
+              },
+              data: {
+                images: {
+                  update: {
+                    where: { id: input.imageType.replace.where.id },
+                    data: { imageId: newImageId },
+                  },
+                },
+              },
+            })
+          : ctx.prisma.album.update({
+              where: {
+                id: input.albumId,
+              },
+              data:
+                input.imageType === "body-add"
+                  ? {
+                      images: {
+                        create: { imageId: newImageId, index: input.index },
+                      },
+                    }
+                  : {
+                      coverImage: {
+                        connect: {
+                          id: newImageId,
+                        },
+                      },
+                    },
+            });
+
+      return ctx.prisma.$transaction([createImage, updateAlbumImages]);
     }),
 });

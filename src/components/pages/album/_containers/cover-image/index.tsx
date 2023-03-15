@@ -79,8 +79,11 @@ const Populated = ({
           fit="object-cover"
           heightSetByContainer={{ isSetByContainer: false, approxVal: 800 }}
           src={album.coverImage.cloudinary_public_id}
-          imgAdditionalClasses="transition-transform duration-200 ease-in-out group-hover:scale-95"
-          wrapperAdditionalClasses="overflow-hidden transition-colors duration-150 ease-in-out hover:rounded-md hover:bg-gray-100 "
+          styles={{
+            img: "transition-transform duration-200 ease-in-out group-hover:scale-95",
+            wrapper:
+              "overflow-hidden transition-colors duration-150 ease-in-out hover:rounded-md hover:bg-gray-100 ",
+          }}
         />
       </div>
     </CoverImageMenu>

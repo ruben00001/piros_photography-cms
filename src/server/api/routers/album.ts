@@ -14,7 +14,6 @@ export const albumRouter = createTRPCRouter({
     .input(
       z.object({
         albumId: z.string(),
-        includeImages: z.optional(z.boolean()),
       })
     )
     .query(({ ctx, input }) => {
@@ -22,7 +21,7 @@ export const albumRouter = createTRPCRouter({
         where: { id: input.albumId },
         include: {
           coverImage: true,
-          images: input.includeImages ? { include: { image: true } } : false,
+          images: { include: { image: true } },
         },
         // include: { coverImage: true, images: input.includeImages || false },
       });
@@ -164,6 +163,31 @@ export const albumRouter = createTRPCRouter({
             create: {
               index: input.index,
               imageId: input.imageId,
+            },
+          },
+        },
+      });
+    }),
+
+  updateImage: protectedProcedure
+    .input(
+      z.object({
+        where: z.object({ albumId: z.string(), imageId: z.string() }),
+        data: z.object({ imageId: z.string() }),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.album.update({
+        where: {
+          id: input.where.albumId,
+        },
+        data: {
+          images: {
+            update: {
+              where: {
+                id: input.where.imageId,
+              },
+              data: { imageId: input.data.imageId },
             },
           },
         },

@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
 import { useAlbumContext } from "../_context/AlbumState";
@@ -16,7 +17,6 @@ import {
   OnSelectImage,
   UploadedPanel,
 } from "~/components/image/add-image/uploaded-modal";
-import { useRouter } from "next/router";
 import { WarningPanel as WarningPanel_ } from "~/components/warning-modal";
 
 // album image: title, desc.
@@ -37,13 +37,15 @@ const PageContent = () => {
 export default PageContent;
 
 const ModalPanels = () => {
-  const createImageAndAddToAlbum = useCreateImageAndAddToAlbum();
+  // const createImageAndAddToAlbum = useCreateImageAndAddToAlbum();
   const addImageToAlbum = useAddImageToAlbum();
 
   return (
     <>
-      <UploadPanel onUploadImage={createImageAndAddToAlbum} />
-      <UploadedPanel onSelectImage={addImageToAlbum} />
+      {/* <UploadPanel onUploadImage={createImageAndAddToAlbum} /> */}
+      {addImageToAlbum ? (
+        <UploadedPanel onSelectImage={addImageToAlbum} />
+      ) : null}
       <WarningPanel />
     </>
   );
@@ -54,7 +56,7 @@ const useCreateImageAndAddToAlbum = (): OnUploadImage => {
   const { imageContext } = useImageTypeContext();
 
   const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
-    { albumId: album.id, includeImages: true },
+    { albumId: album.id },
     {
       enabled: false,
     }
@@ -68,9 +70,7 @@ const useCreateImageAndAddToAlbum = (): OnUploadImage => {
         setTimeout(() => {
           toast(
             <Toast
-              text={
-                imageContext === "body" ? "added image" : "updated cover image"
-              }
+              text={imageContext === "cover" ? "updated cover image" : "added"}
               type="success"
             />
           );
@@ -79,24 +79,26 @@ const useCreateImageAndAddToAlbum = (): OnUploadImage => {
     });
 
   return ({ cloudinary_public_id, tagIds, onSuccess }) =>
-    imageContext &&
-    createImageAndAddToAlbumMutation.mutate(
-      {
-        albumId: album.id,
-        cloudinary_public_id,
-        tagIds,
-        imageType: imageContext,
-      },
-      { onSuccess }
-    );
+    imageContext === "body-add" ||
+    (imageContext === "cover" &&
+      createImageAndAddToAlbumMutation.mutate(
+        {
+          albumId: album.id,
+          cloudinary_public_id,
+          tagIds,
+          imageType: imageContext === "cover" ? "cover" : "body",
+          index: album.images.length,
+        },
+        { onSuccess }
+      ));
 };
 
-const useAddImageToAlbum = (): OnSelectImage => {
+const useAddImageToAlbum = (): OnSelectImage | null => {
   const album = useAlbumContext();
   const { imageContext } = useImageTypeContext();
 
   const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
-    { albumId: album.id, includeImages: true },
+    { albumId: album.id },
     {
       enabled: false,
     }
@@ -118,14 +120,31 @@ const useAddImageToAlbum = (): OnSelectImage => {
     },
   });
 
+  const updateBodyImageMutation = api.album.updateImage.useMutation({
+    onSuccess: async () => {
+      await refetchAlbum();
+
+      toast(<Toast text="updated image" type="success" />);
+    },
+  });
+
+  if (!imageContext) {
+    return null;
+  }
+
   return ({ imageId }) =>
-    imageContext && imageContext === "body"
+    imageContext === "body-add"
       ? addBodyImageMutation.mutate({
           albumId: album.id,
           imageId,
           index: album.images.length,
         })
-      : updateCoverImageMutation.mutate({ albumId: album.id, imageId });
+      : imageContext === "cover"
+      ? updateCoverImageMutation.mutate({ albumId: album.id, imageId })
+      : updateBodyImageMutation.mutate({
+          data: { imageId },
+          where: { albumId: album.id, imageId: imageContext.replace.where.id },
+        });
 };
 
 const WarningPanel = () => {

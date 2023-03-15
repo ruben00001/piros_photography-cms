@@ -41,7 +41,6 @@ const AlbumContent = () => {
     <div className="flex h-full flex-col">
       <AlbumMenu />
       <AlbumTitleInput />
-
       <CoverImage
         addImageMenu={{
           modals: {

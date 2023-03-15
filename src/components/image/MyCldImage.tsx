@@ -7,20 +7,21 @@ const MyCldImage = ({
   src,
   fit,
   heightSetByContainer = true,
-  imgAdditionalClasses,
-  wrapperAdditionalClasses,
+  styles,
 }: {
   src: string;
   fit: "object-contain" | "object-cover";
   heightSetByContainer: true | { isSetByContainer: false; approxVal: number };
-  wrapperAdditionalClasses?: string;
-  imgAdditionalClasses?: string;
+  styles?: {
+    wrapper?: string;
+    img?: string;
+  };
 }) => {
   const [blurImgIsLoaded, setBlurImgIsLoaded] = useState(false);
   const [qualityImgIsLoaded, setQualityImgIsLoaded] = useState(false);
 
   return (
-    <div className={`group relative ${wrapperAdditionalClasses || ""}`}>
+    <div className={`group relative ${styles?.wrapper}`}>
       {/* <div className="relative flex h-full flex-col"> */}
       <div
         className={`my-abs-center transition-opacity ${
@@ -52,7 +53,7 @@ const MyCldImage = ({
               width={width}
               height={height}
               src={src}
-              className={`h-auto w-full ${fit} ${imgAdditionalClasses || ""}`}
+              className={`h-auto w-full ${fit} ${styles?.img}`}
               onLoad={() => setQualityImgIsLoaded(true)}
               alt=""
             />

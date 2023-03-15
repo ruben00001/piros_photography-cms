@@ -89,7 +89,14 @@ const PublishToggleBadge = () => {
   const publishMutation = api.album.updatePublishStatus.useMutation({
     onSuccess: async () => {
       await refetchAlbum();
-      toast(<Toast text="Album set to published" type="success" />);
+      toast(
+        <Toast
+          text={
+            album.published ? "Album unpublished" : "Album set to published"
+          }
+          type="success"
+        />
+      );
     },
     onError: () => {
       toast(

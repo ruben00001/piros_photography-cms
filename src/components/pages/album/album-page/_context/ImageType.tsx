@@ -1,8 +1,14 @@
 import { createContext, type ReactElement, useContext, useState } from "react";
 
+type ImageContext =
+  | null
+  | "cover"
+  | "body-add"
+  | { replace: { where: { id: string } } };
+
 type State = {
-  imageContext: null | "cover" | "body";
-  setImageContext: (imageContext: null | "cover" | "body") => void;
+  imageContext: ImageContext;
+  setImageContext: (imageContext: ImageContext) => void;
 };
 
 const Context = createContext<State | null>(null);
@@ -12,7 +18,7 @@ function Provider({
 }: {
   children: ReactElement | ((args: State) => ReactElement);
 }) {
-  const [imageContext, setImageContext] = useState<State["imageContext"]>(null);
+  const [imageContext, setImageContext] = useState<ImageContext>(null);
 
   const value = { imageContext, setImageContext };
 
