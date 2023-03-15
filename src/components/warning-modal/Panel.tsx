@@ -1,11 +1,11 @@
 import { Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { ErrorIcon, TickIcon } from "../Icon";
-import MyModal from "../MyModal";
+import MyModalPanel from "../MyModalPanel";
 import Spinner from "../Spinner";
 import { useWarningModalContext } from "./Context";
 
-const WarningModal = ({
+export const WarningPanel = ({
   text,
   onConfirm,
   invokedFuncStatus,
@@ -17,7 +17,7 @@ const WarningModal = ({
   const { closeModal, isOpen } = useWarningModalContext();
 
   return (
-    <MyModal
+    <MyModalPanel
       onClose={() => {
         closeModal();
       }}
@@ -109,8 +109,6 @@ const WarningModal = ({
           </Transition>
         ) : null}
       </div>
-    </MyModal>
+    </MyModalPanel>
   );
 };
-
-export default WarningModal;

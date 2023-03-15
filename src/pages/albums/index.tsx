@@ -1,4 +1,4 @@
-import AlbumsPageContent from "~/components/pages/albums/albums-page/index";
+import AlbumsPageContent from "~/components/pages/album/albums-page/index";
 
 export default function AlbumsPage() {
   return <AlbumsPageContent />;

@@ -13,7 +13,7 @@ type Props = {
 
 export const CoverImage = ({ album, addImageMenu }: Props) => {
   return !album.coverImageId ? (
-    <Unpopulated />
+    <Unpopulated addImageMenu={addImageMenu} />
   ) : (
     <Populated album={album} addImageMenu={addImageMenu} />
   );

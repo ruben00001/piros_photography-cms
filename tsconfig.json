@@ -19,7 +19,7 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "~/album-containers": ["./src/components/pages/albums/_containers"]
+      "~/album-containers": ["src/components/pages/album/_containers"]
     },
     "noUnusedLocals": false,
     "noUnusedParameters": false

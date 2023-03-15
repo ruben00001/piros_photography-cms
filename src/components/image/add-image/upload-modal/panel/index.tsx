@@ -1,48 +1,55 @@
 import Image from "next/image";
 import { type ChangeEvent, useState, forwardRef } from "react";
-import { Dialog } from "@headlessui/react";
 import { toast } from "react-toastify";
 
-import { FileImageIcon, TickIcon } from "~/components/Icon";
-import Tags from "~/components/image/add-image/upload-modal/tags";
 import {
   StringArrStateProvider as TagsIdProvider,
   useStringArrStateContext as useTagsIdContext,
 } from "~/context/StringArrState";
-import { useUploadModalVisibilityContext } from "~/context/UploadModalVisibilityState";
-import { handleUploadImage } from "~/helpers/cloudinary";
 import { api } from "~/utils/api";
+
+import { FileImageIcon, TickIcon } from "~/components/Icon";
+import Tags from "~/components/image/add-image/upload-modal/panel/tags";
+import { handleUploadImage } from "~/helpers/cloudinary";
 import Spinner from "~/components/Spinner";
-import { useUploadModalContext } from "~/context/UploadModalState";
 import Toast from "~/components/data-display/Toast";
+import MyModalPanel from "~/components/MyModalPanel";
+import { useUploadModalVisibilityContext } from "../VisibilityContext";
 
-// .env cloudinary
+export type OnUploadImage = (arg0: {
+  cloudinary_public_id: string;
+  onSuccess: () => void;
+  tagIds?: string[];
+}) => void;
 
-// eslint-disable-next-line react/display-name
-export const Panel = forwardRef<HTMLDivElement>((_, ref) => {
+export const UploadPanel = ({
+  onUploadImage,
+}: {
+  onUploadImage: OnUploadImage;
+}) => {
+  const { closeModal, isOpen } = useUploadModalVisibilityContext();
+
   return (
-    <Dialog.Panel
-      className="relative w-full max-w-xl transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
-      ref={ref}
-    >
-      <Dialog.Title
-        as="h3"
-        className="border-b border-b-base-300 pb-sm leading-6 text-base-content"
-      >
-        Upload Image
-      </Dialog.Title>
-      <div className="mt-md">
-        <TagsIdProvider>
-          <UploadFunctionality />
-        </TagsIdProvider>
+    <MyModalPanel isOpen={isOpen} onClose={closeModal}>
+      <div className="relative w-[600px] max-w-[90vw] rounded-2xl bg-white p-6 text-left shadow-xl">
+        <h3 className="border-b border-b-base-300 pb-sm leading-6 text-base-content">
+          Upload Image
+        </h3>
+        <div className="mt-md">
+          <TagsIdProvider>
+            <UploadFunctionality onUploadImage={onUploadImage} />
+          </TagsIdProvider>
+        </div>
       </div>
-    </Dialog.Panel>
+    </MyModalPanel>
   );
-});
+};
 
-export default Panel;
-
-const UploadFunctionality = () => {
+const UploadFunctionality = ({
+  onUploadImage,
+}: {
+  onUploadImage: OnUploadImage;
+}) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [createImageStatus, setCreateImageStatus] = useState<
     "idle" | "pending" | "error" | "success"
@@ -50,8 +57,6 @@ const UploadFunctionality = () => {
 
   const { closeModal } = useUploadModalVisibilityContext();
   const { strings: tagIds } = useTagsIdContext();
-
-  const { createDbImageFunc } = useUploadModalContext();
 
   const { refetch: fetchSignature } = api.image.createSignature.useQuery(
     {
@@ -79,7 +84,7 @@ const UploadFunctionality = () => {
         signatureData,
       });
 
-      createDbImageFunc({
+      onUploadImage({
         cloudinary_public_id,
         onSuccess: () => {
           setCreateImageStatus("success");
@@ -110,7 +115,7 @@ const UploadFunctionality = () => {
         <button
           className="my-btn my-btn-neutral"
           type="button"
-          onClick={closeModal}
+          onClick={() => closeModal()}
         >
           {!imageFile ? "close" : "cancel"}
         </button>

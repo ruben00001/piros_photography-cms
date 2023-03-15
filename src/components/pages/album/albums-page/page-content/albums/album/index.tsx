@@ -11,7 +11,7 @@ import Toast from "~/components/data-display/Toast";
 import DndSortableElement from "~/components/dnd-kit/DndSortableElement";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import AlbumMenu from "./Menu";
-import { CoverImage } from "~/album-containers";
+import { CoverImage } from "~/components/pages/album/_containers";
 
 type AlbumType = RouterOutputs["album"]["albumsPageGetAll"][0];
 
@@ -20,7 +20,6 @@ const Album = ({ album }: { album: AlbumType }) => {
     <DndSortableElement
       elementId={album.id}
       wrapperClasses="group/album relative rounded-lg border border-transparent p-sm transition-colors duration-75 ease-in-out focus-within:border-base-300 hover:border-base-200"
-      key={album.id}
     >
       <AlbumProvider album={album}>
         <AlbumContent />

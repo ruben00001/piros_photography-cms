@@ -48,7 +48,7 @@ const Populated = () => {
 
   const reOrder = api.album.reorder.useMutation({
     onMutate: ({ activeAlbum, albums, overAlbum }) => {
-      const prevData = utils.album.getAll.getData();
+      const prevData = utils.album.albumsPageGetAll.getData();
 
       const updatedEntities = getReorderedEntities({
         active: activeAlbum,
@@ -56,7 +56,7 @@ const Populated = () => {
         entities: albums,
       });
 
-      utils.album.getAll.setData(undefined, (currData) => {
+      utils.album.albumsPageGetAll.setData(undefined, (currData) => {
         if (!currData) {
           return prevData;
         }
@@ -82,10 +82,10 @@ const Populated = () => {
       if (!ctx?.prevData) {
         return;
       }
-      utils.album.getAll.setData(undefined, ctx.prevData);
+      utils.album.albumsPageGetAll.setData(undefined, ctx.prevData);
     },
     onSuccess: async () => {
-      utils.album.getAll.invalidate();
+      utils.album.albumsPageGetAll.invalidate();
       toast(<Toast text="Albums reordered" type="success" />);
     },
   });

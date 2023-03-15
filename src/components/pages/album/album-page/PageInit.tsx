@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { type ReactElement, useEffect } from "react";
 import { toast } from "react-toastify";
 
-import { type Album } from "~/components/pages/albums/album-page/_context/AlbumState";
+import { type Album } from "~/components/pages/album/album-page/_context/AlbumState";
 import useDynamicRouteParams from "~/hooks/useDynamicRouteParams";
 import { api } from "~/utils/api";
 

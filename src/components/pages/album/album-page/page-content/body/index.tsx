@@ -1,5 +1,5 @@
 import DndSortableContext from "~/components/dnd-kit/DndSortableContext";
-import { AlbumTitleInput } from "~/components/pages/albums/_containers";
+import { AlbumTitleInput } from "~/components/pages/album/_containers";
 import { useAlbumContext } from "../../_context/AlbumState";
 
 const AlbumBody = () => {

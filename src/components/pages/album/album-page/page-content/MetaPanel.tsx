@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { useAlbumContext } from "../_context/AlbumState";
 import { api } from "~/utils/api";
 
-import { CoverImage } from "~/album-containers";
+import { CoverImage } from "~/components/pages/album/_containers";
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { useImageTypeContext } from "../_context/ImageType";

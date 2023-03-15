@@ -2,7 +2,7 @@ import { type ImageTag } from "@prisma/client";
 
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { RemoveIcon } from "~/components/Icon";
-import InputSelect from "~/components/image/add-image/upload-modal/tags/input-select";
+import InputSelect from "~/components/image/add-image/upload-modal/panel/tags/input-select";
 import { useStringArrStateContext as useTagsIdContext } from "~/context/StringArrState";
 import { api } from "~/utils/api";
 

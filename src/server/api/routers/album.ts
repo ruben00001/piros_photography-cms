@@ -10,13 +10,6 @@ export const albumRouter = createTRPCRouter({
     });
   }),
 
-  getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.album.findMany({
-      orderBy: { index: "asc" },
-      include: { coverImage: true },
-    });
-  }),
-
   getOne: protectedProcedure
     .input(
       z.object({

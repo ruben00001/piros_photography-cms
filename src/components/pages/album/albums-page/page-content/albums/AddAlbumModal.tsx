@@ -2,11 +2,11 @@ import { Dialog } from "@headlessui/react";
 import { type FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { create, useStore } from "zustand";
+
 import Toast from "~/components/data-display/Toast";
 import TextInput from "~/components/forms/TextInput";
-
 import { PlusIcon } from "~/components/Icon";
-import MyModal from "~/components/MyModal";
+import MyModalPanel from "~/components/MyModalPanel";
 import { api } from "~/utils/api";
 
 // TODO: create status
@@ -29,17 +29,15 @@ const addAlbumModalVisibilityStore = create<ModalVisibilityState>((set) => ({
   },
 }));
 
-const AddAlbumModal = () => {
+export const AddAlbumPanel = () => {
   const { isOpen, closeModal } = useStore(addAlbumModalVisibilityStore);
 
   return (
-    <MyModal isOpen={isOpen} onClose={closeModal}>
+    <MyModalPanel isOpen={isOpen} onClose={closeModal}>
       <Panel />
-    </MyModal>
+    </MyModalPanel>
   );
 };
-
-export default AddAlbumModal;
 
 export const AddAlbumModalButton = () => {
   const { openModal } = useStore(addAlbumModalVisibilityStore);

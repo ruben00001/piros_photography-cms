@@ -1,56 +1,47 @@
-import { Dialog } from "@headlessui/react";
-import { forwardRef, useState, type ReactElement } from "react";
-import { toast } from "react-toastify";
-import Toast from "~/components/data-display/Toast";
-import WithTooltip from "~/components/data-display/WithTooltip";
+import { useState, type ReactElement } from "react";
 
-import MyCldImage from "~/components/image/MyCldImage";
-import SearchInput from "~/components/SearchInput";
-import { useUploadedModalVisibilityContext } from "~/context/UploadedModalVisibilityState";
 import { fuzzySearch } from "~/helpers/query";
 import { api } from "~/utils/api";
-// import { type Image } from "~/utils/router-output-types";
 
-type OnSelectImage = (imageId: string) => void;
+import WithTooltip from "~/components/data-display/WithTooltip";
+import MyCldImage from "~/components/image/MyCldImage";
+import SearchInput from "~/components/SearchInput";
+import MyModalPanel from "~/components/MyModalPanel";
+import { useUploadedModalVisibilityContext } from "../VisibilityState";
 
-// eslint-disable-next-line react/display-name
-export const Panel = forwardRef<
-  HTMLDivElement,
-  { onSelectImage: OnSelectImage }
->(({ onSelectImage: updateCoverImage }, ref) => {
-  const { closeModal } = useUploadedModalVisibilityContext();
+export type OnSelectImage = (arg0: { imageId: string }) => void;
+
+export const UploadedPanel = ({
+  onSelectImage,
+}: {
+  onSelectImage: OnSelectImage;
+}) => {
+  const { closeModal, isOpen } = useUploadedModalVisibilityContext();
 
   return (
-    <Dialog.Panel
-      className="relative w-[90vw] max-w-[1200px] transform rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
-      ref={ref}
-    >
-      <Dialog.Title
-        as="h3"
-        className="border-b border-b-base-300 pb-sm leading-6 text-base-content"
-        onClick={() => toast(<Toast text="Hello" type="success" />)}
-      >
-        Uploaded Images
-      </Dialog.Title>
-      <div className="mt-md">
-        <ImagesStatusWrapper>
-          <Images onSelectImage={updateCoverImage} />
-        </ImagesStatusWrapper>
+    <MyModalPanel isOpen={isOpen} onClose={closeModal}>
+      <div className="relative flex h-[700px] max-h-[70vh] w-[90vw] max-w-[1200px] flex-col rounded-2xl bg-white p-6 text-left shadow-xl">
+        <h3 className="border-b border-b-base-300 pb-sm leading-6 text-base-content">
+          Uploaded Images
+        </h3>
+        <div className="mt-md flex-grow overflow-y-auto">
+          <ImagesStatusWrapper>
+            <Images onSelectImage={onSelectImage} />
+          </ImagesStatusWrapper>
+        </div>
+        <div className="mt-xl">
+          <button
+            className="my-btn my-btn-neutral"
+            type="button"
+            onClick={() => closeModal()}
+          >
+            close
+          </button>
+        </div>
       </div>
-      <div className="mt-xl">
-        <button
-          className="my-btn my-btn-neutral"
-          type="button"
-          onClick={() => closeModal()}
-        >
-          close
-        </button>
-      </div>
-    </Dialog.Panel>
+    </MyModalPanel>
   );
-});
-
-export default Panel;
+};
 
 const ImagesStatusWrapper = ({ children }: { children: ReactElement }) => {
   const { isError, isLoading } = api.image.getAll.useQuery();
@@ -119,7 +110,7 @@ const ImagesGrid = ({
           <div
             className="my-hover-bg rounded-lg border border-base-200 p-sm"
             onClick={() => {
-              onSelectImage(dbImage.id);
+              onSelectImage({ imageId: dbImage.id });
               closeModal();
             }}
           >

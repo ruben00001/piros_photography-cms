@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, type ReactElement } from "react";
 
-const MyModal = ({
+const MyModalPanel = ({
   onClose,
   isOpen,
   children: panelContent,
@@ -12,7 +12,7 @@ const MyModal = ({
 }) => {
   return (
     <Transition show={isOpen} as={Fragment}>
-      <Dialog open={isOpen} onClose={onClose} className="relative z-50">
+      <Dialog as="div" onClose={onClose} className="relative z-50">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -24,6 +24,7 @@ const MyModal = ({
         >
           <div className="fixed inset-0 bg-gray-100/70" aria-hidden="true" />
         </Transition.Child>
+
         <div className="fixed inset-0 grid place-items-center p-4">
           <Transition.Child
             as={Fragment}
@@ -42,4 +43,4 @@ const MyModal = ({
   );
 };
 
-export default MyModal;
+export default MyModalPanel;
