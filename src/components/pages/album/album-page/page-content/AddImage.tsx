@@ -7,7 +7,6 @@ const AddImageButton = () => {
 
   return (
     <AddImageMenu
-      // styles={{ buttonWrapper: "w-full" }}
       imageModals={{
         onVisibilityChange: { onOpen: () => setImageContext("body") },
       }}

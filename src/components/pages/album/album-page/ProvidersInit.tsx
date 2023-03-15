@@ -1,6 +1,7 @@
 import { type ReactElement } from "react";
 import { UploadModalVisibilityProvider } from "~/components/image/add-image/upload-modal";
 import { UploadedModalVisibilityProvider } from "~/components/image/add-image/uploaded-modal";
+import { WarningModalProvider } from "~/components/warning-modal";
 import { AlbumProvider, Album } from "./_context/AlbumState";
 import { ImageTypeProvider } from "./_context/ImageType";
 
@@ -19,7 +20,7 @@ const ProvidersInit = ({
             <UploadedModalVisibilityProvider
               onClose={() => setImageContext(null)}
             >
-              {children}
+              <WarningModalProvider>{children}</WarningModalProvider>
             </UploadedModalVisibilityProvider>
           </UploadModalVisibilityProvider>
         )}

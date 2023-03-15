@@ -7,11 +7,10 @@ const TextInput = ({
   onBlur,
   onFocus,
   placeholder,
-  inputAdditionalClasses = "",
-  wrapperAdditionalClasses = "",
   showBorderOnBlur,
   showPressEnter: showPressEnterControl,
   isChange = true,
+  styles,
 }: {
   value: string;
   setValue: (value: string) => void;
@@ -19,11 +18,13 @@ const TextInput = ({
   placeholder?: string;
   onFocus?: () => void;
   onBlur?: () => void;
-  wrapperAdditionalClasses?: string;
-  inputAdditionalClasses?: string;
   showBorderOnBlur?: true;
   showPressEnter?: true;
   isChange?: boolean;
+  styles?: {
+    wrapper?: string;
+    input?: string;
+  };
 }) => {
   const [localIsFocused, setLocalIsFocused] = useState(false);
 
@@ -36,12 +37,12 @@ const TextInput = ({
         showBorderOnBlur && value.length
           ? "border-base-300"
           : "border-transparent"
-      } ${wrapperAdditionalClasses}`}
+      } ${styles?.wrapper}`}
     >
       <input
-        className={`absolute left-0 z-10 h-full w-full bg-transparent py-1 text-gray-600 outline-none focus:pl-xs ${inputAdditionalClasses} ${
-          showBorderOnBlur && value.length ? "pl-xs" : ""
-        }`}
+        className={`absolute left-0 z-10 h-full w-full bg-transparent py-1 text-gray-600 outline-none focus:pl-xs ${
+          styles?.input
+        } ${showBorderOnBlur && value.length ? "pl-xs" : ""} `}
         id={id}
         value={value}
         onChange={(e) => setValue(e.target.value)}

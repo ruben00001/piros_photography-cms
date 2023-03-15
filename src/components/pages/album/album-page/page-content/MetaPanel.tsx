@@ -11,6 +11,9 @@ import { CoverImage } from "~/components/pages/album/_containers";
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { useImageTypeContext } from "../_context/ImageType";
+import { DeleteIcon } from "~/components/Icon";
+import { useRouter } from "next/router";
+import { useWarningModalContext } from "~/components/warning-modal";
 
 const MetaPanel = () => {
   const album = useAlbumContext();
@@ -45,22 +48,47 @@ const MetaPanel = () => {
           <p>{album.updatedAt.toDateString()}</p>
         </div>
       </div>
+      <div>
+        <DeleteAlbumButton />
+      </div>
     </div>
   );
 };
 
 export default MetaPanel;
 
+const DeleteAlbumButton = () => {
+  const { openModal: openWarningModal } = useWarningModalContext();
+
+  return (
+    <div>
+      <button
+        className="my-btn flex items-center gap-xs border-my-alert-content bg-my-alert text-my-alert-content"
+        type="button"
+        onClick={() => openWarningModal()}
+      >
+        <span>
+          <DeleteIcon />
+        </span>
+        <span>Delete album</span>
+      </button>
+    </div>
+  );
+};
+
 const PublishToggleBadge = () => {
   const album = useAlbumContext();
 
-  const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
-    enabled: false,
-  });
+  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
+    { albumId: album.id, includeImages: true },
+    {
+      enabled: false,
+    }
+  );
 
   const publishMutation = api.album.updatePublishStatus.useMutation({
     onSuccess: async () => {
-      await refetchAlbums();
+      await refetchAlbum();
       toast(<Toast text="Album set to published" type="success" />);
     },
     onError: () => {

@@ -14,6 +14,7 @@ import AlbumMenu from "./Menu";
 import { CoverImage } from "~/components/pages/album/_containers";
 import { GoToPageIcon } from "~/components/Icon";
 import Link from "next/link";
+import { TextInputForm } from "~/components/TextInputForm";
 
 type AlbumType = RouterOutputs["album"]["albumsPageGetAll"][0];
 
@@ -37,9 +38,10 @@ const AlbumContent = () => {
   const { setActiveAlbum } = useAlbumsContext();
 
   return (
-    <div className="relative">
+    <div className="flex h-full flex-col">
       <AlbumMenu />
       <AlbumTitleInput />
+
       <CoverImage
         addImageMenu={{
           modals: {
@@ -48,107 +50,42 @@ const AlbumContent = () => {
         }}
         album={album}
       />
-      <MetaInfo />
-      <GoToPage />
+      <div className=" flex flex-grow flex-col justify-between opacity-0 transition-all duration-150 ease-in-out group-hover/album:opacity-100">
+        <div></div>
+        <div className="flex items-center justify-between pt-xs">
+          <MetaInfo />
+          <GoToPage />
+        </div>
+      </div>
     </div>
   );
 };
 
 const AlbumTitleInput = () => {
-  const [inputIsFocused, setInputIsFocused] = useState(false);
-
   const album = useAlbumContext();
-
-  const [inputText, setInputText] = useState(album.title);
-
-  const prevTitleValueRef = useRef(album.title);
-  const prevTitleValue = prevTitleValueRef.current;
-  const isChange = prevTitleValue !== inputText;
-
-  const {
-    refetch: checkTitleIsUnique,
-    data: titleIsUnique,
-    // isFetching: isFetchingCheckTitleIsUnique,
-  } = api.album.checkTitleIsUnique.useQuery(
-    { title: inputText },
-    { enabled: false }
-  );
-
-  const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery(
-    undefined,
-    {
-      enabled: false,
-    }
-  );
 
   const updateTitle = api.album.updateTitle.useMutation();
 
-  const handleSubmit = async () => {
-    if (!isChange) {
-      return;
-    }
-
-    const { data: titleIsUnique } = await checkTitleIsUnique();
-
-    if (!titleIsUnique) {
-      return;
-    }
-
-    updateTitle.mutate(
-      { albumId: album.id, updatedTitle: inputText },
-      {
-        onSuccess: () => {
-          prevTitleValueRef.current = inputText;
-          toast(<Toast text="Title updated" type="success" />);
-          void refetchAlbums();
-        },
-      }
-    );
-  };
-
-  const isError = titleIsUnique === false;
-
-  const containerRef = useRef<HTMLFormElement>(null);
-
   return (
-    <WithTooltip text="click to edit title" isDisabled={inputIsFocused}>
-      <form
-        className="relative"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void handleSubmit();
-        }}
-        ref={containerRef}
-      >
-        <div className="form-control w-full max-w-xs">
-          <TextInput
-            setValue={(value) => setInputText(value)}
-            value={inputText}
-            placeholder="Album title"
-            inputAdditionalClasses="font-bold text-lg text-black uppercase"
-            wrapperAdditionalClasses={`${
-              !isError ? "" : "border border-my-error-content"
-            }`}
-            showPressEnter
-            isChange={isChange}
-            onBlur={() => setInputIsFocused(false)}
-            onFocus={() => setInputIsFocused(true)}
-          />
-          <label className="label">
-            {titleIsUnique === false ? (
-              <span className="label-text-alt text-my-error-content">
-                Title is already used. Album titles must be unique.
-              </span>
-            ) : null}
-          </label>
-          {/*         {isFetchingCheckTitleIsUnique ? (
-          <div className="absolute left-0 top-0 z-10 grid h-full w-full place-items-center bg-gray-100 bg-opacity-70">
-            <p className="loading">Checking...</p>
-          </div>
-        ) : null} */}
-        </div>
-      </form>
-    </WithTooltip>
+    <div className="mb-xs text-3xl">
+      <TextInputForm
+        onSubmit={({ inputValue, onSuccess }) =>
+          updateTitle.mutate(
+            { albumId: album.id, updatedTitle: inputValue },
+            {
+              onSuccess: async () => {
+                toast(<Toast text="Title updated" type="success" />);
+
+                onSuccess();
+              },
+            }
+          )
+        }
+        tooltipText="click to edit title"
+        initialValue={album.title}
+        placeholder="Album title"
+      />
+    </div>
   );
 };
 
@@ -156,14 +93,10 @@ const MetaInfo = () => {
   const { published } = useAlbumContext();
 
   if (published) {
-    return null;
+    return <div></div>;
   }
 
-  return (
-    <div className="mt-md">
-      <PublishStatusBadge />
-    </div>
-  );
+  return <PublishStatusBadge />;
 };
 
 const PublishStatusBadge = () => {
@@ -222,7 +155,7 @@ const GoToPage = () => {
 
   return (
     <Link href={`/albums/${album.id}`} passHref>
-      <div className="absolute right-0 bottom-1 cursor-pointer rounded-sm border border-transparent py-xxxs px-xxs opacity-0 transition-all duration-150 ease-in-out hover:border-gray-200 hover:bg-gray-100 group-hover/album:opacity-100">
+      <div className="cursor-pointer rounded-sm border border-transparent py-xxxs px-xxs transition-colors duration-150 ease-in-out hover:border-gray-200 hover:bg-gray-100">
         <div className="flex items-center gap-xs text-xs text-gray-500">
           <span>
             <GoToPageIcon />

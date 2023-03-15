@@ -16,6 +16,8 @@ import {
   OnSelectImage,
   UploadedPanel,
 } from "~/components/image/add-image/uploaded-modal";
+import { useRouter } from "next/router";
+import { WarningPanel as WarningPanel_ } from "~/components/warning-modal";
 
 // album image: title, desc.
 
@@ -36,11 +38,13 @@ export default PageContent;
 
 const ModalPanels = () => {
   const createImageAndAddToAlbum = useCreateImageAndAddToAlbum();
+  const addImageToAlbum = useAddImageToAlbum();
 
   return (
     <>
       <UploadPanel onUploadImage={createImageAndAddToAlbum} />
-      {/* <UploadedPanel onSelectImage={addImageToAlbumCoverImage} /> */}
+      <UploadedPanel onSelectImage={addImageToAlbum} />
+      <WarningPanel />
     </>
   );
 };
@@ -110,7 +114,7 @@ const useAddImageToAlbum = (): OnSelectImage => {
     onSuccess: async () => {
       await refetchAlbum();
 
-      toast(<Toast text="updated cover image" type="success" />);
+      toast(<Toast text="added image" type="success" />);
     },
   });
 
@@ -124,8 +128,10 @@ const useAddImageToAlbum = (): OnSelectImage => {
       : updateCoverImageMutation.mutate({ albumId: album.id, imageId });
 };
 
-/* const WarningPanel = () => {
-  const { activeAlbum } = useAlbumsContext();
+const WarningPanel = () => {
+  const album = useAlbumContext();
+
+  const router = useRouter();
 
   const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery(
     undefined,
@@ -134,27 +140,28 @@ const useAddImageToAlbum = (): OnSelectImage => {
     }
   );
 
-  const deleteAlbumMutation = api.album.delete.useMutation({
-    onSuccess: async () => {
-      await refetchAlbums();
-    },
-  });
+  const deleteAlbumMutation = api.album.delete.useMutation();
 
   return (
     <WarningPanel_
       onConfirm={({ closeModal }) =>
-        activeAlbum &&
         deleteAlbumMutation.mutate(
-          { album: { id: activeAlbum.id, index: activeAlbum.index } },
+          { album: { id: album.id, index: album.index } },
           {
-            onSuccess: () => {
+            onSuccess: async () => {
+              closeModal();
+
+              toast(<Toast text="deleted album" type="success" />);
+              toast(<Toast text="redirecting..." type="info" />);
+
+              await refetchAlbums();
+
               setTimeout(() => {
-                deleteAlbumMutation.reset();
-                closeModal();
+                router.push("/albums");
               }, 400);
-              setTimeout(() => {
-                toast(<Toast text="Album deleted" type="success" />);
-              }, 450);
+            },
+            onError: async () => {
+              toast(<Toast text="delete album failed" type="error" />);
             },
           }
         )
@@ -167,4 +174,3 @@ const useAddImageToAlbum = (): OnSelectImage => {
     />
   );
 };
- */

@@ -9,9 +9,11 @@ import WithTooltip from "~/components/data-display/WithTooltip";
 
 export const AlbumTitleInput = ({
   album,
+  onSubmit,
 }: {
   album: { id: string; title: string };
-  input?: { styles?: { input?: string } };
+  // input?: { styles?: { input?: string } };
+  onSubmit: (arg0: { title: string; albumId: string }) => void;
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false);
 
@@ -20,12 +22,6 @@ export const AlbumTitleInput = ({
   const prevTitleValueRef = useRef(album.title);
   const prevTitleValue = prevTitleValueRef.current;
   const isChange = prevTitleValue !== inputText;
-
-  const { refetch: checkTitleIsUnique, data: titleIsUnique } =
-    api.album.checkTitleIsUnique.useQuery(
-      { title: inputText },
-      { enabled: false }
-    );
 
   const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery(
     undefined,
@@ -36,30 +32,24 @@ export const AlbumTitleInput = ({
 
   const updateTitle = api.album.updateTitle.useMutation();
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!isChange) {
-      return;
-    }
-
-    const { data: titleIsUnique } = await checkTitleIsUnique();
-
-    if (!titleIsUnique) {
       return;
     }
 
     updateTitle.mutate(
       { albumId: album.id, updatedTitle: inputText },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
           prevTitleValueRef.current = inputText;
+
           toast(<Toast text="Title updated" type="success" />);
-          void refetchAlbums();
+
+          await refetchAlbums();
         },
       }
     );
   };
-
-  const isError = titleIsUnique === false;
 
   const containerRef = useRef<HTMLFormElement>(null);
 
@@ -69,7 +59,7 @@ export const AlbumTitleInput = ({
         className="relative"
         onSubmit={(e) => {
           e.preventDefault();
-          void handleSubmit();
+          handleSubmit();
         }}
         ref={containerRef}
       >
@@ -78,22 +68,11 @@ export const AlbumTitleInput = ({
             setValue={(value) => setInputText(value)}
             value={inputText}
             placeholder="Album title"
-            // inputAdditionalClasses="font-bold text-lg text-black uppercase"
-            wrapperAdditionalClasses={`${
-              !isError ? "" : "border border-my-error-content"
-            }`}
             showPressEnter
             isChange={isChange}
             onBlur={() => setInputIsFocused(false)}
             onFocus={() => setInputIsFocused(true)}
           />
-          <label className="label">
-            {titleIsUnique === false ? (
-              <span className="label-text-alt text-my-error-content">
-                Title is already used. Album titles must be unique.
-              </span>
-            ) : null}
-          </label>
         </div>
       </form>
     </WithTooltip>

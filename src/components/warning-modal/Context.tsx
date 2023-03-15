@@ -29,14 +29,14 @@ export const WarningModalProvider = ({
   onClose,
 }: {
   children: ReactElement | ((args: ModalVisibilityState) => ReactElement);
-  onClose: () => void;
+  onClose?: () => void;
 }) => {
   const myStore = useStore(store);
 
   const value: ModalVisibilityState = {
     closeModal: () => {
       myStore.closeModal();
-      onClose();
+      onClose && onClose();
     },
     isOpen: myStore.isOpen,
     openModal: myStore.openModal,
