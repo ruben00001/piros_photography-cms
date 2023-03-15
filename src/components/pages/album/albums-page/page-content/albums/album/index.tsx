@@ -12,6 +12,8 @@ import DndSortableElement from "~/components/dnd-kit/DndSortableElement";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import AlbumMenu from "./Menu";
 import { CoverImage } from "~/components/pages/album/_containers";
+import { GoToPageIcon } from "~/components/Icon";
+import Link from "next/link";
 
 type AlbumType = RouterOutputs["album"]["albumsPageGetAll"][0];
 
@@ -35,7 +37,7 @@ const AlbumContent = () => {
   const { setActiveAlbum } = useAlbumsContext();
 
   return (
-    <div>
+    <div className="relative">
       <AlbumMenu />
       <AlbumTitleInput />
       <CoverImage
@@ -47,6 +49,7 @@ const AlbumContent = () => {
         album={album}
       />
       <MetaInfo />
+      <GoToPage />
     </div>
   );
 };
@@ -71,9 +74,12 @@ const AlbumTitleInput = () => {
     { enabled: false }
   );
 
-  const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
-    enabled: false,
-  });
+  const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery(
+    undefined,
+    {
+      enabled: false,
+    }
+  );
 
   const updateTitle = api.album.updateTitle.useMutation();
 
@@ -163,9 +169,12 @@ const MetaInfo = () => {
 const PublishStatusBadge = () => {
   const album = useAlbumContext();
 
-  const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
-    enabled: false,
-  });
+  const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery(
+    undefined,
+    {
+      enabled: false,
+    }
+  );
 
   const publishMutation = api.album.updatePublishStatus.useMutation({
     onSuccess: async () => {
@@ -205,5 +214,22 @@ const PublishStatusBadge = () => {
         draft
       </p>
     </WithTooltip>
+  );
+};
+
+const GoToPage = () => {
+  const album = useAlbumContext();
+
+  return (
+    <Link href={`/albums/${album.id}`} passHref>
+      <div className="absolute right-0 bottom-1 cursor-pointer rounded-sm border border-transparent py-xxxs px-xxs opacity-0 transition-all duration-150 ease-in-out hover:border-gray-200 hover:bg-gray-100 group-hover/album:opacity-100">
+        <div className="flex items-center gap-xs text-xs text-gray-500">
+          <span>
+            <GoToPageIcon />
+          </span>
+          <span className="uppercase text-gray-500">Go to album</span>
+        </div>
+      </div>
+    </Link>
   );
 };

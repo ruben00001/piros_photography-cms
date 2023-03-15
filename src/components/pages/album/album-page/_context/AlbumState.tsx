@@ -1,8 +1,7 @@
 import { createContext, type ReactElement, useContext } from "react";
+import { RouterOutputs } from "~/utils/api";
 
-import { AlbumRouterOutputs } from "~/utils/router-output-types";
-
-export type Album = NonNullable<AlbumRouterOutputs["getOne"]>;
+export type Album = NonNullable<RouterOutputs["album"]["albumPageGetOne"]>;
 
 type AlbumState = Album;
 

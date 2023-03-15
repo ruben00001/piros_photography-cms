@@ -21,18 +21,18 @@ export const AlbumTitleInput = ({
   const prevTitleValue = prevTitleValueRef.current;
   const isChange = prevTitleValue !== inputText;
 
-  const {
-    refetch: checkTitleIsUnique,
-    data: titleIsUnique,
-    // isFetching: isFetchingCheckTitleIsUnique,
-  } = api.album.checkTitleIsUnique.useQuery(
-    { title: inputText },
-    { enabled: false }
-  );
+  const { refetch: checkTitleIsUnique, data: titleIsUnique } =
+    api.album.checkTitleIsUnique.useQuery(
+      { title: inputText },
+      { enabled: false }
+    );
 
-  const { refetch: refetchAlbums } = api.album.getAll.useQuery(undefined, {
-    enabled: false,
-  });
+  const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery(
+    undefined,
+    {
+      enabled: false,
+    }
+  );
 
   const updateTitle = api.album.updateTitle.useMutation();
 

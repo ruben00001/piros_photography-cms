@@ -85,7 +85,7 @@ const FetchAlbumWrapper = ({
   children: (album: Album) => ReactElement;
 }) => {
   const router = useRouter();
-  const { data: album, isFetched } = api.album.getOne.useQuery({
+  const { data: album, isFetched } = api.album.albumPageGetOne.useQuery({
     albumId,
     includeImages: true,
   });

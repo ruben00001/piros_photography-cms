@@ -2,51 +2,64 @@ import { toast } from "react-toastify";
 
 import { useAlbumContext } from "../_context/AlbumState";
 import { useImageTypeContext } from "../_context/ImageType";
-import { UploadedModalVisibilityProvider } from "~/context/UploadedModalVisibilityState";
-import { UploadModalVisibilityProvider } from "~/context/UploadModalVisibilityState";
 import { api } from "~/utils/api";
 
 import Toast from "~/components/data-display/Toast";
-import UploadPanel from "~/components/image/add-image/upload-modal";
-import UploadedModal from "~/components/image/add-image/uploaded-modal";
 import MetaPanel from "./MetaPanel";
 import AlbumBody from "./body";
 import AddImageButton from "./AddImage";
+import {
+  OnUploadImage,
+  UploadPanel,
+} from "~/components/image/add-image/upload-modal";
+import {
+  OnSelectImage,
+  UploadedPanel,
+} from "~/components/image/add-image/uploaded-modal";
 
 // album image: title, desc.
 
 const PageContent = () => {
-  const album = useAlbumContext();
-  const { imageContext, setImageContext } = useImageTypeContext();
+  return (
+    <>
+      <div>
+        <MetaPanel />
+        <AddImageButton />
+        <AlbumBody />
+      </div>
+      <ModalPanels />
+    </>
+  );
+};
 
-  const { refetch } = api.album.getOne.useQuery(
+export default PageContent;
+
+const ModalPanels = () => {
+  const createImageAndAddToAlbum = useCreateImageAndAddToAlbum();
+
+  return (
+    <>
+      <UploadPanel onUploadImage={createImageAndAddToAlbum} />
+      {/* <UploadedPanel onSelectImage={addImageToAlbumCoverImage} /> */}
+    </>
+  );
+};
+
+const useCreateImageAndAddToAlbum = (): OnUploadImage => {
+  const album = useAlbumContext();
+  const { imageContext } = useImageTypeContext();
+
+  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
+    { albumId: album.id, includeImages: true },
     {
-      albumId: album.id,
-      includeImages: true,
-    },
-    { enabled: false }
+      enabled: false,
+    }
   );
 
-  const updateCoverImageMutation = api.album.updateCoverImage.useMutation({
-    onSuccess: async () => {
-      await refetch();
-
-      toast(<Toast text="updated cover image" type="success" />);
-    },
-  });
-
-  const addImageMutation = api.album.addImage.useMutation({
-    onSuccess: async () => {
-      await refetch();
-
-      toast(<Toast text="added image" type="success" />);
-    },
-  });
-
-  const createImageAndAddToAlbum =
+  const createImageAndAddToAlbumMutation =
     api.imageAndAlbumTransaction.createImageAndAddToAlbum.useMutation({
       onSuccess: async () => {
-        await refetch();
+        await refetchAlbum();
 
         setTimeout(() => {
           toast(
@@ -61,43 +74,97 @@ const PageContent = () => {
       },
     });
 
-  return (
-    <UploadModalVisibilityProvider onClose={() => setImageContext(null)}>
-      <UploadedModalVisibilityProvider onClose={() => setImageContext(null)}>
-        <>
-          <div>
-            <MetaPanel />
-            <AddImageButton />
-            <AlbumBody />
-          </div>
-          <UploadedModal
-            onSelectImage={(imageId) =>
-              imageContext === "cover"
-                ? updateCoverImageMutation.mutate({
-                    albumId: album.id,
-                    imageId,
-                  })
-                : addImageMutation.mutate({ albumId: album.id, imageId })
-            }
-          />
-          <UploadPanel
-            createDbImageFunc={({ cloudinary_public_id, onSuccess, tagIds }) =>
-              imageContext &&
-              createImageAndAddToAlbum.mutate(
-                {
-                  albumId: album.id,
-                  cloudinary_public_id,
-                  imageType: imageContext,
-                  tagIds,
-                },
-                { onSuccess }
-              )
-            }
-          />
-        </>
-      </UploadedModalVisibilityProvider>
-    </UploadModalVisibilityProvider>
-  );
+  return ({ cloudinary_public_id, tagIds, onSuccess }) =>
+    imageContext &&
+    createImageAndAddToAlbumMutation.mutate(
+      {
+        albumId: album.id,
+        cloudinary_public_id,
+        tagIds,
+        imageType: imageContext,
+      },
+      { onSuccess }
+    );
 };
 
-export default PageContent;
+const useAddImageToAlbum = (): OnSelectImage => {
+  const album = useAlbumContext();
+  const { imageContext } = useImageTypeContext();
+
+  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
+    { albumId: album.id, includeImages: true },
+    {
+      enabled: false,
+    }
+  );
+
+  const updateCoverImageMutation = api.album.updateCoverImage.useMutation({
+    onSuccess: async () => {
+      await refetchAlbum();
+
+      toast(<Toast text="updated cover image" type="success" />);
+    },
+  });
+
+  const addBodyImageMutation = api.album.addImage.useMutation({
+    onSuccess: async () => {
+      await refetchAlbum();
+
+      toast(<Toast text="updated cover image" type="success" />);
+    },
+  });
+
+  return ({ imageId }) =>
+    imageContext && imageContext === "body"
+      ? addBodyImageMutation.mutate({
+          albumId: album.id,
+          imageId,
+          index: album.images.length,
+        })
+      : updateCoverImageMutation.mutate({ albumId: album.id, imageId });
+};
+
+/* const WarningPanel = () => {
+  const { activeAlbum } = useAlbumsContext();
+
+  const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery(
+    undefined,
+    {
+      enabled: false,
+    }
+  );
+
+  const deleteAlbumMutation = api.album.delete.useMutation({
+    onSuccess: async () => {
+      await refetchAlbums();
+    },
+  });
+
+  return (
+    <WarningPanel_
+      onConfirm={({ closeModal }) =>
+        activeAlbum &&
+        deleteAlbumMutation.mutate(
+          { album: { id: activeAlbum.id, index: activeAlbum.index } },
+          {
+            onSuccess: () => {
+              setTimeout(() => {
+                deleteAlbumMutation.reset();
+                closeModal();
+              }, 400);
+              setTimeout(() => {
+                toast(<Toast text="Album deleted" type="success" />);
+              }, 450);
+            },
+          }
+        )
+      }
+      text={{
+        body: "Are you sure? This can't be undone.",
+        title: "Delete album",
+      }}
+      invokedFuncStatus={deleteAlbumMutation.status}
+    />
+  );
+};
+ */

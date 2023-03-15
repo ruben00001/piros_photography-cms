@@ -10,7 +10,7 @@ export const albumRouter = createTRPCRouter({
     });
   }),
 
-  getOne: protectedProcedure
+  albumPageGetOne: protectedProcedure
     .input(
       z.object({
         albumId: z.string(),
@@ -151,7 +151,9 @@ export const albumRouter = createTRPCRouter({
     }),
 
   addImage: protectedProcedure
-    .input(z.object({ albumId: z.string(), imageId: z.string() }))
+    .input(
+      z.object({ albumId: z.string(), imageId: z.string(), index: z.number() })
+    )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.album.update({
         where: {
@@ -160,6 +162,7 @@ export const albumRouter = createTRPCRouter({
         data: {
           images: {
             create: {
+              index: input.index,
               imageId: input.imageId,
             },
           },

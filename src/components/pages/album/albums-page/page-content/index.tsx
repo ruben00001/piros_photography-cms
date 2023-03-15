@@ -32,24 +32,23 @@ const PageContent = () => {
 export default PageContent;
 
 const ModalPanels = () => {
-  const createImageForUploadAndAddToAlbumCoverImage =
-    useCreateImageForUploadAndAddToAlbumCoverImage();
+  const { activeAlbum } = useAlbumsContext();
+
+  const createImageAndAddToAlbum = useCreateImageAndAddToAlbumCoverImage();
 
   const addImageToAlbumCoverImage = useAddImageToAlbumCoverImage();
 
   return (
     <>
       <AddAlbumPanel />
-      <UploadPanel
-        onUploadImage={createImageForUploadAndAddToAlbumCoverImage}
-      />
+      <UploadPanel onUploadImage={createImageAndAddToAlbum} />
       <UploadedPanel onSelectImage={addImageToAlbumCoverImage} />
       <WarningPanel />
     </>
   );
 };
 
-const useCreateImageForUploadAndAddToAlbumCoverImage = (): OnUploadImage => {
+const useCreateImageAndAddToAlbumCoverImage = (): OnUploadImage => {
   const { activeAlbum } = useAlbumsContext();
 
   const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery(

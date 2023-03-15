@@ -14,6 +14,7 @@ import {
   DotsSixVertical,
   Info,
   FolderSimplePlus,
+  CaretDoubleRight,
 } from "phosphor-react";
 
 export {
@@ -33,4 +34,5 @@ export {
   DotsSixVertical as GrabHandleIcon,
   Info as InfoIcon,
   FolderSimplePlus as AddFirstAlbumIcon,
+  CaretDoubleRight as GoToPageIcon,
 };
