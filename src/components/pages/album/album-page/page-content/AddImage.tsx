@@ -8,7 +8,7 @@ const AddImageButton = () => {
   return (
     <AddImageMenu
       imageModals={{
-        onVisibilityChange: { onOpen: () => setImageContext("body") },
+        onVisibilityChange: { onOpen: () => setImageContext("body-add") },
       }}
     >
       <div className="my-btn-action group flex items-center gap-xs rounded-md py-1.5 px-sm text-white">

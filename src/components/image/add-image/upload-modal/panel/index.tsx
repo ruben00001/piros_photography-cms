@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { type ChangeEvent, useState, forwardRef } from "react";
+import { type ChangeEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 import {
@@ -25,7 +25,7 @@ export type OnUploadImage = (arg0: {
 export const UploadPanel = ({
   onUploadImage,
 }: {
-  onUploadImage: OnUploadImage;
+  onUploadImage: OnUploadImage | null;
 }) => {
   const { closeModal, isOpen } = useUploadModalVisibilityContext();
 
@@ -48,15 +48,39 @@ export const UploadPanel = ({
 const UploadFunctionality = ({
   onUploadImage,
 }: {
-  onUploadImage: OnUploadImage;
+  onUploadImage: OnUploadImage | null;
 }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [createImageStatus, setCreateImageStatus] = useState<
     "idle" | "pending" | "error" | "success"
   >("idle");
 
-  const { closeModal } = useUploadModalVisibilityContext();
+  const { closeModal, isOpen: uploadModalIsOpen } =
+    useUploadModalVisibilityContext();
   const { strings: tagIds } = useTagsIdContext();
+
+  /*   const toastRef = useRef<ToastId | null>(null);
+  const toastId = toastRef.current;
+
+  useEffect(() => {
+    if (
+      uploadModalIsOpen ||
+      createImageStatus === "idle" ||
+      createImageStatus === "pending"
+    ) {
+      return;
+    }
+
+    if (!toastId) {
+      toastRef.current = toast(<Toast text="Uploading image..." type="info" />);
+    }
+    if (createImageStatus === "error" && toastId) {
+      toast.dismiss(toastId);
+      toast(
+        <Toast text="Something went wrong with the image upload" type="error" />
+      );
+    }
+  }, [createImageStatus, uploadModalIsOpen]); */
 
   const { refetch: fetchSignature } = api.image.createSignature.useQuery(
     {
@@ -71,6 +95,9 @@ const UploadFunctionality = ({
     }
 
     try {
+      if (!onUploadImage) {
+        throw new Error("onUploadImage not provided");
+      }
       setCreateImageStatus("pending");
 
       const { data: signatureData } = await fetchSignature();
@@ -89,11 +116,15 @@ const UploadFunctionality = ({
         onSuccess: () => {
           setCreateImageStatus("success");
 
+          /*           if (toastId) {
+            toast.dismiss(toastId);
+          } */
+
           setTimeout(() => {
             closeModal();
 
             toast(<Toast text="uploaded image" type="success" />);
-          }, 800);
+          }, 500);
         },
         tagIds,
       });

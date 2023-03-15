@@ -7,7 +7,7 @@ const MyMenu = ({
   styles,
 }: {
   button: ReactElement | ((arg0: { isOpen: boolean }) => ReactElement);
-  children: ReactElement[];
+  children: ReactElement | ReactElement[];
   styles?: { buttonWrapper?: string; itemsWrapper?: string };
 }) => {
   return (
@@ -29,11 +29,7 @@ const MyMenu = ({
             <Menu.Items
               className={`absolute z-20 origin-top-right rounded-md bg-white shadow-xl focus:outline-none ${styles?.itemsWrapper}`}
             >
-              <div className="px-1 py-1">
-                {children.map((child) => (
-                  <Menu.Item>{child}</Menu.Item>
-                ))}
-              </div>
+              <div className="px-1 py-1">{children}</div>
             </Menu.Items>
           </Transition>
         </>
@@ -43,3 +39,7 @@ const MyMenu = ({
 };
 
 export default MyMenu;
+
+export const MenuItem = ({ children }: { children: ReactElement }) => {
+  return <Menu.Item>{children}</Menu.Item>;
+};

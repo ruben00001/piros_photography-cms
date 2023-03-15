@@ -33,16 +33,16 @@ const TextInput = ({
 
   return (
     <div
-      className={`relative z-10 box-content flex h-[28px] w-[300px] max-w-full items-stretch rounded-sm  border transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
+      className={`relative z-10 box-content flex h-full w-[300px] max-w-full items-stretch rounded-sm border  py-1 transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
         showBorderOnBlur && value.length
           ? "border-base-300"
           : "border-transparent"
       } ${styles?.wrapper}`}
     >
       <input
-        className={`absolute left-0 z-10 h-full w-full bg-transparent py-1 text-gray-600 outline-none focus:pl-xs ${
+        className={`z-10 w-full bg-transparent pr-xs text-gray-600 outline-none transition-transform duration-100 ease-in-out focus:translate-x-2 ${
           styles?.input
-        } ${showBorderOnBlur && value.length ? "pl-xs" : ""} `}
+        } ${showBorderOnBlur && value.length ? "translate-x-2" : ""} `}
         id={id}
         value={value}
         onChange={(e) => setValue(e.target.value)}

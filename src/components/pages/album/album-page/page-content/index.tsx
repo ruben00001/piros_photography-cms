@@ -49,7 +49,7 @@ const ModalPanels = () => {
   );
 };
 
-const useCreateImageAndAddToAlbum = (): OnUploadImage => {
+const useCreateImageAndAddToAlbum = (): OnUploadImage | null => {
   const album = useAlbumContext();
   const { imageContext } = useImageTypeContext();
 
@@ -76,12 +76,15 @@ const useCreateImageAndAddToAlbum = (): OnUploadImage => {
               type="success"
             />
           );
-        }, 950);
+        }, 550);
       },
     });
 
+  if (!imageContext) {
+    return null;
+  }
+
   return ({ cloudinary_public_id, tagIds, onSuccess }) =>
-    imageContext &&
     createImageAndAddToAlbumMutation.mutate(
       {
         albumId: album.id,

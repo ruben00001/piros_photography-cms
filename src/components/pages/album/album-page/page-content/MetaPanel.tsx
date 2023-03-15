@@ -80,7 +80,7 @@ const PublishToggleBadge = () => {
   const album = useAlbumContext();
 
   const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
-    { albumId: album.id, includeImages: true },
+    { albumId: album.id },
     {
       enabled: false,
     }

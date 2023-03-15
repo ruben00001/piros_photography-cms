@@ -124,27 +124,29 @@ const Image = ({ albumImage }: { albumImage: Album["images"][0] }) => {
         }}
       >
         {({ isOpen }) => (
-          <WithTooltip
-            text="click to change image"
-            type="action"
-            isDisabled={isOpen}
-          >
-            <div>
-              <MyCldImage
-                fit="object-cover"
-                heightSetByContainer={{
-                  isSetByContainer: false,
-                  approxVal: 800,
-                }}
-                src={albumImage.image.cloudinary_public_id}
-                styles={{
-                  img: "transition-transform duration-200 ease-in-out group-hover:scale-95",
-                  wrapper:
-                    "overflow-hidden transition-colors duration-150 ease-in-out hover:rounded-md hover:bg-gray-100 ",
-                }}
-              />
-            </div>
-          </WithTooltip>
+          <div>
+            <WithTooltip
+              text="click to change image"
+              type="action"
+              isDisabled={isOpen}
+            >
+              <div>
+                <MyCldImage
+                  fit="object-cover"
+                  heightSetByContainer={{
+                    isSetByContainer: false,
+                    approxVal: 800,
+                  }}
+                  src={albumImage.image.cloudinary_public_id}
+                  styles={{
+                    img: "transition-transform duration-200 ease-in-out group-hover:scale-95",
+                    wrapper:
+                      "overflow-hidden transition-colors duration-150 ease-in-out hover:rounded-md hover:bg-gray-100 ",
+                  }}
+                />
+              </div>
+            </WithTooltip>
+          </div>
         )}
       </AddImageMenu>
     </div>

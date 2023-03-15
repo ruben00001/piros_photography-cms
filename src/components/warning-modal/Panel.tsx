@@ -1,6 +1,6 @@
 import { Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import { ErrorIcon, TickIcon } from "../Icon";
+import { ErrorIcon, InfoIcon, TickIcon } from "../Icon";
 import MyModalPanel from "../MyModalPanel";
 import Spinner from "../Spinner";
 import { useWarningModalContext } from "./Context";
@@ -28,20 +28,10 @@ export const WarningPanel = ({
         className="min-w-[300px] max-w-xl rounded-lg border border-my-alert-content bg-white p-4 text-my-alert-content shadow-lg"
         role="alert"
       >
-        <div className="flex items-center">
-          <svg
-            aria-hidden="true"
-            className="mr-2 h-5 w-5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
+        <div className="flex items-center gap-xxs">
+          <span className="text-lg">
+            <InfoIcon weight="fill" />
+          </span>
           <span className="sr-only">Info</span>
           <h3 className="text-lg font-medium">{text.title}</h3>
         </div>
