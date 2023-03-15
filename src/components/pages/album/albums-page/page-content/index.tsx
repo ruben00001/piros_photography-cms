@@ -69,6 +69,7 @@ const useCreateImageAndAddToAlbumCoverImage = (): OnUploadImage => {
       },
     });
 
+  // todo: below needs index but 'cover' type doesn't require index
   return ({ cloudinary_public_id, tagIds, onSuccess }) =>
     activeAlbum &&
     createImageAndAddToAlbumMutation.mutate(
@@ -77,6 +78,7 @@ const useCreateImageAndAddToAlbumCoverImage = (): OnUploadImage => {
         cloudinary_public_id,
         tagIds,
         imageType: "cover",
+        // index: activeAlbum.
       },
       { onSuccess }
     );

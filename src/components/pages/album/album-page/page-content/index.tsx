@@ -37,15 +37,13 @@ const PageContent = () => {
 export default PageContent;
 
 const ModalPanels = () => {
-  // const createImageAndAddToAlbum = useCreateImageAndAddToAlbum();
+  const createImageAndAddToAlbum = useCreateImageAndAddToAlbum();
   const addImageToAlbum = useAddImageToAlbum();
 
   return (
     <>
-      {/* <UploadPanel onUploadImage={createImageAndAddToAlbum} /> */}
-      {addImageToAlbum ? (
-        <UploadedPanel onSelectImage={addImageToAlbum} />
-      ) : null}
+      <UploadPanel onUploadImage={createImageAndAddToAlbum} />
+      <UploadedPanel onSelectImage={addImageToAlbum} />
       <WarningPanel />
     </>
   );
@@ -70,7 +68,11 @@ const useCreateImageAndAddToAlbum = (): OnUploadImage => {
         setTimeout(() => {
           toast(
             <Toast
-              text={imageContext === "cover" ? "updated cover image" : "added"}
+              text={
+                imageContext === "cover"
+                  ? "updated cover image"
+                  : "updated image"
+              }
               type="success"
             />
           );
@@ -79,21 +81,20 @@ const useCreateImageAndAddToAlbum = (): OnUploadImage => {
     });
 
   return ({ cloudinary_public_id, tagIds, onSuccess }) =>
-    imageContext === "body-add" ||
-    (imageContext === "cover" &&
-      createImageAndAddToAlbumMutation.mutate(
-        {
-          albumId: album.id,
-          cloudinary_public_id,
-          tagIds,
-          imageType: imageContext === "cover" ? "cover" : "body",
-          index: album.images.length,
-        },
-        { onSuccess }
-      ));
+    imageContext &&
+    createImageAndAddToAlbumMutation.mutate(
+      {
+        albumId: album.id,
+        cloudinary_public_id,
+        tagIds,
+        imageType: imageContext,
+        index: album.images.length,
+      },
+      { onSuccess }
+    );
 };
 
-const useAddImageToAlbum = (): OnSelectImage | null => {
+const useAddImageToAlbum = (): OnSelectImage => {
   const album = useAlbumContext();
   const { imageContext } = useImageTypeContext();
 
@@ -128,12 +129,10 @@ const useAddImageToAlbum = (): OnSelectImage | null => {
     },
   });
 
-  if (!imageContext) {
-    return null;
-  }
-
   return ({ imageId }) =>
-    imageContext === "body-add"
+    !imageContext
+      ? null
+      : imageContext === "body-add"
       ? addBodyImageMutation.mutate({
           albumId: album.id,
           imageId,
