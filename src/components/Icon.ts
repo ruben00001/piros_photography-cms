@@ -15,6 +15,7 @@ import {
   Info,
   FolderSimplePlus,
   CaretDoubleRight,
+  CornersOut,
 } from "phosphor-react";
 
 export {
@@ -35,4 +36,5 @@ export {
   Info as InfoIcon,
   FolderSimplePlus as AddFirstAlbumIcon,
   CaretDoubleRight as GoToPageIcon,
+  CornersOut as ExpandIcon,
 };

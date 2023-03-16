@@ -1,17 +1,11 @@
 import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
-import { useAlbumContext, type Album } from "../../_context/AlbumState";
+import { useAlbumContext } from "../../_context/AlbumState";
 
 import Toast from "~/components/data-display/Toast";
-import DndSortableContext from "~/components/dnd-kit/DndSortableContext";
 import { TextInputForm } from "~/components/TextInputForm";
-import { mapIds } from "~/helpers/process-data";
-import { findEntityById } from "~/helpers/query";
-import AddImageMenu from "~/components/image/add-image/menu";
-import MyCldImage from "~/components/image/MyCldImage";
-import WithTooltip from "~/components/data-display/WithTooltip";
-import { useImageTypeContext } from "../../_context/ImageType";
+import AlbumImage from "./album-image";
 
 const AlbumBody = () => {
   return (
@@ -67,46 +61,16 @@ const Images = () => {
         <p>No images yet</p>
       ) : (
         <div className="mt-lg grid grid-cols-2 gap-xl">
-          <DndSortableContext
-            elementIds={mapIds(album.images)}
-            onReorder={({ activeId, overId }) => {
-              const activeAlbum = findEntityById(album.images, activeId)!;
-              const overAlbum = findEntityById(album.images, overId)!;
-
-              const noChange = activeAlbum.id === overAlbum.id;
-
-              if (noChange) {
-                return;
-              }
-
-              /*             reOrder.mutate({
-              activeAlbum: {
-                id: activeId,
-                index: activeAlbum.index,
-              },
-              albums: albums.map((album) => ({
-                id: album.id,
-                index: album.index,
-              })),
-              overAlbum: {
-                id: overId,
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                index: overAlbum.index,
-              },
-            }); */
-            }}
-          >
-            {album.images.map((albumImage) => (
-              <Image albumImage={albumImage} key={albumImage.id} />
-            ))}
-          </DndSortableContext>
+          {album.images.map((albumImage) => (
+            <AlbumImage albumImage={albumImage} key={albumImage.id} />
+          ))}
         </div>
       )}
     </div>
   );
 };
 
-const Image = ({ albumImage }: { albumImage: Album["images"][0] }) => {
+/* const Image = ({ albumImage }: { albumImage: AlbumImage }) => {
   const { setImageContext } = useImageTypeContext();
 
   return (
@@ -152,3 +116,4 @@ const Image = ({ albumImage }: { albumImage: Album["images"][0] }) => {
     </div>
   );
 };
+ */
