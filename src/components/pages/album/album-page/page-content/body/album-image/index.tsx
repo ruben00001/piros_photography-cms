@@ -5,20 +5,23 @@ import { DeleteIcon, ExpandIcon } from "~/components/Icon";
 import MyCldImage from "~/components/image/MyCldImage";
 import { Modal, WarningPanel } from "~/components/modal";
 import ImageModalPanel from "./ImageModalPanel";
+import { AlbumImageProvider } from "../../../_context/AlbumImageState";
 
 const AlbumImage = ({ albumImage }: { albumImage: AlbumImage }) => {
   return (
-    <div className="group/albumImage relative">
-      <MyCldImage
-        fit="object-cover"
-        heightSetByContainer={{
-          isSetByContainer: false,
-          approxVal: 800,
-        }}
-        src={albumImage.image.cloudinary_public_id}
-      />
-      <Menu />
-    </div>
+    <AlbumImageProvider albumImage={albumImage}>
+      <div className="group/albumImage relative">
+        <MyCldImage
+          fit="object-cover"
+          heightSetByContainer={{
+            isSetByContainer: false,
+            approxVal: 800,
+          }}
+          src={albumImage.image.cloudinary_public_id}
+        />
+        <Menu />
+      </div>
+    </AlbumImageProvider>
   );
 };
 
@@ -78,6 +81,7 @@ const OpenAlbumImageModal = () => {
         </div>
       )}
       panelContent={({ close }) => <ImageModalPanel />}
+      // styles={{ parentPanel: "w-full" }}
     />
   );
 };

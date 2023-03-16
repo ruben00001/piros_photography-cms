@@ -106,5 +106,7 @@ model Image {
     tags ImageTag[]
     albumImages AlbumImage[]
     albumCoverImages Album[]
+    width Int ?
+    height Int ?
 }
 

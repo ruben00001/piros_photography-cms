@@ -18,6 +18,8 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
           }),
         ]),
         index: z.number(),
+        width: z.number(),
+        height: z.number(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -29,6 +31,8 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
         data: {
           id: newImageId,
           cloudinary_public_id: input.cloudinary_public_id,
+          height: input.height,
+          width: input.width,
           tags: {
             connect: tags,
           },

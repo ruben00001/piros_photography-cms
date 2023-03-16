@@ -1,4 +1,4 @@
-import Image from "next/image";
+import NextImage from "next/image";
 import { type ChangeEvent, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -18,6 +18,8 @@ import { useUploadModalVisibilityContext } from "../VisibilityContext";
 
 export type OnUploadImage = (arg0: {
   cloudinary_public_id: string;
+  height: number;
+  width: number;
   onSuccess: () => void;
   tagIds?: string[];
 }) => void;
@@ -51,36 +53,17 @@ const UploadFunctionality = ({
   onUploadImage: OnUploadImage | null;
 }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageDimensions, setImageDimensions] = useState<{
+    naturalHeight: number;
+    naturalWidth: number;
+  } | null>(null);
+
   const [createImageStatus, setCreateImageStatus] = useState<
     "idle" | "pending" | "error" | "success"
   >("idle");
 
-  const { closeModal, isOpen: uploadModalIsOpen } =
-    useUploadModalVisibilityContext();
+  const { closeModal } = useUploadModalVisibilityContext();
   const { strings: tagIds } = useTagsIdContext();
-
-  /*   const toastRef = useRef<ToastId | null>(null);
-  const toastId = toastRef.current;
-
-  useEffect(() => {
-    if (
-      uploadModalIsOpen ||
-      createImageStatus === "idle" ||
-      createImageStatus === "pending"
-    ) {
-      return;
-    }
-
-    if (!toastId) {
-      toastRef.current = toast(<Toast text="Uploading image..." type="info" />);
-    }
-    if (createImageStatus === "error" && toastId) {
-      toast.dismiss(toastId);
-      toast(
-        <Toast text="Something went wrong with the image upload" type="error" />
-      );
-    }
-  }, [createImageStatus, uploadModalIsOpen]); */
 
   const { refetch: fetchSignature } = api.image.createSignature.useQuery(
     {
@@ -90,7 +73,7 @@ const UploadFunctionality = ({
   );
 
   const handleCreateImage = async () => {
-    if (!imageFile) {
+    if (!imageFile || !imageDimensions) {
       return;
     }
 
@@ -113,12 +96,11 @@ const UploadFunctionality = ({
 
       onUploadImage({
         cloudinary_public_id,
+        height: imageDimensions.naturalHeight,
+        width: imageDimensions.naturalWidth,
+        tagIds,
         onSuccess: () => {
           setCreateImageStatus("success");
-
-          /*           if (toastId) {
-            toast.dismiss(toastId);
-          } */
 
           setTimeout(() => {
             closeModal();
@@ -126,7 +108,6 @@ const UploadFunctionality = ({
             toast(<Toast text="uploaded image" type="success" />);
           }, 500);
         },
-        tagIds,
       });
     } catch (error) {
       setCreateImageStatus("error");
@@ -135,7 +116,9 @@ const UploadFunctionality = ({
 
   return (
     <div>
-      {imageFile ? <ImageFileDisplay file={imageFile} /> : null}
+      {imageFile ? (
+        <ImageFileDisplay file={imageFile} onLoad={setImageDimensions} />
+      ) : null}
       <ImageFileInput isFile={Boolean(imageFile)} setFile={setImageFile} />
       {imageFile ? (
         <div className="mt-md">
@@ -183,18 +166,30 @@ const UploadFunctionality = ({
   );
 };
 
-const ImageFileDisplay = ({ file }: { file: File }) => {
+const ImageFileDisplay = ({
+  file,
+  onLoad,
+}: {
+  file: File;
+  onLoad: (arg0: { naturalHeight: number; naturalWidth: number }) => void;
+}) => {
   const imgSrc = URL.createObjectURL(file);
 
   return (
     <div className="my-md gap-8">
       <div className="inline-block">
-        <Image
-          width={150}
-          height={150}
+        <NextImage
+          width={300}
+          height={300}
           src={imgSrc}
           className="bg-gray-50"
           alt=""
+          onLoad={(e) => {
+            onLoad({
+              naturalHeight: e.currentTarget.naturalHeight,
+              naturalWidth: e.currentTarget.naturalWidth,
+            });
+          }}
         />
       </div>
       <p className="text-sm text-gray-400">{file.name}</p>

@@ -6,10 +6,12 @@ export const ModalPanelWrapper = ({
   onClose,
   isOpen,
   children: panelContent,
+  styles,
 }: {
   isOpen: boolean;
   onClose: () => void;
   children: ReactElement;
+  styles?: { parentPanel?: string };
 }) => {
   return createPortal(
     <Transition show={isOpen} as={Fragment}>
@@ -36,7 +38,9 @@ export const ModalPanelWrapper = ({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel>{panelContent}</Dialog.Panel>
+            <Dialog.Panel className={`${styles?.parentPanel}`}>
+              {panelContent}
+            </Dialog.Panel>
           </Transition.Child>
         </div>
       </Dialog>

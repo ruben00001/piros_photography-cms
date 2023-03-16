@@ -30,7 +30,7 @@ const MyCldImage = ({
       >
         <SpinnerIcon />
       </div>
-      <ContainerDimension ignoreHeight={true}>
+      <ContainerDimension ignoreHeight={heightSetByContainer !== true}>
         {({ height, width }) => (
           <>
             <CldImage
@@ -44,8 +44,9 @@ const MyCldImage = ({
               quality={1}
               src={src}
               className={`duration-600 absolute z-10 h-auto w-full transition-opacity ease-out ${
+                // className={`duration-600 absolute z-10 transition-opacity ease-out ${
                 !qualityImgIsLoaded ? "opacity-100" : "-z-10 opacity-0"
-              } ${fit}`}
+              } ${fit} h-[${height}px] w-[${width}px]`}
               onLoad={() => setBlurImgIsLoaded(true)}
               alt=""
             />

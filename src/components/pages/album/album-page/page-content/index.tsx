@@ -84,7 +84,7 @@ const useCreateImageAndAddToAlbum = (): OnUploadImage | null => {
     return null;
   }
 
-  return ({ cloudinary_public_id, tagIds, onSuccess }) =>
+  return ({ cloudinary_public_id, tagIds, onSuccess, height, width }) =>
     createImageAndAddToAlbumMutation.mutate(
       {
         albumId: album.id,
@@ -92,6 +92,8 @@ const useCreateImageAndAddToAlbum = (): OnUploadImage | null => {
         tagIds,
         imageType: imageContext,
         index: album.images.length,
+        height,
+        width,
       },
       { onSuccess }
     );
