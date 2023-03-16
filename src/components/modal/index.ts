@@ -1,2 +1,2 @@
-export * from "./PanelWrapper";
 export * from "./WarningPanel";
+export * from "./Modal";
