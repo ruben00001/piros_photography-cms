@@ -16,6 +16,8 @@ import {
   FolderSimplePlus,
   CaretDoubleRight,
   CornersOut,
+  CaretDown,
+  HandsClapping,
 } from "phosphor-react";
 
 export {
@@ -37,4 +39,6 @@ export {
   FolderSimplePlus as AddFirstAlbumIcon,
   CaretDoubleRight as GoToPageIcon,
   CornersOut as ExpandIcon,
+  CaretDown as CaretDownIcon,
+  HandsClapping as LikeIcon,
 };

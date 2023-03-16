@@ -25,7 +25,7 @@ export const ModalPanelWrapper = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-50/50" aria-hidden="true" />
+          <div className="fixed inset-0 bg-gray-50/60" aria-hidden="true" />
         </Transition.Child>
 
         <div className="fixed inset-0 grid place-items-center p-4">
