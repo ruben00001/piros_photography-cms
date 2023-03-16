@@ -31,7 +31,7 @@ export default AlbumImage;
 
 const Menu = () => {
   return (
-    <div className="absolute right-1 top-1 z-20 flex items-center gap-sm rounded-md bg-white py-xxs px-xs opacity-0 shadow-lg hover:!opacity-100 group-hover/albumImage:opacity-50">
+    <div className="absolute right-1 top-1 z-20 flex items-center gap-sm rounded-md bg-white py-xxs px-xs opacity-0 shadow-lg transition-opacity duration-75 ease-in-out hover:!opacity-100 group-hover/albumImage:opacity-50">
       <ModalVisibilityProvider>
         <OpenAlbumImageModal />
       </ModalVisibilityProvider>
@@ -48,7 +48,7 @@ const DeleteModal = () => {
   return (
     <>
       <div
-        className="cursor-pointer rounded-md px-2 py-2 text-sm transition-all duration-75 ease-in-out hover:bg-my-alert hover:brightness-90"
+        className="cursor-pointer rounded-md px-2 py-2 text-sm transition-all duration-75 ease-in-out hover:bg-my-alert"
         onClick={open}
       >
         <WithTooltip text="Delete album image" yOffset={15}>
@@ -77,7 +77,7 @@ const OpenAlbumImageModal = () => {
   return (
     <>
       <div
-        className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:text-base-content hover:brightness-90"
+        className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:brightness-90 group-hover/albumImage:text-base-content"
         onClick={open}
       >
         <WithTooltip text="Open image" yOffset={15}>
