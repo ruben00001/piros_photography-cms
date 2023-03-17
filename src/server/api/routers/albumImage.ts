@@ -12,4 +12,17 @@ export const albumImageRouter = createTRPCRouter({
         data: { title: input.updatedTitle },
       });
     }),
+
+  updateDescription: protectedProcedure
+    .input(
+      z.object({ albumImageId: z.string(), updatedDescription: z.string() })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.albumImage.update({
+        where: {
+          id: input.albumImageId,
+        },
+        data: { title: input.updatedDescription },
+      });
+    }),
 });

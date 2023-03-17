@@ -12,22 +12,26 @@ import AddImageButton from "./AddImage";
 import {
   OnUploadImage,
   UploadPanel,
-} from "~/components/image/add-image/upload-modal";
+} from "~/components/image/update-image/upload-modal";
+import { WarningPanel as WarningPanel_ } from "~/components/warning-modal";
 import {
   OnSelectImage,
   UploadedPanel,
-} from "~/components/image/add-image/uploaded-modal";
-import { WarningPanel as WarningPanel_ } from "~/components/warning-modal";
+} from "~/components/image/update-image/uploaded-modal";
 
 // album image: title, desc.
 
 const PageContent = () => {
   return (
     <>
-      <div>
+      <div className="p-xl">
         <MetaPanel />
-        <AddImageButton />
-        <AlbumBody />
+        <div className="mt-xl">
+          <AddImageButton />
+        </div>
+        <div className="mt-lg">
+          <AlbumBody />
+        </div>
       </div>
       <ModalPanels />
     </>

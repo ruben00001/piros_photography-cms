@@ -10,7 +10,7 @@ import TextAreaForm from "~/components/forms/TextAreaForm";
 
 const AlbumBody = () => {
   return (
-    <div className="p-xl">
+    <div>
       <div>
         <Title />
         <Description />
@@ -27,20 +27,22 @@ export default AlbumBody;
 const Title = () => {
   const album = useAlbumContext();
 
-  const updateTitle = api.album.updateTitle.useMutation();
+  const updateTitle = api.album.updateTitle.useMutation({
+    onSuccess: () => {
+      toast(<Toast text="Title updated" type="success" />);
+    },
+    onError: () => {
+      toast(
+        <Toast text="Something went wrong updating the title" type="error" />
+      );
+    },
+  });
 
   return (
-    <div className="text-4xl">
+    <div className="text-2xl">
       <TextInputForm
         onSubmit={({ inputValue }) =>
-          updateTitle.mutate(
-            { albumId: album.id, updatedTitle: inputValue },
-            {
-              onSuccess: async () => {
-                toast(<Toast text="Title updated" type="success" />);
-              },
-            }
-          )
+          updateTitle.mutate({ albumId: album.id, updatedTitle: inputValue })
         }
         tooltipText="click to edit title"
         initialValue={album.title}
@@ -53,20 +55,28 @@ const Title = () => {
 const Description = () => {
   const album = useAlbumContext();
 
-  const updateDescriptionMutation = api.album.updateDescription.useMutation();
+  const updateDescriptionMutation = api.album.updateDescription.useMutation({
+    onSuccess: () => {
+      toast(<Toast text="Description updated" type="success" />);
+    },
+    onError: () => {
+      toast(
+        <Toast
+          text="Something went wrong updating the description"
+          type="error"
+        />
+      );
+    },
+  });
 
   return (
     <div className="font-serif text-lg">
       <TextAreaForm
         onSubmit={({ inputValue }) =>
-          updateDescriptionMutation.mutate(
-            { albumId: album.id, updatedDescription: inputValue },
-            {
-              onSuccess: async () => {
-                toast(<Toast text="Title updated" type="success" />);
-              },
-            }
-          )
+          updateDescriptionMutation.mutate({
+            albumId: album.id,
+            updatedDescription: inputValue,
+          })
         }
         tooltipText="click to edit"
         initialValue={album.description}

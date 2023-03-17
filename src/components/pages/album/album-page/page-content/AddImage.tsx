@@ -1,5 +1,5 @@
 import { PlusIcon } from "~/components/Icon";
-import AddImageMenu from "~/components/image/add-image/menu";
+import AddImageMenu from "~/components/image/update-image/menu";
 import { useImageTypeContext } from "../_context/ImageType";
 
 const AddImageButton = () => {

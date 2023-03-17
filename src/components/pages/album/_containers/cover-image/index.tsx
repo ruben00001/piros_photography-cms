@@ -1,7 +1,7 @@
 import { type ReactElement } from "react";
 import { Album as BaseAlbum, Image as BaseImage } from "@prisma/client";
 
-import AddImageMenu from "~/components/image/add-image/menu";
+import AddImageMenu from "~/components/image/update-image/menu";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import MyCldImage from "~/components/image/MyCldImage";
 import ImagePlaceholder from "~/components/image/Placeholder";

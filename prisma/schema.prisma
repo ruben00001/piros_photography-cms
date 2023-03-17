@@ -71,8 +71,8 @@ model Album {
     updatedAt DateTime @updatedAt
     index Int 
     images AlbumImage[]
-    title String 
-    description String @default("")
+    title String ?
+    description String ?
     published Boolean @default(false)
     coverImage Image ? @relation(fields: [coverImageId ], references: [id]) 
     coverImageId String ?

@@ -69,7 +69,7 @@ const TextAreaForm = ({
         }}
       >
         <ReactTextareaAutosize
-          className={`relative z-10 box-content h-full w-full rounded-sm border py-1 transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
+          className={`relative z-10 box-content h-full w-full rounded-sm border bg-transparent py-1 transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
             enableBorderOnBlur && isChange
               ? "border-base-300"
               : "border-transparent"

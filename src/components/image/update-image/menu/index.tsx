@@ -5,8 +5,8 @@ import { useUploadModalVisibilityContext } from "../upload-modal";
 import { useUploadedModalVisibilityContext } from "../uploaded-modal";
 import MyMenu, { MenuItem as MenuItem_ } from "~/components/MyMenu";
 
-const AddImageMenu = ({
-  children,
+const UpdateImageMenu = ({
+  children: button,
   styles,
   imageModals,
 }: {
@@ -18,7 +18,7 @@ const AddImageMenu = ({
   const { openModal: openUploadModal } = useUploadModalVisibilityContext();
 
   return (
-    <MyMenu button={children} styles={styles}>
+    <MyMenu button={button} styles={styles}>
       <MenuItem
         onClick={() => {
           openUploadedModal(imageModals?.onVisibilityChange);
@@ -45,7 +45,7 @@ const AddImageMenu = ({
   );
 };
 
-export default AddImageMenu;
+export default UpdateImageMenu;
 
 const MenuItem = ({
   children,

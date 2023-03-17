@@ -6,6 +6,7 @@ import MyCldImage from "~/components/image/MyCldImage";
 import { Modal, WarningPanel } from "~/components/modal";
 import ImageModalPanel from "./ImageModalPanel";
 import { AlbumImageProvider } from "../../../_context/AlbumImageState";
+import UpdateImageMenu from "~/components/image/update-image/menu";
 
 const AlbumImage = ({ albumImage }: { albumImage: AlbumImage }) => {
   return (
@@ -36,6 +37,41 @@ const Menu = () => {
   );
 };
 
+const OpenAlbumImageModal = () => {
+  return (
+    <Modal
+      button={({ open }) => (
+        <div
+          className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:brightness-90 group-hover/albumImage:text-base-content"
+          onClick={open}
+        >
+          <WithTooltip text="Open image" yOffset={15}>
+            <span className="">
+              <ExpandIcon />
+            </span>
+          </WithTooltip>
+        </div>
+      )}
+      panelContent={() => <ImageModalPanel />}
+      // styles={{ parentPanel: "w-full" }}
+    />
+  );
+};
+
+const UpdateImage = () => {
+  return (
+    <UpdateImageMenu>
+      <div className="cursor-pointer rounded-md px-2 py-2 text-sm transition-all duration-75 ease-in-out hover:bg-my-alert">
+        <WithTooltip text="Delete album image" yOffset={15}>
+          <span className="text-my-alert-content">
+            <DeleteIcon />
+          </span>
+        </WithTooltip>
+      </div>
+    </UpdateImageMenu>
+  );
+};
+
 const DeleteModal = () => {
   return (
     <Modal
@@ -61,27 +97,6 @@ const DeleteModal = () => {
           }}
         />
       )}
-    />
-  );
-};
-
-const OpenAlbumImageModal = () => {
-  return (
-    <Modal
-      button={({ open }) => (
-        <div
-          className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:brightness-90 group-hover/albumImage:text-base-content"
-          onClick={open}
-        >
-          <WithTooltip text="Open image" yOffset={15}>
-            <span className="">
-              <ExpandIcon />
-            </span>
-          </WithTooltip>
-        </div>
-      )}
-      panelContent={() => <ImageModalPanel />}
-      // styles={{ parentPanel: "w-full" }}
     />
   );
 };

@@ -37,11 +37,7 @@ export const TextInputForm = ({
   const containerRef = useRef<HTMLFormElement>(null);
 
   return (
-    <WithTooltip
-      text={tooltipText}
-      isDisabled={inputIsFocused}
-      placement="auto-start"
-    >
+    <WithTooltip text={tooltipText} isDisabled={inputIsFocused} placement="top">
       <form
         className="relative"
         onSubmit={(e) => {

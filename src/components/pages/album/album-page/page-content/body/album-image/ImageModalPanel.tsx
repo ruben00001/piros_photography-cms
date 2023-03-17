@@ -2,18 +2,17 @@ import produce from "immer";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
-import Toast from "~/components/data-display/Toast";
-import TextInput from "~/components/forms/TextInput";
-import TextInputDynamicWidth from "~/components/forms/TextInputDynamicWidth";
-import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
-import { CycleLeftIcon, CycleRightIcon, LikeIcon } from "~/components/Icon";
 
-import MyCldImage from "~/components/image/MyCldImage2";
-import { useModalVisibilityContext } from "~/components/modal";
-// import { TextInputForm } from "~/components/TextInputForm";
-import { api } from "~/utils/api";
 import { useAlbumImageContext } from "../../../_context/AlbumImageState";
 import { useAlbumContext } from "../../../_context/AlbumState";
+import { api } from "~/utils/api";
+
+import Toast from "~/components/data-display/Toast";
+import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
+import { CycleLeftIcon, CycleRightIcon, LikeIcon } from "~/components/Icon";
+import MyCldImage from "~/components/image/MyCldImage2";
+import { useModalVisibilityContext } from "~/components/modal";
+import TextAreaForm from "~/components/forms/TextAreaForm";
 
 const ImageModalPanel = () => {
   const { imageDimensionsForScreen } = useAlbumImageContext();
@@ -25,7 +24,7 @@ const ImageModalPanel = () => {
     <>
       <CloseButton />
       <div
-        className={`group/imageModal flex gap-sm ${
+        className={`group/imageModal flex max-w-full gap-sm ${
           imageIsLandscape ? "flex-col" : "flex-row-reverse"
         }`}
       >
@@ -59,11 +58,16 @@ const DescriptionPanel = () => {
 
   const { imageDimensionsForScreen } = useAlbumImageContext();
 
+  const imageIsLandscape =
+    imageDimensionsForScreen.width > imageDimensionsForScreen.height;
+
   return (
-    <div className="text-gray-900">
+    <div className=" text-gray-900 ">
       <div
-        className={`flex items-center justify-between`}
-        style={{ width: imageDimensionsForScreen.width }}
+        className={`flex items-center justify-between bg-white/60 pl-xs`}
+        style={{
+          width: imageIsLandscape ? imageDimensionsForScreen.width : "auto",
+        }}
       >
         <div className="flex gap-xl">
           <Title />
@@ -83,17 +87,14 @@ const DescriptionPanel = () => {
         </div>
       </div>
       <div
-        className={`max-h-[200px] overflow-y-auto transition-opacity duration-150 ease-linear ${
+        className={`overflow-y-auto bg-white/60 pl-xs pb-md transition-opacity duration-150  ease-linear ${
           isExpanded ? "opacity-100" : "opacity-0"
         }`}
+        style={{
+          maxHeight: imageIsLandscape ? 200 : imageDimensionsForScreen.height,
+        }}
       >
-        <p className="font-serif tracking-wide">
-          Quisque vitae dolor tincidunt, ornare diam tincidunt, feugiat tellus.
-          Proin placerat tellus non vehicula vulputate. Aliquam faucibus felis
-          ut eros consectetur semper. Donec volutpat tellus dapibus quam mollis
-          varius. Donec bibendum erat in rutrum rhoncus. Aenean ut ante massa.
-          Fusce ultricies ultrices mi, ac volutpat quam bibendum quis.
-        </p>
+        <Description />
         <p className="mt-sm font-mono text-sm text-base-content">
           [ Comments will go here ]
         </p>
@@ -151,19 +152,73 @@ const Title = () => {
       }
       tooltipText="Click to update title"
       initialValue={albumImage.title}
-      placeholder="Title"
+      placeholder="Title (optional)"
     />
-    /*     <TextInputForm
-      onSubmit={({ inputValue }) =>
-        updateTitleMutation.mutate({
-          albumImageId: albumImage.id,
-          updatedTitle: inputValue,
-        })
-      }
-      tooltipText="Click to update title"
-      initialValue={albumImage.title}
-      placeholder="Title"
-    /> */
+  );
+};
+
+const Description = () => {
+  const album = useAlbumContext();
+  const albumImage = useAlbumImageContext();
+
+  const utils = api.useContext();
+
+  const updateDescriptionMutation =
+    api.albumImage.updateDescription.useMutation({
+      async onMutate({ albumImageId, updatedDescription }) {
+        const prevData = utils.album.albumPageGetOne.getData();
+
+        await utils.album.albumPageGetOne.cancel();
+
+        utils.album.albumPageGetOne.setData(
+          { albumId: album.id },
+          (currData) => {
+            if (!currData) {
+              return prevData;
+            }
+
+            const updated = produce(currData, (draft) => {
+              const albumImageIndex = draft.images.findIndex(
+                (albumImage) => albumImage.id === albumImageId
+              );
+              if (albumImageIndex > -1) {
+                draft.images[albumImageIndex]!.description = updatedDescription;
+              }
+            });
+
+            return updated;
+          }
+        );
+      },
+      onSuccess: () => {
+        toast(<Toast text="Description updated" type="success" />);
+      },
+      onError: () => {
+        toast(
+          <Toast
+            text="Something went wrong updating the description"
+            type="error"
+          />
+        );
+      },
+    });
+
+  return (
+    <div className="overflow-x-hidden pr-md font-serif tracking-wide">
+      <TextAreaForm
+        onSubmit={({ inputValue }) =>
+          updateDescriptionMutation.mutate({
+            albumImageId: albumImage.id,
+            updatedDescription: inputValue,
+          })
+        }
+        tooltipText="Click to update description"
+        initialValue={albumImage.description}
+        placeholder="Description (optional)"
+        enableBorderOnBlur
+        enableHowToSubmitMessage
+      />
+    </div>
   );
 };
 
@@ -171,10 +226,12 @@ const ImagePanel = () => {
   const { image, imageDimensionsForScreen } = useAlbumImageContext();
 
   return (
-    <MyCldImage
-      src={image.cloudinary_public_id}
-      dimensions={imageDimensionsForScreen}
-    />
+    <div className="flex-grow">
+      <MyCldImage
+        src={image.cloudinary_public_id}
+        dimensions={imageDimensionsForScreen}
+      />
+    </div>
   );
 };
 

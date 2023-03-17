@@ -9,7 +9,7 @@ import {
 import { api } from "~/utils/api";
 
 import { FileImageIcon, TickIcon } from "~/components/Icon";
-import Tags from "~/components/image/add-image/upload-modal/panel/tags";
+import Tags from "~/components/image/update-image/upload-modal/panel/tags";
 import { handleUploadImage } from "~/helpers/cloudinary";
 import Spinner from "~/components/Spinner";
 import Toast from "~/components/data-display/Toast";

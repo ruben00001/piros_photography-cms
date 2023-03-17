@@ -11,19 +11,41 @@ import { CoverImage } from "~/components/pages/album/_containers";
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { useImageTypeContext } from "../_context/ImageType";
-import { DeleteIcon } from "~/components/Icon";
+import { DeleteIcon, MenuIcon } from "~/components/Icon";
 import { useRouter } from "next/router";
 import { useWarningModalContext } from "~/components/warning-modal";
+import MyMenu from "~/components/MyMenu";
+import {
+  Modal,
+  useModalVisibilityContext,
+  WarningPanel,
+} from "~/components/modal";
 
 const MetaPanel = () => {
   const album = useAlbumContext();
   const { setImageContext } = useImageTypeContext();
 
   return (
-    <div className="flex gap-xl p-lg">
-      <div className="flex gap-xs">
-        <p className="font-mono text-sm">Cover Image:</p>
-        <div className="h-auto w-[200px]">
+    <div className="group relative flex flex-col gap-sm rounded-lg bg-gray-50 p-xs pb-sm">
+      <div className="flex gap-2xl">
+        <div className="">
+          <span className="mr-xs inline-block text-sm text-gray-400">
+            Created
+          </span>
+          <span className="font-mono text-sm text-gray-500">
+            {album.createdAt.toDateString()}
+          </span>
+        </div>
+        <div className="">
+          <span className="mr-xs text-sm text-gray-400">Updated</span>
+          <span className="font-mono text-sm text-gray-500">
+            {album.updatedAt.toDateString()}
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-col gap-xxs">
+        <p className="text-sm text-gray-400">Cover image</p>
+        <div className="h-auto w-[350px]">
           <CoverImage
             album={album}
             addImageMenu={{
@@ -34,22 +56,12 @@ const MetaPanel = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-xs">
-        <div className="flex items-baseline gap-xs">
-          <p className="font-mono text-sm">Publish status:</p>
-          <PublishToggleBadge />
-        </div>
-        <div className="flex items-baseline gap-xs">
-          <p className="font-mono text-sm">Created at:</p>
-          <p>{album.createdAt.toDateString()}</p>
-        </div>
-        <div className="flex items-baseline gap-xs">
-          <p className="font-mono text-sm">Updated at:</p>
-          <p>{album.updatedAt.toDateString()}</p>
-        </div>
+      <div className="flex items-center gap-sm">
+        <p className="text-sm text-gray-400">Publish status</p>
+        <PublishToggleBadge />
       </div>
-      <div>
-        <DeleteAlbumButton />
+      <div className="absolute right-xs top-xs">
+        <AlbumMenu />
       </div>
     </div>
   );
@@ -57,22 +69,90 @@ const MetaPanel = () => {
 
 export default MetaPanel;
 
-const DeleteAlbumButton = () => {
-  const { openModal: openWarningModal } = useWarningModalContext();
+const AlbumMenu = () => {
+  return (
+    <MyMenu
+      button={
+        <div className="text-gray-300 transition-colors duration-75 ease-in-out hover:!text-gray-600 group-hover:text-gray-400">
+          <MenuIcon />
+        </div>
+      }
+      styles={{ itemsWrapper: "right-0" }}
+    >
+      <div>
+        <DeleteAlbumModal />
+      </div>
+    </MyMenu>
+  );
+};
+
+const DeleteAlbumModal = () => {
+  const album = useAlbumContext();
+
+  const router = useRouter();
+
+  const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery(
+    undefined,
+    {
+      enabled: false,
+    }
+  );
+
+  const deleteAlbumMutation = api.album.delete.useMutation({
+    onSuccess: async () => {
+      // closeModal();
+
+      toast(<Toast text="deleted album" type="success" />);
+      toast(<Toast text="redirecting..." type="info" />);
+
+      await refetchAlbums();
+
+      setTimeout(() => {
+        router.push("/albums");
+      }, 400);
+    },
+    onError: async () => {
+      toast(<Toast text="delete album failed" type="error" />);
+    },
+  });
 
   return (
-    <div>
-      <button
-        className="my-btn flex items-center gap-xs border-my-alert-content bg-my-alert text-my-alert-content"
-        type="button"
-        onClick={() => openWarningModal()}
-      >
-        <span>
-          <DeleteIcon />
-        </span>
-        <span>Delete album</span>
-      </button>
-    </div>
+    <Modal
+      button={({ open: openModal }) => (
+        <button
+          className="my-btn flex items-center gap-xs border-my-alert-content bg-my-alert text-my-alert-content"
+          onClick={openModal}
+          type="button"
+        >
+          <span>
+            <DeleteIcon />
+          </span>
+          <span className="whitespace-nowrap">Delete album</span>
+        </button>
+      )}
+      panelContent={({ close: closeModal }) => (
+        <WarningPanel
+          callback={{
+            func: () =>
+              deleteAlbumMutation.mutate(
+                {
+                  album: { id: album.id, index: album.index },
+                },
+                {
+                  onSuccess() {
+                    closeModal();
+                  },
+                }
+              ),
+          }}
+          closeModal={closeModal}
+          text={{
+            body: "Are you sure? This can't be undone.",
+            title: "Delete album",
+          }}
+        />
+      )}
+    />
   );
 };
 
