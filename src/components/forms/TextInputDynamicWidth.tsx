@@ -98,7 +98,7 @@ const TextInput = ({
         // autofocus={false}
       ></input>
       {showPressEnterMessage ? (
-        <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-70 py-xxxs px-xs">
+        <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-70 py-xxxs px-xs font-sans">
           <p className="text-xs text-gray-500">Press enter to submit</p>
         </div>
       ) : null}

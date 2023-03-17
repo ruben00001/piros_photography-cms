@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 
 import TextInput from "~/components/forms/TextInput";
 import WithTooltip from "~/components/data-display/WithTooltip";
+import DOMPurify from "dompurify";
 
 export const TextInputForm = ({
   initialValue = "",
@@ -29,8 +30,10 @@ export const TextInputForm = ({
 
     prevValueRef.current = inputValue;
 
+    const clean = DOMPurify.sanitize(inputValue);
+
     onSubmit({
-      inputValue,
+      inputValue: clean,
     });
   };
 

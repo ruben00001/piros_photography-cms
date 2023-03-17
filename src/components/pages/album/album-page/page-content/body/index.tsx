@@ -6,12 +6,14 @@ import { useAlbumContext } from "../../_context/AlbumState";
 import Toast from "~/components/data-display/Toast";
 import { TextInputForm } from "~/components/forms/TextInputForm";
 import AlbumImage from "./album-image";
+import TextAreaForm from "~/components/forms/TextAreaForm";
 
 const AlbumBody = () => {
   return (
     <div className="p-xl">
       <div>
         <Title />
+        <Description />
       </div>
       <div className="mt-xl">
         <Images />
@@ -43,6 +45,34 @@ const Title = () => {
         tooltipText="click to edit title"
         initialValue={album.title}
         placeholder="Album title"
+      />
+    </div>
+  );
+};
+
+const Description = () => {
+  const album = useAlbumContext();
+
+  const updateDescriptionMutation = api.album.updateDescription.useMutation();
+
+  return (
+    <div className="font-serif text-lg">
+      <TextAreaForm
+        onSubmit={({ inputValue }) =>
+          updateDescriptionMutation.mutate(
+            { albumId: album.id, updatedDescription: inputValue },
+            {
+              onSuccess: async () => {
+                toast(<Toast text="Title updated" type="success" />);
+              },
+            }
+          )
+        }
+        tooltipText="click to edit"
+        initialValue={album.description}
+        placeholder="Album description (optional)"
+        enableHowToSubmitMessage
+        enableBorderOnBlur
       />
     </div>
   );

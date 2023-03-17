@@ -8,7 +8,7 @@ const TextInput = ({
   onFocus,
   placeholder,
   showBorderOnBlur,
-  showPressEnter: showPressEnterControl,
+  showPressEnter,
   isChange = true,
   styles,
 }: {
@@ -29,7 +29,7 @@ const TextInput = ({
   const [localIsFocused, setLocalIsFocused] = useState(false);
 
   const showPressEnterMessage =
-    showPressEnterControl && isChange && localIsFocused && value.length;
+    showPressEnter && isChange && localIsFocused && value.length;
 
   return (
     <div

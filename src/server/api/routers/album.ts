@@ -52,6 +52,17 @@ export const albumRouter = createTRPCRouter({
       });
     }),
 
+  updateDescription: protectedProcedure
+    .input(z.object({ albumId: z.string(), updatedDescription: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.album.update({
+        where: {
+          id: input.albumId,
+        },
+        data: { description: input.updatedDescription },
+      });
+    }),
+
   checkTitleIsUnique: protectedProcedure
     .input(z.object({ title: z.string() }))
     .query(async ({ ctx, input }) => {

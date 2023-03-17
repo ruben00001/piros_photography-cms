@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 @layer base {
-  button {
+  button,
+  input,
+  textarea {
     @apply outline-none focus:outline-none;
   }
 }
