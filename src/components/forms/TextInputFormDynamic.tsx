@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-import TextInput from "~/components/forms/TextInput";
+import TextInput from "~/components/forms/TextInputDynamicWidth";
 import WithTooltip from "~/components/data-display/WithTooltip";
 
 export const TextInputForm = ({
@@ -9,20 +9,14 @@ export const TextInputForm = ({
   tooltipText,
   placeholder = "Write here",
 }: {
-  initialValue?: string;
-  onSubmit: ({
-    inputValue,
-    onSuccess,
-  }: {
-    inputValue: string;
-    onSuccess: () => void;
-  }) => void;
+  initialValue?: string | null;
+  onSubmit: ({ inputValue }: { inputValue: string }) => void;
   tooltipText: string;
   placeholder?: string;
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false);
 
-  const [inputValue, setInputValue] = useState(initialValue);
+  const [inputValue, setInputValue] = useState(initialValue || "");
 
   const prevValueRef = useRef(inputValue);
   const prevValueValue = prevValueRef.current;
@@ -33,11 +27,10 @@ export const TextInputForm = ({
       return;
     }
 
+    prevValueRef.current = inputValue;
+
     onSubmit({
       inputValue,
-      onSuccess: () => {
-        prevValueRef.current = inputValue;
-      },
     });
   };
 

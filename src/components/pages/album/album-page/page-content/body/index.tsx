@@ -4,7 +4,7 @@ import { api } from "~/utils/api";
 import { useAlbumContext } from "../../_context/AlbumState";
 
 import Toast from "~/components/data-display/Toast";
-import { TextInputForm } from "~/components/TextInputForm";
+import { TextInputForm } from "~/components/forms/TextInputForm";
 import AlbumImage from "./album-image";
 
 const AlbumBody = () => {
@@ -30,14 +30,12 @@ const Title = () => {
   return (
     <div className="text-4xl">
       <TextInputForm
-        onSubmit={({ inputValue, onSuccess }) =>
+        onSubmit={({ inputValue }) =>
           updateTitle.mutate(
             { albumId: album.id, updatedTitle: inputValue },
             {
               onSuccess: async () => {
                 toast(<Toast text="Title updated" type="success" />);
-
-                onSuccess();
               },
             }
           )

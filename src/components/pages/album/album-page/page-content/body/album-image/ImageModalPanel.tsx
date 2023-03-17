@@ -1,10 +1,19 @@
+import produce from "immer";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { toast } from "react-toastify";
+import Toast from "~/components/data-display/Toast";
+import TextInput from "~/components/forms/TextInput";
+import TextInputDynamicWidth from "~/components/forms/TextInputDynamicWidth";
+import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
 import { CycleLeftIcon, CycleRightIcon, LikeIcon } from "~/components/Icon";
 
 import MyCldImage from "~/components/image/MyCldImage2";
 import { useModalVisibilityContext } from "~/components/modal";
+// import { TextInputForm } from "~/components/TextInputForm";
+import { api } from "~/utils/api";
 import { useAlbumImageContext } from "../../../_context/AlbumImageState";
+import { useAlbumContext } from "../../../_context/AlbumState";
 
 const ImageModalPanel = () => {
   const { imageDimensionsForScreen } = useAlbumImageContext();
@@ -57,7 +66,7 @@ const DescriptionPanel = () => {
         style={{ width: imageDimensionsForScreen.width }}
       >
         <div className="flex gap-xl">
-          <div>A title</div>
+          <Title />
           <button
             className="flex items-center gap-xs text-xs text-gray-500"
             onClick={() => setIsExpanded(!isExpanded)}
@@ -66,7 +75,7 @@ const DescriptionPanel = () => {
             <span>read {isExpanded ? "less" : "more"}</span>
           </button>
         </div>
-        <div className="flex items-center gap-xs text-base-content">
+        <div className="flex items-center gap-xs text-gray-600">
           <div className="text-lg">
             <LikeIcon />
           </div>
@@ -90,6 +99,71 @@ const DescriptionPanel = () => {
         </p>
       </div>
     </div>
+  );
+};
+
+const Title = () => {
+  const album = useAlbumContext();
+  const albumImage = useAlbumImageContext();
+
+  const utils = api.useContext();
+
+  const updateTitleMutation = api.albumImage.updateTitle.useMutation({
+    async onMutate({ albumImageId, updatedTitle }) {
+      const prevData = utils.album.albumPageGetOne.getData();
+
+      await utils.album.albumPageGetOne.cancel();
+
+      utils.album.albumPageGetOne.setData({ albumId: album.id }, (currData) => {
+        if (!currData) {
+          return prevData;
+        }
+
+        const updated = produce(currData, (draft) => {
+          const albumImageIndex = draft.images.findIndex(
+            (albumImage) => albumImage.id === albumImageId
+          );
+          if (albumImageIndex > -1) {
+            draft.images[albumImageIndex]!.title = updatedTitle;
+          }
+        });
+
+        return updated;
+      });
+    },
+    onSuccess: () => {
+      toast(<Toast text="Title updated" type="success" />);
+    },
+    onError: () => {
+      toast(
+        <Toast text="Something went wrong updating the title" type="error" />
+      );
+    },
+  });
+
+  return (
+    <TextInputForm
+      onSubmit={({ inputValue }) =>
+        updateTitleMutation.mutate({
+          albumImageId: albumImage.id,
+          updatedTitle: inputValue,
+        })
+      }
+      tooltipText="Click to update title"
+      initialValue={albumImage.title}
+      placeholder="Title"
+    />
+    /*     <TextInputForm
+      onSubmit={({ inputValue }) =>
+        updateTitleMutation.mutate({
+          albumImageId: albumImage.id,
+          updatedTitle: inputValue,
+        })
+      }
+      tooltipText="Click to update title"
+      initialValue={albumImage.title}
+      placeholder="Title"
+    /> */
   );
 };
 

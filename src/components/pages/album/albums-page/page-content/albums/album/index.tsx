@@ -14,7 +14,7 @@ import AlbumMenu from "./Menu";
 import { CoverImage } from "~/components/pages/album/_containers";
 import { GoToPageIcon } from "~/components/Icon";
 import Link from "next/link";
-import { TextInputForm } from "~/components/TextInputForm";
+import { TextInputForm } from "~/components/forms/TextInputForm";
 
 type AlbumType = RouterOutputs["album"]["albumsPageGetAll"][0];
 
