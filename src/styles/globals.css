@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  button {
+    @apply outline-none focus:outline-none;
+  }
+}
+
 @layer components {
   .my-btn {
     @apply rounded-md border py-xxs px-[0.75rem] text-sm capitalize transition-colors duration-75 ease-in-out;

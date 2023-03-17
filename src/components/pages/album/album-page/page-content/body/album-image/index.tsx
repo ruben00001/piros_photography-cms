@@ -80,7 +80,7 @@ const OpenAlbumImageModal = () => {
           </WithTooltip>
         </div>
       )}
-      panelContent={({ close }) => <ImageModalPanel />}
+      panelContent={() => <ImageModalPanel />}
       // styles={{ parentPanel: "w-full" }}
     />
   );

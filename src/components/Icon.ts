@@ -18,6 +18,8 @@ import {
   CornersOut,
   CaretDown,
   HandsClapping,
+  ArrowSquareLeft,
+  ArrowSquareRight,
 } from "phosphor-react";
 
 export {
@@ -41,4 +43,6 @@ export {
   CornersOut as ExpandIcon,
   CaretDown as CaretDownIcon,
   HandsClapping as LikeIcon,
+  ArrowSquareLeft as CycleLeftIcon,
+  ArrowSquareRight as CycleRightIcon,
 };

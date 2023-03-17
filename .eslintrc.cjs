@@ -19,7 +19,7 @@ const config = {
   parserOptions: {
     project: "./tsconfig.json",
   },
-  plugins: ["@typescript-eslint", "testing-library"],
+  plugins: ["testing-library", "@typescript-eslint"],
   extends: [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",

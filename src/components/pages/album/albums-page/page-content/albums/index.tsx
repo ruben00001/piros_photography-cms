@@ -5,7 +5,7 @@ import {
   mapIds,
   sortByIndex,
 } from "~/helpers/process-data";
-import { findEntityById } from "~/helpers/query";
+import { findEntityById } from "~/helpers/query-data";
 import { api } from "~/utils/api";
 
 import Toast from "~/components/data-display/Toast";

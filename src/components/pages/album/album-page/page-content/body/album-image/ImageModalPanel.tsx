@@ -1,38 +1,61 @@
-import { Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import { CaretDownIcon, LikeIcon } from "~/components/Icon";
+import { useState } from "react";
+import { createPortal } from "react-dom";
+import { CycleLeftIcon, CycleRightIcon, LikeIcon } from "~/components/Icon";
 
 import MyCldImage from "~/components/image/MyCldImage2";
+import { useModalVisibilityContext } from "~/components/modal";
 import { useAlbumImageContext } from "../../../_context/AlbumImageState";
 
 const ImageModalPanel = () => {
-  const { image } = useAlbumImageContext();
+  const { imageDimensionsForScreen } = useAlbumImageContext();
 
-  // ! need to use the calcImagDimensions func below. Could put in context
-  const imageIsLandscape = image.width > image.height;
+  const imageIsLandscape =
+    imageDimensionsForScreen.width > imageDimensionsForScreen.height;
 
   return (
-    <div
-      className={`flex gap-sm ${
-        imageIsLandscape ? "flex-col" : "flex-row-reverse"
-      }`}
-    >
-      <ImagePanel />
-      <DescriptionPanel />
-    </div>
+    <>
+      <CloseButton />
+      <div
+        className={`group/imageModal flex gap-sm ${
+          imageIsLandscape ? "flex-col" : "flex-row-reverse"
+        }`}
+      >
+        <ImagePanel />
+        <DescriptionPanel />
+        <CycleImagesButtons />
+      </div>
+    </>
   );
 };
 
 export default ImageModalPanel;
 
+const CloseButton = () => {
+  const { close: closeModal } = useModalVisibilityContext();
+
+  return createPortal(
+    <button
+      className="fixed top-sm right-sm z-50 text-sm tracking-wide"
+      onClick={closeModal}
+      type="button"
+    >
+      close
+    </button>,
+    document.body
+  );
+};
+
 const DescriptionPanel = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // ! can pass image width to title component below to have clap in line with image
+  const { imageDimensionsForScreen } = useAlbumImageContext();
 
   return (
     <div className="text-gray-900">
-      <div className="flex items-center justify-between">
+      <div
+        className={`flex items-center justify-between`}
+        style={{ width: imageDimensionsForScreen.width }}
+      >
         <div className="flex gap-xl">
           <div>A title</div>
           <button
@@ -71,39 +94,31 @@ const DescriptionPanel = () => {
 };
 
 const ImagePanel = () => {
-  const { image } = useAlbumImageContext();
+  const { image, imageDimensionsForScreen } = useAlbumImageContext();
 
   return (
-    // <div className="flex-grow border-2 bg-white/90">
     <MyCldImage
       src={image.cloudinary_public_id}
-      dimensions={calcImageDimensions({
-        imageHeight: image.height!,
-        imageWidth: image.width!,
-      })}
+      dimensions={imageDimensionsForScreen}
     />
   );
 };
 
-const calcImageDimensions = ({
-  imageHeight,
-  imageWidth,
-}: {
-  imageWidth: number;
-  imageHeight: number;
-}): { width: number; height: number } => {
-  const imageAspectRatio = imageWidth / imageHeight;
-
-  const maxWidth = window.innerWidth * 0.8;
-  const maxHeight = window.innerHeight * 0.8;
-
-  let width = maxWidth;
-  let height = width / imageAspectRatio;
-
-  if (height > maxHeight) {
-    height = maxHeight;
-    width = height * imageAspectRatio;
-  }
-
-  return { width, height };
+const CycleImagesButtons = () => {
+  return (
+    <>
+      <button
+        className="absolute left-sm top-1/2 z-10 -translate-y-1/2 text-4xl opacity-0 transition-opacity duration-150 ease-in-out group-hover/imageModal:opacity-100"
+        type="button"
+      >
+        <CycleLeftIcon weight="duotone" color="white" fill="gray" />
+      </button>
+      <button
+        className="absolute right-sm top-1/2 z-10 -translate-y-1/2 text-4xl opacity-0 transition-opacity duration-150 ease-in-out group-hover/imageModal:opacity-100"
+        type="button"
+      >
+        <CycleRightIcon weight="duotone" color="white" fill="black" />
+      </button>
+    </>
+  );
 };

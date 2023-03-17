@@ -6,12 +6,11 @@
 import { type ImageTag } from "@prisma/client";
 import { useState } from "react";
 
-import { arrayDivergence } from "~/helpers/data";
+import { arrayDivergence, findEntityById } from "~/helpers/query-data";
 import useHovered from "~/hooks/useHovered";
 import { api } from "~/utils/api";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import TextInput from "~/components/forms/TextInput";
-import { findEntityById } from "~/helpers/query";
 
 type Props = {
   parent: {

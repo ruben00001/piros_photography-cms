@@ -1,6 +1,6 @@
 import { useState, type ReactElement } from "react";
 
-import { fuzzySearch } from "~/helpers/query";
+import { fuzzySearch } from "~/helpers/query-data";
 import { api } from "~/utils/api";
 
 import WithTooltip from "~/components/data-display/WithTooltip";

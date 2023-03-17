@@ -32,10 +32,10 @@ export const ModalVisibilityProvider = ({
   );
 };
 
-export const useModalVisibilityStore = () => {
+export const useModalVisibilityContext = () => {
   const value = useContext(MyContext);
   if (!value) {
-    throw new Error("Missing Provider");
+    throw new Error("Missing Modal Visibility Provider");
   }
   return value;
 };
