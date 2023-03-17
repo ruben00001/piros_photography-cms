@@ -19,8 +19,6 @@ import {
   UploadedPanel,
 } from "~/components/image/update-image/uploaded-modal";
 
-// album image: title, desc.
-
 const PageContent = () => {
   return (
     <>
@@ -33,25 +31,11 @@ const PageContent = () => {
           <AlbumBody />
         </div>
       </div>
-      <ModalPanels />
     </>
   );
 };
 
 export default PageContent;
-
-const ModalPanels = () => {
-  const createImageAndAddToAlbum = useCreateImageAndAddToAlbum();
-  const addImageToAlbum = useAddImageToAlbum();
-
-  return (
-    <>
-      <UploadPanel onUploadImage={createImageAndAddToAlbum} />
-      <UploadedPanel onSelectImage={addImageToAlbum} />
-      <WarningPanel />
-    </>
-  );
-};
 
 const useCreateImageAndAddToAlbum = (): OnUploadImage | null => {
   const album = useAlbumContext();
@@ -153,51 +137,4 @@ const useAddImageToAlbum = (): OnSelectImage => {
           data: { imageId },
           where: { albumId: album.id, imageId: imageContext.replace.where.id },
         });
-};
-
-const WarningPanel = () => {
-  const album = useAlbumContext();
-
-  const router = useRouter();
-
-  const { refetch: refetchAlbums } = api.album.albumsPageGetAll.useQuery(
-    undefined,
-    {
-      enabled: false,
-    }
-  );
-
-  const deleteAlbumMutation = api.album.delete.useMutation();
-
-  return (
-    <WarningPanel_
-      onConfirm={({ closeModal }) =>
-        deleteAlbumMutation.mutate(
-          { album: { id: album.id, index: album.index } },
-          {
-            onSuccess: async () => {
-              closeModal();
-
-              toast(<Toast text="deleted album" type="success" />);
-              toast(<Toast text="redirecting..." type="info" />);
-
-              await refetchAlbums();
-
-              setTimeout(() => {
-                router.push("/albums");
-              }, 400);
-            },
-            onError: async () => {
-              toast(<Toast text="delete album failed" type="error" />);
-            },
-          }
-        )
-      }
-      text={{
-        body: "Are you sure? This can't be undone.",
-        title: "Delete album",
-      }}
-      invokedFuncStatus={deleteAlbumMutation.status}
-    />
-  );
 };

@@ -1,7 +1,7 @@
 import { type ReactElement } from "react";
 import { Album as BaseAlbum, Image as BaseImage } from "@prisma/client";
 
-import AddImageMenu from "~/components/image/update-image/menu";
+import UpdateImageMenu from "~/components/image/update-image/menu-old";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import MyCldImage from "~/components/image/MyCldImage";
 import ImagePlaceholder from "~/components/image/Placeholder";
@@ -29,7 +29,7 @@ const CoverImageMenu = ({
   addImageMenu: Props["addImageMenu"];
 }) => {
   return (
-    <AddImageMenu
+    <UpdateImageMenu
       styles={{ buttonWrapper: "w-full" }}
       imageModals={addImageMenu?.modals}
     >
@@ -38,7 +38,7 @@ const CoverImageMenu = ({
           <div>{children}</div>
         </WithTooltip>
       )}
-    </AddImageMenu>
+    </UpdateImageMenu>
   );
 };
 

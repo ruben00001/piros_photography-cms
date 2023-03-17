@@ -16,7 +16,7 @@ export const Modal = ({
       {({ open, close, isOpen }) => (
         <>
           {button({ open })}
-          <ModalPanelWrapper isOpen={isOpen} onClose={close} styles={styles}>
+          <ModalPanelWrapper isOpen={isOpen} closeModal={close} styles={styles}>
             {panelContent({ close })}
           </ModalPanelWrapper>
         </>

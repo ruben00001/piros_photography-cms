@@ -2,20 +2,22 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, type ReactElement } from "react";
 import { createPortal } from "react-dom";
 
+export type Props = {
+  isOpen: boolean;
+  closeModal: () => void;
+  children: ReactElement;
+  styles?: { parentPanel?: string };
+};
+
 export const ModalPanelWrapper = ({
-  onClose,
+  closeModal: closeModal,
   isOpen,
   children: panelContent,
   styles,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  children: ReactElement;
-  styles?: { parentPanel?: string };
-}) => {
+}: Props) => {
   return createPortal(
     <Transition show={isOpen} as={Fragment}>
-      <Dialog as="div" onClose={onClose} className="relative z-50">
+      <Dialog as="div" onClose={closeModal} className="relative z-50">
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

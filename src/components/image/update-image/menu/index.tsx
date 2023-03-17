@@ -1,67 +1,89 @@
 import { type ReactElement } from "react";
 
 import { ImageIcon, UploadIcon } from "~/components/Icon";
-import { useUploadModalVisibilityContext } from "../upload-modal";
-import { useUploadedModalVisibilityContext } from "../uploaded-modal";
-import MyMenu, { MenuItem as MenuItem_ } from "~/components/MyMenu";
+import { ModalPanelWrapper } from "~/components/modal/PanelWrapper";
+import MyMenu, { MenuItem } from "~/components/MyMenu";
+import { ImageModalsVisibilityProvider } from "./ImageModalsVisibiltyContext";
+import UploadedPanelContent, { OnSelectImage } from "../UploadedPanelContent";
+import UploadPanelContent, { OnUploadImage } from "../UploadPanelContent";
 
 const UpdateImageMenu = ({
   children: button,
+  uploadPanel,
+  uploadedPanel,
   styles,
-  imageModals,
 }: {
   children: ReactElement | ((arg0: { isOpen: boolean }) => ReactElement);
+  uploadPanel: { onUploadImage: OnUploadImage };
+  uploadedPanel: { onSelectImage: OnSelectImage };
   styles?: { buttonWrapper?: string };
-  imageModals?: { onVisibilityChange?: { onOpen: () => void } };
 }) => {
-  const { openModal: openUploadedModal } = useUploadedModalVisibilityContext();
-  const { openModal: openUploadModal } = useUploadModalVisibilityContext();
-
   return (
-    <MyMenu button={button} styles={styles}>
-      <MenuItem
-        onClick={() => {
-          openUploadedModal(imageModals?.onVisibilityChange);
-        }}
-      >
-        <div className="flex items-center gap-4">
-          <span>
-            <ImageIcon />
-          </span>
-          <span>Use uploaded</span>
-        </div>
-      </MenuItem>
-      <MenuItem
-        onClick={() => openUploadModal(imageModals?.onVisibilityChange)}
-      >
-        <div className="flex items-center gap-4">
-          <span>
-            <UploadIcon />
-          </span>
-          <span>Upload new</span>
-        </div>
-      </MenuItem>
-    </MyMenu>
+    <>
+      <ImageModalsVisibilityProvider>
+        {({ uploadModal, uploadedModal }) => (
+          <>
+            <MyMenu button={button} styles={styles}>
+              <ImageModalButton
+                icon={<ImageIcon />}
+                onClick={uploadedModal.open}
+                text="Use uploaded"
+              />
+              <ImageModalButton
+                icon={<UploadIcon />}
+                onClick={uploadModal.open}
+                text="Upload new"
+              />
+            </MyMenu>
+
+            <ModalPanelWrapper
+              isOpen={uploadModal.isOpen}
+              closeModal={uploadModal.close}
+            >
+              <UploadPanelContent
+                closeModal={uploadModal.close}
+                onUploadImage={uploadPanel.onUploadImage}
+              />
+            </ModalPanelWrapper>
+
+            <ModalPanelWrapper
+              isOpen={uploadedModal.isOpen}
+              closeModal={uploadedModal.close}
+            >
+              <UploadedPanelContent
+                closeModal={uploadedModal.close}
+                onSelectImage={uploadedPanel.onSelectImage}
+              />
+            </ModalPanelWrapper>
+          </>
+        )}
+      </ImageModalsVisibilityProvider>
+    </>
   );
 };
 
 export default UpdateImageMenu;
 
-const MenuItem = ({
-  children,
+const ImageModalButton = ({
   onClick,
+  icon,
+  text,
 }: {
-  children: ReactElement | ReactElement[];
+  icon: ReactElement;
+  text: string;
   onClick: () => void;
 }) => {
   return (
-    <MenuItem_>
+    <MenuItem>
       <div
         className={`group flex w-full cursor-pointer items-center gap-4 rounded-md px-2 py-2 pr-md text-sm hover:bg-base-200`}
         onClick={onClick}
       >
-        {children}
+        <div className="flex items-center gap-4">
+          <span>{icon}</span>
+          <span>{text}</span>
+        </div>
       </div>
-    </MenuItem_>
+    </MenuItem>
   );
 };

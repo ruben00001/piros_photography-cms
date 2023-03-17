@@ -1,29 +1,18 @@
-// cover image
-// published
-// created, updated at
-
+import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
-import { useAlbumContext } from "../_context/AlbumState";
 import { api } from "~/utils/api";
+import { useAlbumContext } from "../_context/AlbumState";
 
-import { CoverImage } from "~/components/pages/album/_containers";
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
-import { useImageTypeContext } from "../_context/ImageType";
 import { DeleteIcon, MenuIcon } from "~/components/Icon";
-import { useRouter } from "next/router";
-import { useWarningModalContext } from "~/components/warning-modal";
+import { Modal, WarningPanel } from "~/components/modal";
 import MyMenu from "~/components/MyMenu";
-import {
-  Modal,
-  useModalVisibilityContext,
-  WarningPanel,
-} from "~/components/modal";
+import { CoverImage } from "~/components/pages/album/_containers";
 
 const MetaPanel = () => {
   const album = useAlbumContext();
-  const { setImageContext } = useImageTypeContext();
 
   return (
     <div className="group relative flex flex-col gap-sm rounded-lg bg-gray-50 p-xs pb-sm">
@@ -46,14 +35,7 @@ const MetaPanel = () => {
       <div className="flex flex-col gap-xxs">
         <p className="text-sm text-gray-400">Cover image</p>
         <div className="h-auto w-[350px]">
-          <CoverImage
-            album={album}
-            addImageMenu={{
-              modals: {
-                onVisibilityChange: { onOpen: () => setImageContext("cover") },
-              },
-            }}
-          />
+          <CoverImage album={album} />
         </div>
       </div>
       <div className="flex items-center gap-sm">
@@ -100,8 +82,6 @@ const DeleteAlbumModal = () => {
 
   const deleteAlbumMutation = api.album.delete.useMutation({
     onSuccess: async () => {
-      // closeModal();
-
       toast(<Toast text="deleted album" type="success" />);
       toast(<Toast text="redirecting..." type="info" />);
 

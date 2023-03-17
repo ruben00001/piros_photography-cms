@@ -6,7 +6,7 @@ import MyCldImage from "~/components/image/MyCldImage";
 import { Modal, WarningPanel } from "~/components/modal";
 import ImageModalPanel from "./ImageModalPanel";
 import { AlbumImageProvider } from "../../../_context/AlbumImageState";
-import UpdateImageMenu from "~/components/image/update-image/menu";
+import UpdateImageMenu from "~/components/image/update-image/menu-old";
 
 const AlbumImage = ({ albumImage }: { albumImage: AlbumImage }) => {
   return (
