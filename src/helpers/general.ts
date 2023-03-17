@@ -19,7 +19,7 @@ export const calcImageDimensionsToFitToScreen = ({
   let width = maxWidth;
   let height = width / imageAspectRatio;
 
-  if (initialHeight > maxHeight) {
+  if (height > maxHeight) {
     height = maxHeight;
     width = height * imageAspectRatio;
   }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMeasure } from "react-use";
 
 const TextInput = ({
@@ -34,6 +34,8 @@ const TextInput = ({
   autoFocus?: boolean;
 }) => {
   const [localIsFocused, setLocalIsFocused] = useState(false);
+  const [isBlurredOnInitialRender, setIsBlurredOnInitialRender] =
+    useState(false);
 
   const [dummyInputRef, { width: dummyInputWidth }] =
     useMeasure<HTMLParagraphElement>();
@@ -41,8 +43,10 @@ const TextInput = ({
   const showPressEnterMessage =
     showPressEnter && isChange && localIsFocused && value.length;
 
-  const inputWidth = dummyInputWidth;
-  const inputWidthEditing = dummyInputWidth + trailingSpace;
+  // const inputWidth = dummyInputWidth;
+  const inputWidth = dummyInputWidth + trailingSpace;
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   return (
     <div
@@ -67,7 +71,12 @@ const TextInput = ({
         placeholder={placeholder}
         type="text"
         autoComplete="off"
-        onFocus={() => {
+        onFocus={(e) => {
+          if (!autoFocus && !isBlurredOnInitialRender) {
+            e.currentTarget.blur();
+            setIsBlurredOnInitialRender(true);
+          }
+
           setLocalIsFocused(true);
           if (onFocus) {
             onFocus();
@@ -80,11 +89,13 @@ const TextInput = ({
           }
         }}
         style={{
-          width: inputWidthEditing,
+          width: inputWidth,
           // width: localIsFocused ? inputWidthEditing : inputWidth,
           minWidth,
         }}
-        autoFocus={autoFocus}
+        ref={inputRef}
+        // @ts-ignore
+        // autofocus={false}
       ></input>
       {showPressEnterMessage ? (
         <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-70 py-xxxs px-xs">
