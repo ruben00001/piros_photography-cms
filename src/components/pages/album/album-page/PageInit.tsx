@@ -2,9 +2,9 @@ import { useRouter } from "next/router";
 import { type ReactElement, useEffect } from "react";
 import { toast } from "react-toastify";
 
-import { type Album } from "~/components/pages/album/album-page/_context/AlbumState";
 import useDynamicRouteParams from "~/hooks/useDynamicRouteParams";
 import { api } from "~/utils/api";
+import { type Album } from "./_types";
 
 import Toast from "~/components/data-display/Toast";
 
@@ -56,15 +56,15 @@ const IsParamsIdWrapper = ({
   const router = useRouter();
 
   useEffect(() => {
-    if (albumId) {
+    if (albumId || !router) {
       return;
     }
 
     setTimeout(() => {
       toast(<Toast text="Something went wrong" type="error" />);
-      router.push("/albums");
+      void router.push("/albums");
     }, 800);
-  }, [albumId]);
+  }, [albumId, router]);
 
   if (!albumId) {
     return (
@@ -85,23 +85,21 @@ const FetchAlbumWrapper = ({
   children: (album: Album) => ReactElement;
 }) => {
   const router = useRouter();
+
   const { data: album, isFetched } = api.album.albumPageGetOne.useQuery({
     albumId,
   });
 
   useEffect(() => {
-    if (!isFetched) {
-      return;
-    }
-    if (album) {
+    if (!isFetched || album || !router) {
       return;
     }
 
     setTimeout(() => {
-      toast(<Toast text="Redircted because album not found" type="info" />);
-      router.push("/albums");
+      toast(<Toast text="Redirected because album not found" type="info" />);
+      void router.push("/albums");
     }, 800);
-  }, [isFetched]);
+  }, [album, isFetched, router]);
 
   if (!isFetched) {
     return (

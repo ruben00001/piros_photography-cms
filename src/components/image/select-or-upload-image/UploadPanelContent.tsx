@@ -11,13 +11,15 @@ import { FileImageIcon, TickIcon } from "~/components/Icon";
 import Tags from "~/components/image/select-or-upload-image/upload-modal/panel/tags";
 import Spinner from "~/components/Spinner";
 import { handleUploadImage } from "~/helpers/cloudinary";
+import { toast } from "react-toastify";
+import Toast from "~/components/data-display/Toast";
 
 export type OnUploadImage = (arg0: {
   cloudinary_public_id: string;
-  height: number;
-  width: number;
-  // onSuccess: () => void;
+  naturalHeight: number;
+  naturalWidth: number;
   tagIds?: string[];
+  onSuccess: () => void;
 }) => void;
 
 const UploadPanelContent = (props: {
@@ -90,20 +92,21 @@ const UploadFunctionality = ({
 
       onUploadImage({
         cloudinary_public_id,
-        height: imageDimensions.naturalHeight,
-        width: imageDimensions.naturalWidth,
+        naturalHeight: imageDimensions.naturalHeight,
+        naturalWidth: imageDimensions.naturalWidth,
         tagIds,
-        /*         onSuccess: () => {
+        onSuccess: () => {
           setCreateImageStatus("success");
 
           setTimeout(() => {
             closeModal();
 
             toast(<Toast text="uploaded image" type="success" />);
-          }, 500); */
-        // },
+          }, 500);
+        },
       });
     } catch (error) {
+      console.log("error:", error);
       setCreateImageStatus("error");
     }
   };

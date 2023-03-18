@@ -1,140 +1,19 @@
-import { useRouter } from "next/router";
-import { toast } from "react-toastify";
-
-import { useAlbumContext } from "../_context/AlbumState";
-import { useImageTypeContext } from "../_context/ImageType";
-import { api } from "~/utils/api";
-
-import Toast from "~/components/data-display/Toast";
-import MetaPanel from "./MetaPanel";
-import AlbumBody from "./body";
 import AddAlbumImageButton from "./AddAlbumImage";
-import {
-  OnUploadImage,
-  UploadPanel,
-} from "~/components/image/select-or-upload-image/upload-modal";
-// import { WarningPanel as WarningPanel_ } from "~/components/warning-modal";
-import {
-  OnSelectImage,
-  UploadedPanel,
-} from "~/components/image/select-or-upload-image/uploaded-modal";
+import AlbumBody from "./body";
+import MetaPanel from "./MetaPanel";
 
 const PageContent = () => {
   return (
-    <>
-      <div className="p-xl">
-        <MetaPanel />
-        <div className="mt-xl">
-          <AddAlbumImageButton />
-        </div>
-        <div className="mt-lg">
-          <AlbumBody />
-        </div>
+    <div className="p-xl">
+      <MetaPanel />
+      <div className="mt-xl">
+        <AddAlbumImageButton />
       </div>
-    </>
+      <div className="mt-lg">
+        <AlbumBody />
+      </div>
+    </div>
   );
 };
 
 export default PageContent;
-
-const useCreateImageAndAddToAlbum = (): OnUploadImage | null => {
-  const album = useAlbumContext();
-  const { imageContext } = useImageTypeContext();
-
-  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
-    { albumId: album.id },
-    {
-      enabled: false,
-    }
-  );
-
-  const createImageAndAddToAlbumMutation =
-    api.imageAndAlbumTransaction.createImageAndAddToAlbum.useMutation({
-      onSuccess: async () => {
-        await refetchAlbum();
-
-        setTimeout(() => {
-          toast(
-            <Toast
-              text={
-                imageContext === "cover"
-                  ? "updated cover image"
-                  : "updated image"
-              }
-              type="success"
-            />
-          );
-        }, 550);
-      },
-    });
-
-  if (!imageContext) {
-    return null;
-  }
-
-  return ({ cloudinary_public_id, tagIds, onSuccess, height, width }) =>
-    createImageAndAddToAlbumMutation.mutate(
-      {
-        albumId: album.id,
-        cloudinary_public_id,
-        tagIds,
-        imageType: imageContext,
-        index: album.images.length,
-        height,
-        width,
-      },
-      { onSuccess }
-    );
-};
-
-const useAddImageToAlbum = (): OnSelectImage => {
-  const album = useAlbumContext();
-  const { imageContext } = useImageTypeContext();
-
-  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
-    { albumId: album.id },
-    {
-      enabled: false,
-    }
-  );
-
-  const updateCoverImageMutation = api.album.updateCoverImage.useMutation({
-    onSuccess: async () => {
-      await refetchAlbum();
-
-      toast(<Toast text="updated cover image" type="success" />);
-    },
-  });
-
-  const addBodyImageMutation = api.album.addImage.useMutation({
-    onSuccess: async () => {
-      await refetchAlbum();
-
-      toast(<Toast text="added image" type="success" />);
-    },
-  });
-
-  const updateBodyImageMutation = api.album.updateImage.useMutation({
-    onSuccess: async () => {
-      await refetchAlbum();
-
-      toast(<Toast text="updated image" type="success" />);
-    },
-  });
-
-  return ({ imageId }) =>
-    !imageContext
-      ? null
-      : imageContext === "body-add"
-      ? addBodyImageMutation.mutate({
-          albumId: album.id,
-          imageId,
-          index: album.images.length,
-        })
-      : imageContext === "cover"
-      ? updateCoverImageMutation.mutate({ albumId: album.id, imageId })
-      : updateBodyImageMutation.mutate({
-          data: { imageId },
-          where: { albumId: album.id, imageId: imageContext.replace.where.id },
-        });
-};

@@ -5,16 +5,18 @@ import { PlusIcon } from "~/components/Icon";
 import {
   SelectOrUploadImageMenu,
   type OnSelectImage,
+  type OnUploadImage,
 } from "~/components/image/select-or-upload-image";
 import { api } from "~/utils/api";
 import { useAlbumContext } from "../_context/AlbumState";
 
 const AddAlbumImageButton = () => {
   const onSelectImage = useAddUploadedImageToAlbum();
+  const onUploadImage = useAddUploadImageToAlbum();
 
   return (
     <SelectOrUploadImageMenu
-      uploadPanel={{ onUploadImage: () => null }}
+      uploadPanel={{ onUploadImage }}
       uploadedPanel={{ onSelectImage }}
       button={
         <div className="my-btn-action group flex items-center gap-xs rounded-md py-1.5 px-sm text-white">
@@ -56,4 +58,47 @@ const useAddUploadedImageToAlbum = (): OnSelectImage => {
       data: { image: { id: imageId, index: album.images.length } },
       where: { albumId: album.id },
     });
+};
+
+const useAddUploadImageToAlbum = (): OnUploadImage => {
+  const album = useAlbumContext();
+
+  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
+    { albumId: album.id },
+    {
+      enabled: false,
+    }
+  );
+
+  const createImageAndAddToAlbumMutation =
+    api.imageAndAlbumTransaction.createImageAndAddToAlbum.useMutation({
+      onSuccess: async () => {
+        await refetchAlbum();
+
+        setTimeout(() => {
+          toast(<Toast text="added image" type="success" />);
+        }, 650);
+      },
+      onError: () => {
+        toast(<Toast text="Something went wrong adding image" type="error" />);
+      },
+    });
+
+  return ({
+    cloudinary_public_id,
+    naturalHeight,
+    naturalWidth,
+    onSuccess,
+    tagIds,
+  }) =>
+    createImageAndAddToAlbumMutation.mutate(
+      {
+        data: {
+          image: { cloudinary_public_id, naturalHeight, naturalWidth, tagIds },
+          albumImage: { index: album.images.length },
+        },
+        where: { albumId: album.id },
+      },
+      { onSuccess }
+    );
 };

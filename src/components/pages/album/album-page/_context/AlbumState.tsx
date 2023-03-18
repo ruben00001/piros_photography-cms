@@ -1,6 +1,6 @@
 import { createContext, type ReactElement, useContext } from "react";
 
-import { Album } from "../_types";
+import { type Album } from "../_types";
 
 type AlbumState = Album;
 
