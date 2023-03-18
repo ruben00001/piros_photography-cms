@@ -8,16 +8,16 @@ import { api } from "~/utils/api";
 import Toast from "~/components/data-display/Toast";
 import MetaPanel from "./MetaPanel";
 import AlbumBody from "./body";
-import AddImageButton from "./AddImage";
+import AddAlbumImageButton from "./AddAlbumImage";
 import {
   OnUploadImage,
   UploadPanel,
-} from "~/components/image/update-image/upload-modal";
-import { WarningPanel as WarningPanel_ } from "~/components/warning-modal";
+} from "~/components/image/select-or-upload-image/upload-modal";
+// import { WarningPanel as WarningPanel_ } from "~/components/warning-modal";
 import {
   OnSelectImage,
   UploadedPanel,
-} from "~/components/image/update-image/uploaded-modal";
+} from "~/components/image/select-or-upload-image/uploaded-modal";
 
 const PageContent = () => {
   return (
@@ -25,7 +25,7 @@ const PageContent = () => {
       <div className="p-xl">
         <MetaPanel />
         <div className="mt-xl">
-          <AddImageButton />
+          <AddAlbumImageButton />
         </div>
         <div className="mt-lg">
           <AlbumBody />

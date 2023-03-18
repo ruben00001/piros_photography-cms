@@ -10,14 +10,16 @@ const config = {
         project: "tsconfig.json",
       },
     },
+    {
+      files: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+      extends: ["plugin:testing-library/react"],
+    },
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: "./tsconfig.json",
-    tsconfigRootDir: __dirname,
-    sourceType: "module",
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["testing-library", "@typescript-eslint"],
   extends: [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",

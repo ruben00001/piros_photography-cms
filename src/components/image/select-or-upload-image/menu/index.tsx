@@ -3,17 +3,19 @@ import { type ReactElement } from "react";
 import { ImageIcon, UploadIcon } from "~/components/Icon";
 import { ModalPanelWrapper } from "~/components/modal/PanelWrapper";
 import MyMenu, { MenuItem } from "~/components/MyMenu";
-import { ImageModalsVisibilityProvider } from "./ImageModalsVisibiltyContext";
-import UploadedPanelContent, { OnSelectImage } from "../UploadedPanelContent";
-import UploadPanelContent, { OnUploadImage } from "../UploadPanelContent";
+import { ImageModalsVisibilityProvider } from "../ImageModalsVisibiltyContext";
+import UploadedPanelContent, {
+  type OnSelectImage,
+} from "../UploadedPanelContent";
+import UploadPanelContent, { type OnUploadImage } from "../UploadPanelContent";
 
-const UpdateImageMenu = ({
-  children: button,
+export const SelectOrUploadImageMenu = ({
+  button,
   uploadPanel,
   uploadedPanel,
   styles,
 }: {
-  children: ReactElement | ((arg0: { isOpen: boolean }) => ReactElement);
+  button: ReactElement | ((arg0: { isOpen: boolean }) => ReactElement);
   uploadPanel: { onUploadImage: OnUploadImage };
   uploadedPanel: { onSelectImage: OnSelectImage };
   styles?: { buttonWrapper?: string };
@@ -61,8 +63,6 @@ const UpdateImageMenu = ({
     </>
   );
 };
-
-export default UpdateImageMenu;
 
 const ImageModalButton = ({
   onClick,

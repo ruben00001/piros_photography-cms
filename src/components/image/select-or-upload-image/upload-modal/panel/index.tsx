@@ -1,5 +1,6 @@
 import NextImage from "next/image";
-import { useState, type ChangeEvent } from "react";
+import { type ChangeEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 import {
   StringArrStateProvider as TagsIdProvider,
@@ -8,44 +9,48 @@ import {
 import { api } from "~/utils/api";
 
 import { FileImageIcon, TickIcon } from "~/components/Icon";
-import Tags from "~/components/image/update-image/upload-modal/panel/tags";
-import Spinner from "~/components/Spinner";
+import Tags from "~/components/image/select-or-upload-image/upload-modal/panel/tags";
 import { handleUploadImage } from "~/helpers/cloudinary";
+import Spinner from "~/components/Spinner";
+import Toast from "~/components/data-display/Toast";
+import MyModalPanel from "~/components/MyModalPanel";
+import { useUploadModalVisibilityContext } from "../VisibilityContext";
 
 export type OnUploadImage = (arg0: {
   cloudinary_public_id: string;
   height: number;
   width: number;
-  // onSuccess: () => void;
+  onSuccess: () => void;
   tagIds?: string[];
 }) => void;
 
-const UploadPanelContent = (props: {
+export const UploadPanel = ({
+  onUploadImage,
+}: {
   onUploadImage: OnUploadImage | null;
-  closeModal: () => void;
 }) => {
+  const { closeModal, isOpen } = useUploadModalVisibilityContext();
+
   return (
-    <div className="relative w-[600px] max-w-[90vw] rounded-2xl bg-white p-6 text-left shadow-xl">
-      <h3 className="border-b border-b-base-300 pb-sm leading-6 text-base-content">
-        Upload Image
-      </h3>
-      <div className="mt-md">
-        <TagsIdProvider>
-          <UploadFunctionality {...props} />
-        </TagsIdProvider>
+    <MyModalPanel isOpen={isOpen} onClose={closeModal}>
+      <div className="relative w-[600px] max-w-[90vw] rounded-2xl bg-white p-6 text-left shadow-xl">
+        <h3 className="border-b border-b-base-300 pb-sm leading-6 text-base-content">
+          Upload Image
+        </h3>
+        <div className="mt-md">
+          <TagsIdProvider>
+            <UploadFunctionality onUploadImage={onUploadImage} />
+          </TagsIdProvider>
+        </div>
       </div>
-    </div>
+    </MyModalPanel>
   );
 };
 
-export default UploadPanelContent;
-
 const UploadFunctionality = ({
   onUploadImage,
-  closeModal,
 }: {
   onUploadImage: OnUploadImage | null;
-  closeModal: () => void;
 }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageDimensions, setImageDimensions] = useState<{
@@ -57,6 +62,7 @@ const UploadFunctionality = ({
     "idle" | "pending" | "error" | "success"
   >("idle");
 
+  const { closeModal } = useUploadModalVisibilityContext();
   const { strings: tagIds } = useTagsIdContext();
 
   const { refetch: fetchSignature } = api.image.createSignature.useQuery(
@@ -93,15 +99,15 @@ const UploadFunctionality = ({
         height: imageDimensions.naturalHeight,
         width: imageDimensions.naturalWidth,
         tagIds,
-        /*         onSuccess: () => {
+        onSuccess: () => {
           setCreateImageStatus("success");
 
           setTimeout(() => {
             closeModal();
 
             toast(<Toast text="uploaded image" type="success" />);
-          }, 500); */
-        // },
+          }, 500);
+        },
       });
     } catch (error) {
       setCreateImageStatus("error");

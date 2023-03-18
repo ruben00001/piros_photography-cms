@@ -162,18 +162,23 @@ export const albumRouter = createTRPCRouter({
 
   addImage: protectedProcedure
     .input(
-      z.object({ albumId: z.string(), imageId: z.string(), index: z.number() })
+      z.object({
+        where: z.object({ albumId: z.string() }),
+        data: z.object({
+          image: z.object({ id: z.string(), index: z.number() }),
+        }),
+      })
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.album.update({
         where: {
-          id: input.albumId,
+          id: input.where.albumId,
         },
         data: {
           images: {
             create: {
-              index: input.index,
-              imageId: input.imageId,
+              imageId: input.data.image.id,
+              index: input.data.image.index,
             },
           },
         },
