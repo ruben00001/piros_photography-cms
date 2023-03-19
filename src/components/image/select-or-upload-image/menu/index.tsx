@@ -81,7 +81,7 @@ const ImageModalButton = ({
       >
         <div className="flex items-center gap-4">
           <span>{icon}</span>
-          <span>{text}</span>
+          <span className="whitespace-nowrap">{text}</span>
         </div>
       </div>
     </MenuItem>

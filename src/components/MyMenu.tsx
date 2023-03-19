@@ -27,7 +27,9 @@ const MyMenu = ({
             leaveTo="transform opacity-0 scale-95"
           >
             <Menu.Items
-              className={`absolute z-50 origin-top-right rounded-md bg-white shadow-xl focus:outline-none ${styles?.itemsWrapper}`}
+              className={`absolute z-50 origin-top-right rounded-md bg-white shadow-xl focus:outline-none ${
+                styles?.itemsWrapper || ""
+              }`}
             >
               <div className="px-1 py-1">{children}</div>
             </Menu.Items>

@@ -20,6 +20,7 @@ import {
   HandsClapping,
   ArrowSquareLeft,
   ArrowSquareRight,
+  CaretRight,
 } from "phosphor-react";
 
 export {
@@ -45,4 +46,5 @@ export {
   HandsClapping as LikeIcon,
   ArrowSquareLeft as CycleLeftIcon,
   ArrowSquareRight as CycleRightIcon,
+  CaretRight as CaretRightIcon,
 };

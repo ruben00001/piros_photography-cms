@@ -11,7 +11,7 @@ type Props = {
   album: BaseAlbum & { coverImage: BaseImage | null };
 };
 
-export const CoverImage = ({ album, addImageMenu }: Props) => {
+export const CoverImageOLD = ({ album, addImageMenu }: Props) => {
   return !album.coverImageId ? (
     <Unpopulated addImageMenu={addImageMenu} />
   ) : (

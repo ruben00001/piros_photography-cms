@@ -9,9 +9,7 @@ const PageContent = () => {
       <div className="mt-xl">
         <AddAlbumImageButton />
       </div>
-      <div className="mt-lg">
-        <AlbumBody />
-      </div>
+      <div className="mt-lg">{/* <AlbumBody /> */}</div>
     </div>
   );
 };

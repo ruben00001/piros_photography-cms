@@ -6,45 +6,89 @@ import { useAlbumContext } from "../_context/AlbumState";
 
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
-import { DeleteIcon, MenuIcon } from "~/components/Icon";
+import { CaretDownIcon, DeleteIcon, MenuIcon } from "~/components/Icon";
 import { Modal, WarningPanel } from "~/components/modal";
 import MyMenu from "~/components/MyMenu";
-import { CoverImage } from "~/components/pages/album/_containers";
+import CoverImage from "./CoverImage";
+
+import { animated, useSpring } from "@react-spring/web";
+import { useState } from "react";
+import { useMeasure } from "react-use";
 
 const MetaPanel = () => {
+  const [isOpen, setIsOpen] = useState(true);
+
+  // ! TODO: need to wait for height value otherwise starts at 0
+  const [ref, { height }] = useMeasure<HTMLDivElement>();
+  console.log("height:", height);
+
+  const [springs, api] = useSpring(() => ({
+    from: { height: `${height}px` },
+    // to: { height: "0px" },
+  }));
+
   const album = useAlbumContext();
 
   return (
-    <div className="group relative flex flex-col gap-sm rounded-lg bg-gray-50 p-xs pb-sm">
-      <div className="flex gap-2xl">
-        <div className="">
-          <span className="mr-xs inline-block text-sm text-gray-400">
-            Created
-          </span>
-          <span className="font-mono text-sm text-gray-500">
-            {album.createdAt.toDateString()}
-          </span>
+    <div className="relative">
+      <WithTooltip text="hide section" type="action">
+        <div
+          className="absolute -left-xs top-0 -translate-x-full cursor-pointer text-gray-400"
+          onClick={() => {
+            // api.start({ from: { x: 0 }, to: { x: 100 } });
+            if (isOpen) {
+              api.start({
+                from: { height: `${height}px` },
+                to: { height: "0px" },
+              });
+              setIsOpen(false);
+            } else {
+              api.start({
+                from: { height: "0px" },
+                to: { height: `${height}px` },
+              });
+              setIsOpen(true);
+            }
+          }}
+        >
+          <CaretDownIcon />
         </div>
-        <div className="">
-          <span className="mr-xs text-sm text-gray-400">Updated</span>
-          <span className="font-mono text-sm text-gray-500">
-            {album.updatedAt.toDateString()}
-          </span>
+      </WithTooltip>
+      <animated.div style={{ overflowY: "hidden", ...springs }}>
+        <div ref={ref}>
+          <div className="group relative flex flex-col gap-sm rounded-lg bg-gray-50 p-xs pb-sm">
+            <div className="flex gap-2xl">
+              <div className="">
+                <span className="mr-xs inline-block text-sm text-gray-400">
+                  Created
+                </span>
+                <span className="font-mono text-sm text-gray-500">
+                  {album.createdAt.toDateString()}
+                </span>
+              </div>
+              <div className="">
+                <span className="mr-xs text-sm text-gray-400">Updated</span>
+                <span className="font-mono text-sm text-gray-500">
+                  {album.updatedAt.toDateString()}
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col gap-xxs">
+              <p className="text-sm text-gray-400">Cover image</p>
+              <div className="h-auto w-[350px]">
+                <CoverImage />
+              </div>
+            </div>
+            <div className="flex items-center gap-sm">
+              <p className="text-sm text-gray-400">Publish status</p>
+              <PublishToggleBadge />
+            </div>
+            <div className="absolute right-xs top-xs">
+              <AlbumMenu />
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="flex flex-col gap-xxs">
-        <p className="text-sm text-gray-400">Cover image</p>
-        <div className="h-auto w-[350px]">
-          <CoverImage album={album} />
-        </div>
-      </div>
-      <div className="flex items-center gap-sm">
-        <p className="text-sm text-gray-400">Publish status</p>
-        <PublishToggleBadge />
-      </div>
-      <div className="absolute right-xs top-xs">
-        <AlbumMenu />
-      </div>
+      </animated.div>
     </div>
   );
 };
@@ -88,10 +132,10 @@ const DeleteAlbumModal = () => {
       await refetchAlbums();
 
       setTimeout(() => {
-        router.push("/albums");
+        void router.push("/albums");
       }, 400);
     },
-    onError: async () => {
+    onError: () => {
       toast(<Toast text="delete album failed" type="error" />);
     },
   });

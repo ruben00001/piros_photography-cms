@@ -6,11 +6,12 @@ const useImageDimensionsForScreen = (initialImageDimensions: {
   width: number;
   height: number;
 }) => {
-  const { height, width } = useWindowSize();
+  const window = useWindowSize();
 
   const imageDimensions = useMemo(
     () => calcImageDimensionsToFitToScreen(initialImageDimensions),
-    [height, width]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [window.height, window.width]
   );
 
   return imageDimensions;

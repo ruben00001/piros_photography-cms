@@ -11,7 +11,7 @@ import Toast from "~/components/data-display/Toast";
 import DndSortableElement from "~/components/dnd-kit/DndSortableElement";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import AlbumMenu from "./Menu";
-import { CoverImage } from "~/components/pages/album/_containers";
+import { CoverImageOLD } from "~/components/pages/album/_containers";
 import { GoToPageIcon } from "~/components/Icon";
 import Link from "next/link";
 import { TextInputForm } from "~/components/forms/TextInputForm";
@@ -41,7 +41,7 @@ const AlbumContent = () => {
     <div className="flex h-full flex-col">
       <AlbumMenu />
       <AlbumTitleInput />
-      <CoverImage
+      <CoverImageOLD
         addImageMenu={{
           modals: {
             onVisibilityChange: { onOpen: () => setActiveAlbum(album) },

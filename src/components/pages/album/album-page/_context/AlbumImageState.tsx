@@ -2,7 +2,7 @@ import { createContext, type ReactElement, useContext } from "react";
 
 import useImageDimensionsForScreen from "~/hooks/useImageDimensionsForScreen";
 
-import { AlbumImage } from "../_types";
+import { type AlbumImage } from "../_types";
 
 type AlbumImageState = AlbumImage & {
   imageDimensionsForScreen: { width: number; height: number };
@@ -18,8 +18,8 @@ function Provider({
   albumImage: AlbumImage;
 }) {
   const imageDimensionsForScreen = useImageDimensionsForScreen({
-    height: albumImage.image.height,
-    width: albumImage.image.width,
+    height: albumImage.image.naturalHeight,
+    width: albumImage.image.naturalWidth,
   });
 
   const value: AlbumImageState = { ...albumImage, imageDimensionsForScreen };
