@@ -32,11 +32,9 @@ const MetaPanel = () => {
           </span>
         </div>
       </div>
-      <div className="flex flex-col gap-xxs">
-        <p className="text-sm text-gray-400">Cover image</p>
-        <div className="h-auto w-[350px]">
-          <CoverImage />
-        </div>
+      <div>
+        <p className="mb-xxs text-sm text-gray-400">Cover image</p>
+        <CoverImage />
       </div>
       <div className="flex items-center gap-sm">
         <p className="text-sm text-gray-400">Publish status</p>

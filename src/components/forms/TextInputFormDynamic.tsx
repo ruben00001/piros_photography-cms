@@ -11,7 +11,7 @@ export const TextInputForm = ({
 }: {
   initialValue?: string | null;
   onSubmit: ({ inputValue }: { inputValue: string }) => void;
-  tooltipText: string;
+  tooltipText?: string;
   placeholder?: string;
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false);
@@ -23,7 +23,7 @@ export const TextInputForm = ({
   const isChange = prevValueValue !== inputValue;
 
   const handleSubmit = () => {
-    if (!isChange) {
+    if (!isChange || !inputValue.length) {
       return;
     }
 
@@ -37,7 +37,11 @@ export const TextInputForm = ({
   const containerRef = useRef<HTMLFormElement>(null);
 
   return (
-    <WithTooltip text={tooltipText} isDisabled={inputIsFocused} placement="top">
+    <WithTooltip
+      text={tooltipText || ""}
+      isDisabled={!tooltipText || inputIsFocused}
+      placement="top"
+    >
       <form
         className="relative inline-block max-w-full"
         onSubmit={(e) => {

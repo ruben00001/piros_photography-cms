@@ -1,11 +1,10 @@
 import { createContext, type ReactElement, useContext } from "react";
 
-import { RouterOutputs } from "~/utils/api";
+import { type Album } from "../_types";
 
 // todo: Album type differs with each type of fetch; differs with what's 'included' in the fetch.
-type AlbumType = RouterOutputs["album"]["albumsPageGetAll"][0];
 
-type Value = AlbumType;
+type Value = Album;
 
 const Context = createContext<Value | null>(null);
 
@@ -14,7 +13,7 @@ function Provider({
   album,
 }: {
   children: ReactElement | ((args: Value) => ReactElement);
-  album: AlbumType;
+  album: Album;
 }) {
   const value: Value = album;
 
