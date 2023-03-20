@@ -15,7 +15,9 @@ const AlbumBody = () => {
         <Title />
         <Description />
       </div>
-      <div className="mt-xl">{/* <Images /> */}</div>
+      <div className="mt-xl">
+        <Images />
+      </div>
     </div>
   );
 };

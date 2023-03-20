@@ -18,9 +18,7 @@ const PageContent = () => {
       >
         <AddAlbumImageButton />
       </CollapsableSection>
-      <div className="mt-lg">
-        <AlbumBody />
-      </div>
+      <div className="mt-lg">{/* <AlbumBody /> */}</div>
     </div>
   );
 };

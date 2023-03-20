@@ -72,7 +72,7 @@ const useAddUploadImageToAlbum = (): OnUploadImage => {
   );
 
   const createImageAndAddToAlbumMutation =
-    api.imageAndAlbumTransaction.createImageAndAddToAlbum.useMutation({
+    api.imageAndAlbumTransaction.createImageAndAddToBody.useMutation({
       onSuccess: async () => {
         await refetchAlbum();
 

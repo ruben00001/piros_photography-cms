@@ -3,9 +3,16 @@ import { useAlbumContext } from "../_context/AlbumState";
 
 import MyCldImage from "~/components/image/MyCldImage2";
 import ImagePlaceholder from "~/components/image/Placeholder";
-import { SelectOrUploadImageMenu } from "~/components/image/select-or-upload-image";
+import {
+  SelectOrUploadImageMenu,
+  type OnSelectImage,
+  type OnUploadImage,
+} from "~/components/image/select-or-upload-image";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { ImageIcon } from "~/components/Icon";
+import { api } from "~/utils/api";
+import { toast } from "react-toastify";
+import Toast from "~/components/data-display/Toast";
 
 const CoverImage = () => {
   const album = useAlbumContext();
@@ -59,6 +66,9 @@ const Populated = () => {
 };
 
 const UpdateCoverImageMenu = () => {
+  const onSelectImage = useUploadedImage();
+  const onUploadImage = useUploadImage();
+
   return (
     <div className="absolute right-1 top-1 z-20 flex items-center gap-sm rounded-md bg-white py-xxs px-xs opacity-0 shadow-lg transition-opacity duration-75 ease-in-out hover:!opacity-100 group-hover/coverImage:opacity-50">
       <SelectOrUploadImageMenu
@@ -71,9 +81,81 @@ const UpdateCoverImageMenu = () => {
             </WithTooltip>
           </div>
         }
-        uploadPanel={{ onUploadImage: () => null }}
-        uploadedPanel={{ onSelectImage: () => null }}
+        uploadPanel={{ onUploadImage }}
+        uploadedPanel={{ onSelectImage }}
       />
     </div>
   );
+};
+
+const useUploadedImage = (): OnSelectImage => {
+  const album = useAlbumContext();
+
+  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
+    { albumId: album.id },
+    {
+      enabled: false,
+    }
+  );
+
+  const updateCoverImageMutation = api.album.updateCoverImage.useMutation({
+    onSuccess: async () => {
+      await refetchAlbum();
+
+      toast(<Toast text="updated cover image" type="success" />);
+    },
+    onError: () => {
+      toast(
+        <Toast text="Something went wrong updating cover image" type="error" />
+      );
+    },
+  });
+
+  return ({ imageId }) =>
+    updateCoverImageMutation.mutate({
+      albumId: album.id,
+      imageId,
+    });
+};
+
+const useUploadImage = (): OnUploadImage => {
+  const album = useAlbumContext();
+
+  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
+    { albumId: album.id },
+    {
+      enabled: false,
+    }
+  );
+
+  const createImageAndAddToAlbumMutation =
+    api.imageAndAlbumTransaction.createImageAndUpdateCoverImage.useMutation({
+      onSuccess: async () => {
+        await refetchAlbum();
+
+        setTimeout(() => {
+          toast(<Toast text="added image" type="success" />);
+        }, 650);
+      },
+      onError: () => {
+        toast(<Toast text="Something went wrong adding image" type="error" />);
+      },
+    });
+
+  return ({
+    cloudinary_public_id,
+    naturalHeight,
+    naturalWidth,
+    onSuccess,
+    tagIds,
+  }) =>
+    createImageAndAddToAlbumMutation.mutate(
+      {
+        data: {
+          image: { cloudinary_public_id, naturalHeight, naturalWidth, tagIds },
+        },
+        where: { albumId: album.id },
+      },
+      { onSuccess }
+    );
 };
