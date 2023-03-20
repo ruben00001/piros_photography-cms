@@ -9,7 +9,7 @@ const Empty = () => {
       </div>
       <h5 className="font-bold">No albums</h5>
       <p className="mt-xs mb-sm text-gray-500">Create first album</p>
-      <AddAlbum />
+      <AddAlbum centerButton />
     </div>
   );
 };

@@ -9,7 +9,7 @@ import Toast from "~/components/data-display/Toast";
 import Spinner from "~/components/Spinner";
 import { Transition } from "@headlessui/react";
 
-const AddAlbum = () => {
+const AddAlbum = ({ centerButton }: { centerButton?: boolean }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
 
   const [formRef, { height: formHeight }] = useMeasure<HTMLDivElement>();
@@ -35,8 +35,8 @@ const AddAlbum = () => {
   };
 
   return (
-    <div>
-      <div className="flex justify-center">
+    <>
+      <div className={centerButton ? "flex justify-center" : ""}>
         <button
           className={`my-btn-action group mb-lg  flex items-center gap-xs rounded-md py-1.5 px-sm text-white ${
             formIsOpen ? "opacity-75" : ""
@@ -55,7 +55,7 @@ const AddAlbum = () => {
           <TitleForm closeForm={closeForm} />
         </div>
       </animated.div>
-    </div>
+    </>
   );
 };
 
@@ -72,11 +72,6 @@ const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
     onError: () => {
       toast(<Toast text="Error creating album" type="error" />);
     },
-    onSuccess: async () => {
-      await refetchAlbums();
-
-      toast(<Toast text="Album created" type="success" />);
-    },
   });
 
   const handleSubmit = () => {
@@ -84,7 +79,25 @@ const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
       return;
     }
 
-    createAlbumMutation.mutate({ title: value, index: allAlbums?.length });
+    createAlbumMutation.mutate(
+      { title: value, index: allAlbums?.length },
+      {
+        async onSuccess() {
+          await refetchAlbums();
+
+          setTimeout(() => {
+            setValue("");
+            closeForm();
+
+            toast(<Toast text="Album created" type="success" />);
+
+            setTimeout(() => {
+              createAlbumMutation.reset();
+            }, 200);
+          }, 450);
+        },
+      }
+    );
   };
 
   return (
@@ -155,30 +168,29 @@ const CreateStatusPanel = ({
       leave="transition ease-in duration-75"
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
+      className="absolute left-0 top-0 z-10 grid h-full w-full place-items-center rounded-md bg-white/70"
     >
-      <div className="absolute left-0 top-0 z-10 grid h-full w-full place-items-center rounded-md bg-white/70">
-        <div className="flex items-center gap-sm">
-          {status === "loading" ? (
-            <>
-              <Spinner />
-              <p className="font-mono">Creating album</p>
-            </>
-          ) : status === "success" ? (
-            <>
-              <span className="text-success">
-                <TickIcon />
-              </span>
-              <p className="font-mono">Album created</p>
-            </>
-          ) : (
-            <>
-              <span className="text-2xl text-my-error-content">
-                <ErrorIcon />
-              </span>
-              <p className="font-mono">Error creating album</p>
-            </>
-          )}
-        </div>
+      <div className="flex items-center gap-sm">
+        {status === "loading" ? (
+          <>
+            <Spinner />
+            <p className="font-mono">Creating album</p>
+          </>
+        ) : status === "success" ? (
+          <>
+            <span className="text-success">
+              <TickIcon />
+            </span>
+            <p className="font-mono">Album created</p>
+          </>
+        ) : (
+          <>
+            <span className="text-2xl text-my-error-content">
+              <ErrorIcon />
+            </span>
+            <p className="font-mono">Error creating album</p>
+          </>
+        )}
       </div>
     </Transition>
   );

@@ -10,8 +10,10 @@ const Populated = () => {
   const albums = data as NonNullable<typeof data>;
 
   return (
-    <div>
-      <AddAlbum />
+    <div className="p-lg">
+      <div className="max-w-[400px]">
+        <AddAlbum />
+      </div>
       <div className="mt-lg grid grid-cols-2 gap-xl">
         {albums.map((album) => (
           <AlbumProvider album={album} key={album.id}>

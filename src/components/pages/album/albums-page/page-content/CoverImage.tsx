@@ -91,8 +91,8 @@ const UpdateCoverImageMenu = () => {
 const useUploadedImage = (): OnSelectImage => {
   const album = useAlbumContext();
 
-  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
-    { albumId: album.id },
+  const { refetch: refetchAlbum } = api.album.albumsPageGetAll.useQuery(
+    undefined,
     {
       enabled: false,
     }
@@ -121,8 +121,8 @@ const useUploadedImage = (): OnSelectImage => {
 const useUploadImage = (): OnUploadImage => {
   const album = useAlbumContext();
 
-  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
-    { albumId: album.id },
+  const { refetch: refetchAlbum } = api.album.albumsPageGetAll.useQuery(
+    undefined,
     {
       enabled: false,
     }
