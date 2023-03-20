@@ -6,115 +6,45 @@ import { useAlbumContext } from "../_context/AlbumState";
 
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
-import {
-  CaretDownIcon,
-  CaretRightIcon,
-  DeleteIcon,
-  MenuIcon,
-} from "~/components/Icon";
+import { DeleteIcon, MenuIcon } from "~/components/Icon";
 import { Modal, WarningPanel } from "~/components/modal";
 import MyMenu from "~/components/MyMenu";
 import CoverImage from "./CoverImage";
 
-import { animated, useSpring } from "@react-spring/web";
-import { useState } from "react";
-import { useMeasure } from "react-use";
-
 const MetaPanel = () => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [springAtRest, setSpringAtRest] = useState(true);
-
-  const [ref, { height }] = useMeasure<HTMLDivElement>();
-
-  const [springs, api] = useSpring(() => ({
-    config: { tension: 280, friction: 60 },
-    onChange: () => setSpringAtRest(false),
-    onRest: () => setSpringAtRest(true),
-  }));
-
   const album = useAlbumContext();
 
   return (
-    <div className="relative" style={{ minHeight: 20 }}>
-      <WithTooltip
-        text="hide section"
-        // text={`${isOpen ? "hide section" : "show section"}`}
-        type="action"
-        isDisabled={!isOpen}
-        placement="top-start"
-      >
-        <div
-          className="absolute -left-xs top-0 -translate-x-full cursor-pointer text-gray-400"
-          onClick={() => {
-            if (isOpen) {
-              api.start({
-                from: { height: `${height}px` },
-                to: { height: "0px" },
-              });
-              setIsOpen(false);
-            } else {
-              api.start({
-                from: { height: "0px" },
-                to: { height: `${height}px` },
-              });
-              setIsOpen(true);
-            }
-          }}
-        >
-          {isOpen ? (
-            <CaretDownIcon />
-          ) : (
-            <div className="relative duration-100 ease-in-out hover:brightness-90">
-              <span className="text-gray-300">
-                <CaretRightIcon />
-              </span>
-              {/*               <span className="absolute top-1/2 -right-xs translate-x-full -translate-y-1/2 whitespace-nowrap text-sm text-gray-300">
-                Show album info
-              </span> */}
-            </div>
-          )}
+    <div className="group relative flex flex-col gap-sm rounded-lg bg-gray-50 p-xs pb-sm">
+      <div className="flex gap-2xl">
+        <div className="">
+          <span className="mr-xs inline-block text-sm text-gray-400">
+            Created
+          </span>
+          <span className="font-mono text-sm text-gray-500">
+            {album.createdAt.toDateString()}
+          </span>
         </div>
-      </WithTooltip>
-      {springAtRest && !isOpen ? (
-        <div className="absolute top-0 left-0 z-30 -translate-y-[1px] whitespace-nowrap bg-white text-xs text-gray-300">
-          Show album info
+        <div className="">
+          <span className="mr-xs text-sm text-gray-400">Updated</span>
+          <span className="font-mono text-sm text-gray-500">
+            {album.updatedAt.toDateString()}
+          </span>
         </div>
-      ) : null}
-      <animated.div style={{ overflowY: "hidden", ...springs }}>
-        <div ref={ref}>
-          <div className="group relative flex flex-col gap-sm rounded-lg bg-gray-50 p-xs pb-sm">
-            <div className="flex gap-2xl">
-              <div className="">
-                <span className="mr-xs inline-block text-sm text-gray-400">
-                  Created
-                </span>
-                <span className="font-mono text-sm text-gray-500">
-                  {album.createdAt.toDateString()}
-                </span>
-              </div>
-              <div className="">
-                <span className="mr-xs text-sm text-gray-400">Updated</span>
-                <span className="font-mono text-sm text-gray-500">
-                  {album.updatedAt.toDateString()}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-xxs">
-              <p className="text-sm text-gray-400">Cover image</p>
-              <div className="h-auto w-[350px]">
-                <CoverImage />
-              </div>
-            </div>
-            <div className="flex items-center gap-sm">
-              <p className="text-sm text-gray-400">Publish status</p>
-              <PublishToggleBadge />
-            </div>
-            <div className="absolute right-xs top-xs">
-              <AlbumMenu />
-            </div>
-          </div>
+      </div>
+      <div className="flex flex-col gap-xxs">
+        <p className="text-sm text-gray-400">Cover image</p>
+        <div className="h-auto w-[350px]">
+          <CoverImage />
         </div>
-      </animated.div>
+      </div>
+      <div className="flex items-center gap-sm">
+        <p className="text-sm text-gray-400">Publish status</p>
+        <PublishToggleBadge />
+      </div>
+      <div className="absolute right-xs top-xs">
+        <AlbumMenu />
+      </div>
     </div>
   );
 };
