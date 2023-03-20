@@ -48,7 +48,11 @@ const TextAreaForm = ({
   };
 
   return (
-    <WithTooltip text={tooltipText} isDisabled={localIsFocused}>
+    <WithTooltip
+      text={tooltipText}
+      isDisabled={localIsFocused}
+      placement="top-start"
+    >
       <div
         className="relative"
         onFocus={() => {
@@ -73,7 +77,9 @@ const TextAreaForm = ({
             enableBorderOnBlur && isChange
               ? "border-base-300"
               : "border-transparent"
-          } ${((enableBorderOnBlur && isChange) || localIsFocused) && "px-xs"}`}
+          } ${
+            (enableBorderOnBlur && isChange) || localIsFocused ? "px-xs" : ""
+          }`}
           value={value}
           onSubmit={() => {
             handleSubmit();

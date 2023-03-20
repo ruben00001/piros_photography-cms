@@ -39,14 +39,14 @@ export const TextInputForm = ({
   return (
     <WithTooltip text={tooltipText} isDisabled={inputIsFocused} placement="top">
       <form
-        className="relative"
+        className="relative inline-block max-w-full"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
         ref={containerRef}
       >
-        <div className="form-control w-full max-w-xs">
+        <div className="form-control ">
           <TextInput
             setValue={(value) => setInputValue(value)}
             value={inputValue}

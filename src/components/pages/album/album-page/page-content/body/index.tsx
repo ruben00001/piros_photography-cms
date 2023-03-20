@@ -4,9 +4,9 @@ import { api } from "~/utils/api";
 import { useAlbumContext } from "../../_context/AlbumState";
 
 import Toast from "~/components/data-display/Toast";
-import { TextInputForm } from "~/components/forms/TextInputForm";
 import AlbumImage from "./album-image";
 import TextAreaForm from "~/components/forms/TextAreaForm";
+import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
 
 const AlbumBody = () => {
   return (
@@ -15,9 +15,7 @@ const AlbumBody = () => {
         <Title />
         <Description />
       </div>
-      <div className="mt-xl">
-        <Images />
-      </div>
+      <div className="mt-xl">{/* <Images /> */}</div>
     </div>
   );
 };

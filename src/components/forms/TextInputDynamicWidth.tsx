@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useMeasure } from "react-use";
 
 const TextInput = ({
@@ -54,14 +54,14 @@ const TextInput = ({
         showBorderOnBlur && value.length
           ? "border-base-300"
           : "border-transparent"
-      } ${styles?.wrapper}`}
+      } ${styles?.wrapper || ""}`}
     >
       <p className="invisible absolute whitespace-nowrap" ref={dummyInputRef}>
         {value.length ? value : placeholder}
       </p>
       <input
         className={`z-10 bg-transparent pr-xs text-gray-600 outline-none transition-transform duration-100 ease-in-out focus:translate-x-2 ${
-          styles?.input
+          styles?.input || ""
         } ${showBorderOnBlur && value.length ? "translate-x-2" : ""} `}
         id={id}
         value={value}
@@ -94,11 +94,9 @@ const TextInput = ({
           minWidth,
         }}
         ref={inputRef}
-        // @ts-ignore
-        // autofocus={false}
-      ></input>
+      />
       {showPressEnterMessage ? (
-        <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-70 py-xxxs px-xs font-sans">
+        <div className="absolute -top-1 left-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-70 py-xxxs px-xs font-sans">
           <p className="text-xs text-gray-500">Press enter to submit</p>
         </div>
       ) : null}

@@ -100,7 +100,7 @@ const DeleteAlbumModal = () => {
     <Modal
       button={({ open: openModal }) => (
         <button
-          className="my-btn flex items-center gap-xs border-my-alert-content bg-my-alert text-my-alert-content"
+          className="my-btn flex items-center gap-xs border-my-alert-content bg-my-alert text-my-alert-content transition-all duration-75 ease-in-out hover:brightness-95"
           onClick={openModal}
           type="button"
         >
