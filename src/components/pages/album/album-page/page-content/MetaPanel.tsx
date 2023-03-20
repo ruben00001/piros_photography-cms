@@ -6,7 +6,12 @@ import { useAlbumContext } from "../_context/AlbumState";
 
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
-import { CaretDownIcon, DeleteIcon, MenuIcon } from "~/components/Icon";
+import {
+  CaretDownIcon,
+  CaretRightIcon,
+  DeleteIcon,
+  MenuIcon,
+} from "~/components/Icon";
 import { Modal, WarningPanel } from "~/components/modal";
 import MyMenu from "~/components/MyMenu";
 import CoverImage from "./CoverImage";
@@ -17,25 +22,30 @@ import { useMeasure } from "react-use";
 
 const MetaPanel = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const [springAtRest, setSpringAtRest] = useState(true);
 
-  // ! TODO: need to wait for height value otherwise starts at 0
   const [ref, { height }] = useMeasure<HTMLDivElement>();
-  console.log("height:", height);
 
   const [springs, api] = useSpring(() => ({
-    from: { height: `${height}px` },
-    // to: { height: "0px" },
+    config: { tension: 280, friction: 60 },
+    onChange: () => setSpringAtRest(false),
+    onRest: () => setSpringAtRest(true),
   }));
 
   const album = useAlbumContext();
 
   return (
-    <div className="relative">
-      <WithTooltip text="hide section" type="action">
+    <div className="relative" style={{ minHeight: 20 }}>
+      <WithTooltip
+        text="hide section"
+        // text={`${isOpen ? "hide section" : "show section"}`}
+        type="action"
+        isDisabled={!isOpen}
+        placement="top-start"
+      >
         <div
           className="absolute -left-xs top-0 -translate-x-full cursor-pointer text-gray-400"
           onClick={() => {
-            // api.start({ from: { x: 0 }, to: { x: 100 } });
             if (isOpen) {
               api.start({
                 from: { height: `${height}px` },
@@ -51,9 +61,25 @@ const MetaPanel = () => {
             }
           }}
         >
-          <CaretDownIcon />
+          {isOpen ? (
+            <CaretDownIcon />
+          ) : (
+            <div className="relative duration-100 ease-in-out hover:brightness-90">
+              <span className="text-gray-300">
+                <CaretRightIcon />
+              </span>
+              {/*               <span className="absolute top-1/2 -right-xs translate-x-full -translate-y-1/2 whitespace-nowrap text-sm text-gray-300">
+                Show album info
+              </span> */}
+            </div>
+          )}
         </div>
       </WithTooltip>
+      {springAtRest && !isOpen ? (
+        <div className="absolute top-0 left-0 z-30 -translate-y-[1px] whitespace-nowrap bg-white text-xs text-gray-300">
+          Show album info
+        </div>
+      ) : null}
       <animated.div style={{ overflowY: "hidden", ...springs }}>
         <div ref={ref}>
           <div className="group relative flex flex-col gap-sm rounded-lg bg-gray-50 p-xs pb-sm">
