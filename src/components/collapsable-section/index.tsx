@@ -41,16 +41,18 @@ const CollapsableSection = ({
     api.start({
       from: { height: "0px" },
       to: { height: `${sectionContentHeight}px` },
+      onRest: () => setIsOpen(true),
     });
-    setIsOpen(true);
   };
 
   const closeSection = () => {
     api.start({
       from: { height: `${sectionContentHeight}px` },
       to: { height: "0px" },
+      onRest() {
+        setIsOpen(false);
+      },
     });
-    setIsOpen(false);
   };
 
   return (
@@ -78,9 +80,10 @@ const CollapsableSection = ({
         </div>
       </WithTooltip>
       <div
-        className={`absolute top-0 left-0 -translate-y-[1px] whitespace-nowrap bg-white text-xs text-gray-300 ${
+        className={`absolute top-0 left-0 -translate-y-[1px] cursor-pointer whitespace-nowrap bg-white text-xs text-gray-300 transition-colors duration-150 ease-in-out hover:!text-gray-600 ${
           springAtRest && !isOpen ? "z-30 opacity-100" : "-z-10 opacity-0"
         }`}
+        onClick={openSection}
         ref={openSectionTextRef}
       >
         {showSectionText}
