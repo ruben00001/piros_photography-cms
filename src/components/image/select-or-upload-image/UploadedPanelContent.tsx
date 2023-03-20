@@ -1,13 +1,18 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { useState, type ReactElement } from "react";
 
 import { fuzzySearch } from "~/helpers/query-data";
-import { api } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 
 import WithTooltip from "~/components/data-display/WithTooltip";
-import MyCldImage from "~/components/image/MyCldImage";
+import MyCldImage from "~/components/image/MyCldImage2";
 import SearchInput from "~/components/SearchInput";
+import { calcImageDimensions } from "~/helpers/general";
+import { useMeasure } from "react-use";
 
 export type OnSelectImage = (arg0: { imageId: string }) => void;
+
+type Image = RouterOutputs["image"]["getAll"][0];
 
 const UploadedPanelContent = ({
   onSelectImage,
@@ -113,25 +118,57 @@ const ImagesGrid = ({
     <p className="text-gray-600">No matches</p>
   ) : (
     <div className="grid cursor-pointer grid-cols-4 gap-sm">
-      {imagesByQuery.map((dbImage) => (
-        <WithTooltip text="click to add" type="action" key={dbImage.id}>
-          <div
-            className="my-hover-bg rounded-lg border border-base-200 p-sm"
-            onClick={() => {
-              onSelectImage({ imageId: dbImage.id });
-              closeModal();
-            }}
-          >
-            <div className="aspect-square">
-              <MyCldImage
-                src={dbImage.cloudinary_public_id}
-                fit="object-contain"
-                heightSetByContainer
-              />
-            </div>
+      {imagesByQuery.map((image) => (
+        <Image
+          image={image}
+          onSelectImage={onSelectImage}
+          closeModal={closeModal}
+          key={image.id}
+        />
+      ))}
+    </div>
+  );
+};
+
+const Image = ({
+  image,
+  onSelectImage,
+  closeModal,
+}: {
+  image: Image;
+  onSelectImage: OnSelectImage;
+  closeModal: () => void;
+}) => {
+  const [containerRef, { width }] = useMeasure<HTMLDivElement>();
+
+  return (
+    <div
+      className="my-hover-bg flex flex-col rounded-lg border border-base-200 p-sm"
+      onClick={() => {
+        onSelectImage({ imageId: image.id });
+        closeModal();
+      }}
+      ref={containerRef}
+    >
+      {width ? (
+        <WithTooltip text="Click to add" type="action">
+          <div className="flex flex-grow flex-col">
+            <MyCldImage
+              src={image.cloudinary_public_id}
+              dimensions={calcImageDimensions({
+                constraint: {
+                  maxDecimal: { height: 1, width: 1 },
+                  value: { height: width, width },
+                },
+                image: {
+                  height: image.naturalHeight,
+                  width: image.naturalWidth,
+                },
+              })}
+            />
           </div>
         </WithTooltip>
-      ))}
+      ) : null}
     </div>
   );
 };

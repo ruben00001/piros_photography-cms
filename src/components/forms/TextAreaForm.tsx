@@ -3,6 +3,7 @@ import DOMPurify from "dompurify";
 import ReactTextareaAutosize from "react-textarea-autosize";
 
 import WithTooltip from "../data-display/WithTooltip";
+import { useMeasure } from "react-use";
 
 const TextAreaForm = ({
   initialValue = "",
@@ -47,70 +48,78 @@ const TextAreaForm = ({
     });
   };
 
+  const [dummyRef, { width: dummyWidth }] = useMeasure<HTMLDivElement>();
+
   return (
     <WithTooltip
       text={tooltipText}
       isDisabled={localIsFocused}
       placement="top-start"
     >
-      <div
-        className="relative"
-        onFocus={() => {
-          setLocalIsFocused(true);
-          if (onFocus) {
-            onFocus();
-          }
-        }}
-        onBlur={(e) => {
-          if (e.currentTarget.contains(e.relatedTarget)) {
-            return;
-          }
+      <>
+        <p className="invisible absolute -z-10" ref={dummyRef}>
+          {value.length ? value : placeholder}
+        </p>
+        <div
+          className="relative w-full"
+          onFocus={() => {
+            setLocalIsFocused(true);
+            if (onFocus) {
+              onFocus();
+            }
+          }}
+          onBlur={(e) => {
+            if (e.currentTarget.contains(e.relatedTarget)) {
+              return;
+            }
 
-          setLocalIsFocused(false);
-          if (onBlur) {
-            onBlur();
-          }
-        }}
-      >
-        <ReactTextareaAutosize
-          className={`relative z-10 box-content h-full w-full rounded-sm border bg-transparent py-1 transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
-            enableBorderOnBlur && isChange
-              ? "border-base-300"
-              : "border-transparent"
-          } ${
-            (enableBorderOnBlur && isChange) || localIsFocused ? "px-xs" : ""
-          }`}
-          value={value}
-          onSubmit={() => {
-            handleSubmit();
+            setLocalIsFocused(false);
+            if (onBlur) {
+              onBlur();
+            }
           }}
-          onChange={(event) => {
-            setValue(event.target.value);
-          }}
-          placeholder={placeholder}
-        />
-        {localIsFocused && isChange ? (
-          <div className="flex justify-between">
-            <div></div>
-            <button
-              className={`rounded-md border bg-white py-xxs px-xs font-sans text-sm text-gray-500 hover:bg-base-200 `}
-              onClick={handleSubmit}
-              type="button"
-            >
-              Submit
-            </button>
-          </div>
-        ) : null}
-        {showHowToSubmitMessage ? (
-          <>
-            <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-60 py-xxxs px-xs font-sans">
-              <p className="text-xs text-gray-500">
-                Click on submit button to submit
-              </p>
+        >
+          <ReactTextareaAutosize
+            className={`relative z-10 box-content h-full min-w-[200px] max-w-full rounded-sm bg-transparent py-1 transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
+              enableBorderOnBlur && isChange
+                ? "border-base-300"
+                : "border-transparent"
+            } ${
+              (enableBorderOnBlur && isChange) || localIsFocused ? "px-xs" : ""
+            }`}
+            value={value}
+            onSubmit={() => {
+              handleSubmit();
+            }}
+            onChange={(event) => {
+              setValue(event.target.value);
+            }}
+            placeholder={placeholder}
+            style={{ width: dummyWidth + 20 }}
+          />
+          {localIsFocused && isChange ? (
+            <div className="flex justify-between">
+              <div></div>
+              <button
+                className={`rounded-md border bg-white py-xxs px-xs font-sans text-sm text-gray-500 hover:bg-base-200 `}
+                onClick={handleSubmit}
+                type="button"
+              >
+                Submit
+              </button>
             </div>
-          </>
-        ) : null}
-      </div>
+          ) : null}
+          {showHowToSubmitMessage ? (
+            <>
+              <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-60 py-xxxs px-xs font-sans">
+                <p className="text-xs text-gray-500">
+                  Click on submit button to submit
+                </p>
+              </div>
+            </>
+          ) : null}
+        </div>
+      </>
     </WithTooltip>
   );
 };

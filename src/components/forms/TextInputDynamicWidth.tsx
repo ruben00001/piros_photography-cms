@@ -60,7 +60,7 @@ const TextInput = ({
         {value.length ? value : placeholder}
       </p>
       <input
-        className={`z-10 bg-transparent pr-xs text-gray-600 outline-none transition-transform duration-100 ease-in-out focus:translate-x-2 ${
+        className={`z-10 bg-transparent pr-xs outline-none transition-transform duration-100 ease-in-out focus:translate-x-2 ${
           styles?.input || ""
         } ${showBorderOnBlur && value.length ? "translate-x-2" : ""} `}
         id={id}

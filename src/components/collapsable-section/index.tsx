@@ -41,18 +41,16 @@ const CollapsableSection = ({
     api.start({
       from: { height: "0px" },
       to: { height: `${sectionContentHeight}px` },
-      onRest: () => setIsOpen(true),
     });
+    setIsOpen(true);
   };
 
   const closeSection = () => {
     api.start({
       from: { height: `${sectionContentHeight}px` },
       to: { height: "0px" },
-      onRest() {
-        setIsOpen(false);
-      },
     });
+    setIsOpen(false);
   };
 
   return (

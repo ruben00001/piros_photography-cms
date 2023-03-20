@@ -18,7 +18,7 @@ const CoverImage = () => {
   const album = useAlbumContext();
 
   return (
-    <div className="group/coverImage relative inline-block border-2">
+    <div className="group/coverImage relative inline-block">
       {!album.coverImageId ? <Unpopulated /> : <Populated />}
       <UpdateCoverImageMenu />
     </div>

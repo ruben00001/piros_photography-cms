@@ -22,7 +22,7 @@ export const albumImageRouter = createTRPCRouter({
         where: {
           id: input.albumImageId,
         },
-        data: { title: input.updatedDescription },
+        data: { description: input.updatedDescription },
       });
     }),
 });

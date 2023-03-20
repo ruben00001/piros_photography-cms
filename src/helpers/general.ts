@@ -16,7 +16,7 @@ export const calcImageDimensionsToFitToScreen = ({
   const imageAspectRatio = initialWidth / initialHeight;
 
   const maxWidth = window.innerWidth * 0.8;
-  const maxHeight = window.innerHeight * 0.8;
+  const maxHeight = window.innerHeight * 0.7;
 
   let width = maxWidth;
   let height = width / imageAspectRatio;

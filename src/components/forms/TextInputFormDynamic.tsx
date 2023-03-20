@@ -46,7 +46,7 @@ export const TextInputForm = ({
         }}
         ref={containerRef}
       >
-        <div className="form-control ">
+        <div className="form-control">
           <TextInput
             setValue={(value) => setInputValue(value)}
             value={inputValue}

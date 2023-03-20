@@ -88,8 +88,6 @@ const Description = () => {
   );
 };
 
-// TODO: handle inedx on delete image
-
 const Images = () => {
   const album = useAlbumContext();
 

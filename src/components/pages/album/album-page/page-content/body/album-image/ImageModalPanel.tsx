@@ -3,31 +3,22 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 
-import { useAlbumImageContext } from "../../../_context/AlbumImageState";
+import { useAlbumImageContext } from "./_context/AlbumImageState";
 import { useAlbumContext } from "../../../_context/AlbumState";
 import { api } from "~/utils/api";
 
 import Toast from "~/components/data-display/Toast";
 import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
-import { CycleLeftIcon, CycleRightIcon, LikeIcon } from "~/components/Icon";
+import { CycleLeftIcon, CycleRightIcon } from "~/components/Icon";
 import MyCldImage from "~/components/image/MyCldImage2";
 import { useModalVisibilityContext } from "~/components/modal";
 import TextAreaForm from "~/components/forms/TextAreaForm";
 
 const ImageModalPanel = () => {
-  const { imageDimensionsForScreen } = useAlbumImageContext();
-
-  const imageIsLandscape =
-    imageDimensionsForScreen.width > imageDimensionsForScreen.height;
-
   return (
     <>
       <CloseButton />
-      <div
-        className={`group/imageModal flex max-w-full gap-sm ${
-          imageIsLandscape ? "flex-col" : "flex-row-reverse"
-        }`}
-      >
+      <div className={`group/imageModal`}>
         <ImagePanel />
         <DescriptionPanel />
         <CycleImagesButtons />
@@ -58,40 +49,36 @@ const DescriptionPanel = () => {
 
   const { imageDimensionsForScreen } = useAlbumImageContext();
 
-  const imageIsLandscape =
-    imageDimensionsForScreen.width > imageDimensionsForScreen.height;
-
   return (
-    <div className=" text-gray-900 ">
+    <div
+      className={`text-gray-900`}
+      // style={{ maxWidth: "23vw" }}
+    >
       <div
-        className={`flex items-center justify-between bg-white/60 pl-xs`}
+        className={`flex items-center justify-between`}
         style={{
-          width: imageIsLandscape ? imageDimensionsForScreen.width : "auto",
+          width: imageDimensionsForScreen.width,
         }}
       >
-        <div className="flex gap-xl">
-          <Title />
+        <div className={`flex gap-xl `}>
+          <div className="text-gray-900">
+            <Title />
+          </div>
           <button
-            className="flex items-center gap-xs text-xs text-gray-500"
+            className="flex items-center gap-xs whitespace-nowrap text-xs text-gray-700"
             onClick={() => setIsExpanded(!isExpanded)}
             type="button"
           >
             <span>read {isExpanded ? "less" : "more"}</span>
           </button>
         </div>
-        <div className="flex items-center gap-xs text-gray-600">
-          <div className="text-lg">
-            <LikeIcon />
-          </div>
-          <div className="">11</div>
-        </div>
       </div>
       <div
-        className={`overflow-y-auto bg-white/60 pl-xs pb-md transition-opacity duration-150  ease-linear ${
+        className={`overflow-y-auto pb-md text-gray-900 transition-opacity duration-150  ease-linear ${
           isExpanded ? "opacity-100" : "opacity-0"
         }`}
         style={{
-          maxHeight: imageIsLandscape ? 200 : imageDimensionsForScreen.height,
+          maxHeight: 200,
         }}
       >
         <Description />
@@ -124,9 +111,11 @@ const Title = () => {
           const albumImageIndex = draft.images.findIndex(
             (albumImage) => albumImage.id === albumImageId
           );
-          if (albumImageIndex > -1) {
-            draft.images[albumImageIndex]!.title = updatedTitle;
+          const image = draft.images[albumImageIndex];
+          if (!image) {
+            return;
           }
+          image.title = updatedTitle;
         });
 
         return updated;
@@ -181,9 +170,11 @@ const Description = () => {
               const albumImageIndex = draft.images.findIndex(
                 (albumImage) => albumImage.id === albumImageId
               );
-              if (albumImageIndex > -1) {
-                draft.images[albumImageIndex]!.description = updatedDescription;
+              const image = draft.images[albumImageIndex];
+              if (!image) {
+                return;
               }
+              image.description = updatedDescription;
             });
 
             return updated;
@@ -204,7 +195,7 @@ const Description = () => {
     });
 
   return (
-    <div className="overflow-x-hidden pr-md font-serif tracking-wide">
+    <div className="overflow-x-hidden font-serif tracking-wide">
       <TextAreaForm
         onSubmit={({ inputValue }) =>
           updateDescriptionMutation.mutate({
@@ -226,12 +217,10 @@ const ImagePanel = () => {
   const { image, imageDimensionsForScreen } = useAlbumImageContext();
 
   return (
-    <div className="flex-grow">
-      <MyCldImage
-        src={image.cloudinary_public_id}
-        dimensions={imageDimensionsForScreen}
-      />
-    </div>
+    <MyCldImage
+      src={image.cloudinary_public_id}
+      dimensions={imageDimensionsForScreen}
+    />
   );
 };
 

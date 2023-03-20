@@ -21,7 +21,7 @@ export const albumRouter = createTRPCRouter({
         where: { id: input.albumId },
         include: {
           coverImage: true,
-          images: { include: { image: true } },
+          images: { include: { image: true }, orderBy: { index: "asc" } },
         },
         // include: { coverImage: true, images: input.includeImages || false },
       });
