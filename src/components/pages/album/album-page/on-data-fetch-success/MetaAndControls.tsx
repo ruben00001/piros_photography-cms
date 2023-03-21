@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
-import { useAlbumContext } from "../_context/AlbumState";
+import { useAlbumContext } from "~/album-page/_context";
 
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
@@ -11,7 +11,7 @@ import { Modal, WarningPanel } from "~/components/modal";
 import MyMenu from "~/components/MyMenu";
 import CoverImage from "./CoverImage";
 
-const MetaPanel = () => {
+const MetaAndControls = () => {
   const album = useAlbumContext();
 
   return (
@@ -47,7 +47,7 @@ const MetaPanel = () => {
   );
 };
 
-export default MetaPanel;
+export default MetaAndControls;
 
 const AlbumMenu = () => {
   return (

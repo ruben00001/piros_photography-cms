@@ -3,15 +3,15 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
-import { useAlbumContext } from "../../_context/AlbumState";
+import { useAlbumContext } from "~/albums-page/_context";
 
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
 import { GoToPageIcon } from "~/components/Icon";
-import AlbumMenu from "./AlbumMenu";
-import CoverImage from "./CoverImage";
 import DndSortableElement from "~/components/dnd-kit/DndSortableElement";
+import AlbumMenu from "./Menu";
+import CoverImage from "./CoverImage";
 
 const Album = () => {
   const album = useAlbumContext();

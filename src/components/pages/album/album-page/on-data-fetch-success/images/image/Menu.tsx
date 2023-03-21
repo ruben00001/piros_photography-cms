@@ -1,5 +1,9 @@
 import { toast } from "react-toastify";
 
+import { api } from "~/utils/api";
+
+import { useAlbumContext, useAlbumImageContext } from "~/album-page/_context";
+
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { DeleteIcon, ExpandIcon, ImageIcon } from "~/components/Icon";
@@ -9,10 +13,7 @@ import {
   type OnUploadImage,
 } from "~/components/image/select-or-upload-image";
 import { Modal, WarningPanel } from "~/components/modal";
-import { api } from "~/utils/api";
-import { useAlbumContext } from "../../../_context/AlbumState";
-import ImageModalPanel from "./ImageModalPanel";
-import { useAlbumImageContext } from "./_context/AlbumImageState";
+import OpenedImagePanel from "./OpenedImagePanel";
 
 const Menu = () => {
   return (
@@ -62,7 +63,7 @@ const OpenAlbumImageModal = () => {
           </WithTooltip>
         </div>
       )}
-      panelContent={() => <ImageModalPanel />}
+      panelContent={() => <OpenedImagePanel />}
     />
   );
 };

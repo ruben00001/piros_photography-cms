@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useMeasure } from "react-use";
 import { animated, useSpring } from "@react-spring/web";
+import { toast } from "react-toastify";
+import { Transition } from "@headlessui/react";
 
 import { ErrorIcon, PlusIcon, TickIcon } from "~/components/Icon";
 import { api } from "~/utils/api";
-import { toast } from "react-toastify";
 import Toast from "~/components/data-display/Toast";
 import Spinner from "~/components/Spinner";
-import { Transition } from "@headlessui/react";
 
 const AddAlbum = () => {
   const [formIsOpen, setFormIsOpen] = useState(false);

@@ -2,7 +2,7 @@ import { type ReactElement } from "react";
 import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
-import { AlbumProvider } from "../../_context/AlbumState";
+import { AlbumProvider } from "~/albums-page/_context";
 import { findEntityById } from "~/helpers/query-data";
 import {
   getReorderedEntities,
@@ -10,10 +10,10 @@ import {
   sortByIndex,
 } from "~/helpers/process-data";
 
-import AddAlbum from "./AddAlbum";
-import Album from "./Album";
 import Toast from "~/components/data-display/Toast";
 import DndSortableContext from "~/components/dnd-kit/DndSortableContext";
+import AddAlbum from "./AddAlbum";
+import Album from "./album";
 
 const Populated = () => {
   const { data } = api.album.albumsPageGetAll.useQuery(undefined, {

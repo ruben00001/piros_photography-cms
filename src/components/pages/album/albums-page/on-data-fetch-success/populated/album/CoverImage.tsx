@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
+import { useMeasure } from "react-use";
 
 import { api } from "~/utils/api";
-import { useAlbumContext } from "../../_context/AlbumState";
+import { useAlbumContext } from "~/albums-page/_context";
 
 import MyCldImage from "~/components/image/MyCldImage2";
 import ImagePlaceholder from "~/components/image/Placeholder";
@@ -13,7 +14,6 @@ import {
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { ImageIcon } from "~/components/Icon";
 import Toast from "~/components/data-display/Toast";
-import { useMeasure } from "react-use";
 
 const CoverImage = () => {
   const album = useAlbumContext();

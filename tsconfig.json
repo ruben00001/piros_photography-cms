@@ -19,7 +19,9 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "~/album-containers": ["src/components/pages/album/_containers"]
+      "~/album-containers": ["src/components/pages/album/_containers"],
+      "~/albums-page/*": ["src/components/pages/album/albums-page/*"],
+      "~/album-page/*": ["src/components/pages/album/album-page/*"]
     },
     "noUnusedLocals": false,
     "noUnusedParameters": false

@@ -1,28 +1,22 @@
 import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
-import { useAlbumContext } from "../../_context/AlbumState";
+import { useAlbumContext } from "~/album-page/_context";
 
 import Toast from "~/components/data-display/Toast";
-import AlbumImage from "./album-image";
 import TextAreaForm from "~/components/forms/TextAreaForm";
 import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
 
-const AlbumBody = () => {
+const About = () => {
   return (
     <div>
-      <div>
-        <Title />
-        <Description />
-      </div>
-      <div className="mt-xl">
-        <Images />
-      </div>
+      <Title />
+      <Description />
     </div>
   );
 };
 
-export default AlbumBody;
+export default About;
 
 const Title = () => {
   const album = useAlbumContext();
@@ -84,24 +78,6 @@ const Description = () => {
         enableHowToSubmitMessage
         enableBorderOnBlur
       />
-    </div>
-  );
-};
-
-const Images = () => {
-  const album = useAlbumContext();
-
-  return (
-    <div>
-      {!album.images.length ? (
-        <p>No images yet</p>
-      ) : (
-        <div className="mt-lg grid grid-cols-2 gap-xl">
-          {album.images.map((albumImage) => (
-            <AlbumImage albumImage={albumImage} key={albumImage.id} />
-          ))}
-        </div>
-      )}
     </div>
   );
 };

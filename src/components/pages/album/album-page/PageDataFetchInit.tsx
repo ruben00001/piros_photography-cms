@@ -8,7 +8,7 @@ import { type Album } from "./_types";
 
 import Toast from "~/components/data-display/Toast";
 
-export default function PageInit({
+export default function PageDataFetchInit({
   children,
 }: {
   children: (arg0: { album: Album }) => ReactElement;

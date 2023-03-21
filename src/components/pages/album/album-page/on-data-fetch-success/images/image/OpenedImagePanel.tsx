@@ -3,9 +3,9 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 
-import { useAlbumImageContext } from "./_context/AlbumImageState";
-import { useAlbumContext } from "../../../_context/AlbumState";
+import { useAlbumContext, useAlbumImageContext } from "~/album-page/_context";
 import { api } from "~/utils/api";
+import { calcImageDimensionsToFitToScreen } from "~/helpers/general";
 
 import Toast from "~/components/data-display/Toast";
 import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
@@ -14,7 +14,7 @@ import MyCldImage from "~/components/image/MyCldImage2";
 import { useModalVisibilityContext } from "~/components/modal";
 import TextAreaForm from "~/components/forms/TextAreaForm";
 
-const ImageModalPanel = () => {
+const OpenedImagePanel = () => {
   return (
     <>
       <CloseButton />
@@ -27,7 +27,7 @@ const ImageModalPanel = () => {
   );
 };
 
-export default ImageModalPanel;
+export default OpenedImagePanel;
 
 const CloseButton = () => {
   const { close: closeModal } = useModalVisibilityContext();
@@ -47,7 +47,12 @@ const CloseButton = () => {
 const DescriptionPanel = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const { imageDimensionsForScreen } = useAlbumImageContext();
+  const { image } = useAlbumImageContext();
+
+  const imageDimensionsForScreen = calcImageDimensionsToFitToScreen({
+    height: image.naturalHeight,
+    width: image.naturalWidth,
+  });
 
   return (
     <div
@@ -214,7 +219,12 @@ const Description = () => {
 };
 
 const ImagePanel = () => {
-  const { image, imageDimensionsForScreen } = useAlbumImageContext();
+  const { image } = useAlbumImageContext();
+
+  const imageDimensionsForScreen = calcImageDimensionsToFitToScreen({
+    height: image.naturalHeight,
+    width: image.naturalWidth,
+  });
 
   return (
     <MyCldImage
