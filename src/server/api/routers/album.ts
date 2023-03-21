@@ -257,22 +257,22 @@ export const albumRouter = createTRPCRouter({
   reorderImages: protectedProcedure
     .input(
       z.object({
-        albums: z.array(z.object({ id: z.string(), index: z.number() })),
-        activeAlbum: z.object({ id: z.string(), index: z.number() }),
-        overAlbum: z.object({ id: z.string(), index: z.number() }),
+        albumImages: z.array(z.object({ id: z.string(), index: z.number() })),
+        activeAlbumImage: z.object({ id: z.string(), index: z.number() }),
+        overAlbumImage: z.object({ id: z.string(), index: z.number() }),
       })
     )
     .mutation(({ ctx, input }) => {
       const updateFuncs = getReorderedEntities({
-        active: input.activeAlbum,
-        over: input.overAlbum,
-        entities: input.albums,
-      }).map((album) =>
-        ctx.prisma.album.update({
+        active: input.activeAlbumImage,
+        over: input.overAlbumImage,
+        entities: input.albumImages,
+      }).map((albumImage) =>
+        ctx.prisma.albumImage.update({
           where: {
-            id: album.id,
+            id: albumImage.id,
           },
-          data: { index: album.index },
+          data: { index: albumImage.index },
         })
       );
 

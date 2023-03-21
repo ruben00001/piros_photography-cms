@@ -27,7 +27,7 @@ export const ModalPanelWrapper = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-50/60" aria-hidden="true" />
+          <div className="fixed inset-0 bg-gray-50/70" aria-hidden="true" />
         </Transition.Child>
 
         <div className="fixed inset-0 grid place-items-center p-4">
@@ -40,7 +40,7 @@ export const ModalPanelWrapper = ({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Panel className={`${styles?.parentPanel}`}>
+            <Dialog.Panel className={`${styles?.parentPanel || ""}`}>
               {panelContent}
             </Dialog.Panel>
           </Transition.Child>

@@ -56,8 +56,6 @@ const DescriptionPanel = () => {
     width: image.naturalWidth,
   });
 
-  /*   const [expandedPanelRef, { height: expandedPanelHeight }] =
-    useMeasure<HTMLDivElement>(); */
   const [dummyExpandedPanelRef, { height: dummyExpandedPanelHeight }] =
     useMeasure<HTMLDivElement>();
 
@@ -83,10 +81,7 @@ const DescriptionPanel = () => {
   };
 
   return (
-    <div
-      className={`text-gray-900`}
-      // style={{ maxWidth: "23vw" }}
-    >
+    <div className={`text-gray-900`}>
       <div
         className={`flex items-center justify-between`}
         style={{
@@ -281,7 +276,6 @@ const CycleImagesButtons = () => {
     <>
       <button
         className="fixed left-sm top-1/2 z-50 -translate-y-1/2 text-4xl transition-opacity duration-150 ease-in-out group-hover/imageModal:opacity-100"
-        // className="fixed left-sm top-1/2 z-50 -translate-y-1/2 text-4xl opacity-0 transition-opacity duration-150 ease-in-out group-hover/imageModal:opacity-100"
         type="button"
       >
         <CycleLeftIcon weight="duotone" color="white" fill="black" />
