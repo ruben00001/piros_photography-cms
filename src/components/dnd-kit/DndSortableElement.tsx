@@ -22,7 +22,7 @@ const DndSortableElement = ({
   wrapperClasses?: string;
 }): ReactElement => {
   const animateLayoutChanges: AnimateLayoutChanges = (args) =>
-    defaultAnimateLayoutChanges({ ...args, wasDragging: true });
+    defaultAnimateLayoutChanges({ ...args });
 
   const {
     attributes,
@@ -49,12 +49,12 @@ const DndSortableElement = ({
       <div
         className={`group/dndElement relative transition-opacity duration-100 ease-in-out ${
           isDragging ? "z-50 opacity-40" : ""
-        } ${wrapperClasses}`}
+        } ${wrapperClasses || ""}`}
         style={style}
         ref={setNodeRef}
       >
         {children}
-        <div className="absolute top-1/2 right-0 z-30 translate-x-full -translate-y-1/2 rounded-sm py-1 opacity-0 hover:opacity-100 group-hover/dndElement:opacity-100">
+        <div className="absolute top-1/2 right-0 z-30 translate-x-full -translate-y-1/2 rounded-sm py-1 opacity-0 transition-opacity duration-150 ease-in-out hover:!opacity-100 group-hover/dndElement:opacity-40">
           <WithTooltip text="drag to change position" isDisabled={isDragging}>
             <button
               className="text-2xl"

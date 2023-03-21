@@ -24,9 +24,11 @@ const Album = ({ album }: { album: AlbumType }) => {
       elementId={album.id}
       wrapperClasses="group/album relative rounded-lg border border-transparent p-sm transition-colors duration-75 ease-in-out focus-within:border-base-300 hover:border-base-200"
     >
-      <AlbumProvider album={album}>
-        <AlbumContent />
-      </AlbumProvider>
+      <div>
+        <AlbumProvider album={album}>
+          <AlbumContent />
+        </AlbumProvider>
+      </div>
     </DndSortableElement>
   );
 };

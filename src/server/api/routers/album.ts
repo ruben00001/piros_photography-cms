@@ -209,47 +209,4 @@ export const albumRouter = createTRPCRouter({
         },
       });
     }),
-
-  /*   deleteImage: protectedProcedure
-    .input(
-      z.object({
-        where: z.object({ albumId: z.string() }),
-        delete: z.object({ where: z.object({ albumImageId: z.string() }) }),
-        update: z.object({
-          albumImages: z.array(
-            z.object({ id: z.string(), currentIndex: z.number() })
-          ),
-        }),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const deleteImageFunc = ctx.prisma.albumImage.delete({
-        where: {
-          id: input.delete.where.albumImageId,
-        },
-      });
-
-      const updateImagesFuncs = input.update.albumImages.map((albumImage) =>
-        ctx.prisma.albumImage.update({
-          where: { id: albumImage.id },
-          data: { index: albumImage.currentIndex - 1 },
-        })
-      );
-
-      return ctx.prisma.album.update({
-        where: {
-          id: input.where.albumId,
-        },
-        data: {
-          images: {
-            update: {
-              where: {
-                id: input.where.imageId,
-              },
-              data: { imageId: input.data.imageId },
-            },
-          },
-        },
-      });
-    }), */
 });

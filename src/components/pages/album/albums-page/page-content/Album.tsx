@@ -1,24 +1,31 @@
 import produce from "immer";
 import Link from "next/link";
 import { toast } from "react-toastify";
+
+import { api } from "~/utils/api";
+import { useAlbumContext } from "../_context/AlbumState";
+
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
 import { GoToPageIcon } from "~/components/Icon";
-import { api } from "~/utils/api";
-import { useAlbumContext } from "../_context/AlbumState";
 import AlbumMenu from "./AlbumMenu";
 import CoverImage from "./CoverImage";
+import DndSortableElement from "~/components/dnd-kit/DndSortableElement";
 
 const Album = () => {
+  const album = useAlbumContext();
+
   return (
-    <div className="group/album relative">
-      <DraftBadge />
-      <TitleInput />
-      <CoverImage />
-      <GoToPage />
-      <AlbumMenu />
-    </div>
+    <DndSortableElement elementId={album.id}>
+      <div className="group/album relative">
+        <DraftBadge />
+        <TitleInput />
+        <CoverImage />
+        <GoToPage />
+        <AlbumMenu />
+      </div>
+    </DndSortableElement>
   );
 };
 
@@ -102,11 +109,11 @@ const GoToPage = () => {
   return (
     <Link href={`/albums/${album.id}`} passHref>
       <div className="mt-sm inline-block cursor-pointer rounded-sm border border-transparent py-xxxs px-xxs opacity-0 transition-all duration-150 ease-in-out hover:border-gray-200 hover:bg-gray-100 group-hover/album:opacity-100">
-        <div className="flex items-center gap-xs text-xs text-gray-500">
-          <span>
+        <div className="flex items-center gap-xs">
+          <span className="text-mid text-secondary">
             <GoToPageIcon />
           </span>
-          <span className="uppercase text-gray-500">Go to album</span>
+          <span className=" text-xs text-gray-400">Go to album</span>
         </div>
       </div>
     </Link>

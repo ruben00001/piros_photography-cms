@@ -24,6 +24,9 @@ const config = {
         ["my-error-content"]: "hsl(16 100% 56.1%)",
         ["overlay-light"]: "rgba(237, 242, 247, 0.2)",
       },
+      fontSize: {
+        mid: "15px",
+      },
     },
   },
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
