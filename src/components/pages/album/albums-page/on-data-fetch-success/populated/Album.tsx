@@ -3,7 +3,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
-import { useAlbumContext } from "../_context/AlbumState";
+import { useAlbumContext } from "../../_context/AlbumState";
 
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";

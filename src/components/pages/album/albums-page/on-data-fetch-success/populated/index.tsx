@@ -1,17 +1,19 @@
+import { type ReactElement } from "react";
+import { toast } from "react-toastify";
+
 import { api } from "~/utils/api";
 import { AlbumProvider } from "../../_context/AlbumState";
-import AddAlbum from "./AddAlbum";
-import Album from "../Album";
+import { findEntityById } from "~/helpers/query-data";
 import {
   getReorderedEntities,
   mapIds,
   sortByIndex,
 } from "~/helpers/process-data";
-import { toast } from "react-toastify";
+
+import AddAlbum from "./AddAlbum";
+import Album from "./Album";
 import Toast from "~/components/data-display/Toast";
 import DndSortableContext from "~/components/dnd-kit/DndSortableContext";
-import { findEntityById } from "~/helpers/query-data";
-import { type ReactElement } from "react";
 
 const Populated = () => {
   const { data } = api.album.albumsPageGetAll.useQuery(undefined, {

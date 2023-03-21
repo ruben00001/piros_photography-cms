@@ -2,11 +2,15 @@ import { type ReactElement } from "react";
 
 import { api } from "~/utils/api";
 
-export default function PageInit({ children }: { children: ReactElement }) {
-  return <FetchAlbumWrapper>{children}</FetchAlbumWrapper>;
+export default function PageDataFetchInit({
+  children,
+}: {
+  children: ReactElement;
+}) {
+  return <FetchAlbumsWrapper>{children}</FetchAlbumsWrapper>;
 }
 
-const FetchAlbumWrapper = ({ children }: { children: ReactElement }) => {
+const FetchAlbumsWrapper = ({ children }: { children: ReactElement }) => {
   const { isFetchedAfterMount, isInitialLoading, isError } =
     api.album.albumsPageGetAll.useQuery();
 

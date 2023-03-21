@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
-import { useAlbumContext } from "../_context/AlbumState";
+import { useAlbumContext } from "../../_context/AlbumState";
 
 import MyCldImage from "~/components/image/MyCldImage2";
 import ImagePlaceholder from "~/components/image/Placeholder";

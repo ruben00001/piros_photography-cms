@@ -5,7 +5,7 @@ import { Modal, WarningPanel } from "~/components/modal";
 import { api } from "~/utils/api";
 import { toast } from "react-toastify";
 import Toast from "~/components/data-display/Toast";
-import { useAlbumContext } from "../_context/AlbumState";
+import { useAlbumContext } from "../../_context/AlbumState";
 
 const AlbumMenu = () => {
   return (

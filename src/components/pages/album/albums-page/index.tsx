@@ -1,11 +1,11 @@
-import PageContent from "./page-content";
-import PageInit from "./PageInit";
+import OnDataFetchSuccess from "./on-data-fetch-success";
+import PageDataFetchInit from "./PageDataFetchInit";
 
 const AlbumsPage = () => {
   return (
-    <PageInit>
-      <PageContent />
-    </PageInit>
+    <PageDataFetchInit>
+      <OnDataFetchSuccess />
+    </PageDataFetchInit>
   );
 };
 
