@@ -5,7 +5,7 @@ import { fuzzySearch } from "~/helpers/query-data";
 import { api, type RouterOutputs } from "~/utils/api";
 
 import WithTooltip from "~/components/data-display/WithTooltip";
-import MyCldImage from "~/components/image/MyCldImage2";
+import MyCldImage from "~/components/image/MyCldImage";
 import SearchInput from "~/components/SearchInput";
 import { calcImageDimensions } from "~/helpers/general";
 import { useMeasure } from "react-use";

@@ -1,66 +1,52 @@
 import { CldImage } from "next-cloudinary";
 import { useState } from "react";
-import ContainerDimension from "../ContainerDimension";
 import { SpinnerIcon } from "../Icon";
 
 const MyCldImage = ({
   src,
-  fit,
-  heightSetByContainer = true,
-  styles,
+  dimensions,
 }: {
   src: string;
-  fit: "object-contain" | "object-cover";
-  heightSetByContainer: true | { isSetByContainer: false; approxVal: number };
-  styles?: {
-    wrapper?: string;
-    img?: string;
-  };
+  dimensions: { width: number; height: number };
 }) => {
   const [blurImgIsLoaded, setBlurImgIsLoaded] = useState(false);
   const [qualityImgIsLoaded, setQualityImgIsLoaded] = useState(false);
 
   return (
-    <div className={`group relative ${styles?.wrapper}`}>
-      {/* <div className="relative flex h-full flex-col"> */}
-      <div
-        className={`my-abs-center transition-opacity ${
-          !blurImgIsLoaded ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <SpinnerIcon />
+    <div className="grid flex-grow place-items-center">
+      <div className="relative bg-gray-50" style={dimensions}>
+        <div
+          className={`my-abs-center transition-opacity ${
+            !blurImgIsLoaded && !qualityImgIsLoaded
+              ? "opacity-100"
+              : "opacity-0"
+          }`}
+        >
+          <SpinnerIcon />
+        </div>
+        <CldImage
+          className={`absolute left-0 top-0 ${
+            qualityImgIsLoaded ? "opacity-0" : "opacity-100"
+          }`}
+          src={src}
+          {...dimensions}
+          style={dimensions}
+          effects={[{ blur: "1000" }]}
+          quality={1}
+          alt=""
+          onLoad={() => setBlurImgIsLoaded(true)}
+          loading="lazy"
+        />
+        <CldImage
+          className={`${!qualityImgIsLoaded ? "opacity-0" : "opacity-100"}`}
+          src={src}
+          {...dimensions}
+          style={dimensions}
+          alt=""
+          onLoad={() => setQualityImgIsLoaded(true)}
+          loading="lazy"
+        />
       </div>
-      <ContainerDimension ignoreHeight={heightSetByContainer !== true}>
-        {({ height, width }) => (
-          <>
-            <CldImage
-              width={width}
-              height={
-                heightSetByContainer === true
-                  ? height
-                  : heightSetByContainer.approxVal
-              }
-              effects={[{ blur: "1000" }]}
-              quality={1}
-              src={src}
-              className={`duration-600 absolute z-10 h-auto w-full transition-opacity ease-out ${
-                // className={`duration-600 absolute z-10 transition-opacity ease-out ${
-                !qualityImgIsLoaded ? "opacity-100" : "-z-10 opacity-0"
-              } ${fit} h-[${height}px] w-[${width}px]`}
-              onLoad={() => setBlurImgIsLoaded(true)}
-              alt=""
-            />
-            <CldImage
-              width={width}
-              height={height}
-              src={src}
-              className={`h-auto w-full ${fit} ${styles?.img}`}
-              onLoad={() => setQualityImgIsLoaded(true)}
-              alt=""
-            />
-          </>
-        )}
-      </ContainerDimension>
     </div>
   );
 };

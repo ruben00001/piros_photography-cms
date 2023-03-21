@@ -4,7 +4,7 @@ import { useMeasure } from "react-use";
 import { api } from "~/utils/api";
 import { useAlbumContext } from "~/albums-page/_context";
 
-import MyCldImage from "~/components/image/MyCldImage2";
+import MyCldImage from "~/components/image/MyCldImage";
 import ImagePlaceholder from "~/components/image/Placeholder";
 import {
   SelectOrUploadImageMenu,

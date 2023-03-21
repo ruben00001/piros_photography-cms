@@ -1,7 +1,7 @@
 import { calcImageDimensions } from "~/helpers/general";
 import { useAlbumContext } from "../_context/AlbumState";
 
-import MyCldImage from "~/components/image/MyCldImage2";
+import MyCldImage from "~/components/image/MyCldImage";
 import ImagePlaceholder from "~/components/image/Placeholder";
 import {
   SelectOrUploadImageMenu,

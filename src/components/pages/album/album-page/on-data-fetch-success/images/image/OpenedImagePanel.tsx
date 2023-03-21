@@ -10,7 +10,7 @@ import { calcImageDimensionsToFitToScreen } from "~/helpers/general";
 import Toast from "~/components/data-display/Toast";
 import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
 import { CycleLeftIcon, CycleRightIcon } from "~/components/Icon";
-import MyCldImage from "~/components/image/MyCldImage2";
+import MyCldImage from "~/components/image/MyCldImage";
 import { useModalVisibilityContext } from "~/components/modal";
 import TextAreaForm from "~/components/forms/TextAreaForm";
 

@@ -6,7 +6,7 @@ import {
   useAlbumImageContext,
 } from "~/album-page/_context";
 
-import MyCldImage from "~/components/image/MyCldImage2";
+import MyCldImage from "~/components/image/MyCldImage";
 import Menu from "./Menu";
 
 const AlbumImage = () => {

@@ -8,7 +8,7 @@ import {
 import { api } from "~/utils/api";
 
 import { FileImageIcon, TickIcon } from "~/components/Icon";
-import Tags from "~/components/image/select-or-upload-image/upload-modal/panel/tags";
+import Tags from "~/components/image/select-or-upload-image/tags";
 import Spinner from "~/components/Spinner";
 import { handleUploadImage } from "~/helpers/cloudinary";
 import { toast } from "react-toastify";

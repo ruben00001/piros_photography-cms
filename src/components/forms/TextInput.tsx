@@ -37,11 +37,11 @@ const TextInput = ({
         showBorderOnBlur && value.length
           ? "border-base-300"
           : "border-transparent"
-      } ${styles?.wrapper}`}
+      } ${styles?.wrapper || ""}`}
     >
       <input
         className={`z-10 w-full bg-transparent pr-xs text-gray-600 outline-none transition-transform duration-100 ease-in-out focus:translate-x-2 ${
-          styles?.input
+          styles?.input || ""
         } ${showBorderOnBlur && value.length ? "translate-x-2" : ""} `}
         id={id}
         value={value}
