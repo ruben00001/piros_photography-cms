@@ -1,5 +1,5 @@
 import { AddFirstAlbumIcon } from "~/components/Icon";
-import AddAlbum from "./AddAlbum";
+import AddAlbum from "../populated/AddAlbum";
 
 const Empty = () => {
   return (

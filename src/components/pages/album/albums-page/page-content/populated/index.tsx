@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
-import { AlbumProvider } from "../_context/AlbumState";
+import { AlbumProvider } from "../../_context/AlbumState";
 import AddAlbum from "./AddAlbum";
-import Album from "./Album";
+import Album from "../Album";
 
 const Populated = () => {
   const { data } = api.album.albumsPageGetAll.useQuery(undefined, {
