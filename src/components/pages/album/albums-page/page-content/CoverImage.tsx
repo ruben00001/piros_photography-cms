@@ -1,4 +1,6 @@
-import { calcImageDimensions } from "~/helpers/general";
+import { toast } from "react-toastify";
+
+import { api } from "~/utils/api";
 import { useAlbumContext } from "../_context/AlbumState";
 
 import MyCldImage from "~/components/image/MyCldImage2";
@@ -10,16 +12,15 @@ import {
 } from "~/components/image/select-or-upload-image";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import { ImageIcon } from "~/components/Icon";
-import { api } from "~/utils/api";
-import { toast } from "react-toastify";
 import Toast from "~/components/data-display/Toast";
+import { useMeasure } from "react-use";
 
 const CoverImage = () => {
   const album = useAlbumContext();
 
   return (
-    <div className="group/coverImage relative inline-block">
-      {!album.coverImageId ? <Unpopulated /> : <Populated />}
+    <div className="group/coverImage relative">
+      {!album.coverImageId ? <ImagePlaceholder /> : <Populated />}
       <UpdateCoverImageMenu />
     </div>
   );
@@ -27,16 +28,10 @@ const CoverImage = () => {
 
 export default CoverImage;
 
-const Unpopulated = () => {
-  return (
-    <div className="w-[300px]">
-      <ImagePlaceholder />
-    </div>
-  );
-};
-
 const Populated = () => {
   const album = useAlbumContext();
+
+  const [containerRef, { width }] = useMeasure<HTMLDivElement>();
 
   if (!album.coverImage) {
     return (
@@ -46,22 +41,20 @@ const Populated = () => {
     );
   }
 
-  const imageDimensions = calcImageDimensions({
-    constraint: {
-      maxDecimal: { height: 1, width: 1 },
-      value: { height: 300, width: 400 },
-    },
-    image: {
-      height: album.coverImage.naturalHeight,
-      width: album.coverImage.naturalWidth,
-    },
-  });
-
   return (
-    <MyCldImage
-      dimensions={imageDimensions}
-      src={album.coverImage.cloudinary_public_id}
-    />
+    <div ref={containerRef}>
+      {width ? (
+        <MyCldImage
+          src={album.coverImage.cloudinary_public_id}
+          dimensions={{
+            width,
+            height:
+              width /
+              (album.coverImage.naturalWidth / album.coverImage.naturalHeight),
+          }}
+        />
+      ) : null}
+    </div>
   );
 };
 
@@ -83,6 +76,9 @@ const UpdateCoverImageMenu = () => {
         }
         uploadPanel={{ onUploadImage }}
         uploadedPanel={{ onSelectImage }}
+        styles={{
+          itemsWrapper: "right-0",
+        }}
       />
     </div>
   );

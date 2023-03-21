@@ -13,7 +13,7 @@ const TextInput = ({
   isChange = true,
   styles,
   minWidth = 50,
-  trailingSpace = 10,
+  trailingSpace = 20,
   autoFocus = false,
 }: {
   value: string;

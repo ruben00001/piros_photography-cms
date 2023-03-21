@@ -18,7 +18,7 @@ export const SelectOrUploadImageMenu = ({
   button: ReactElement | ((arg0: { isOpen: boolean }) => ReactElement);
   uploadPanel: { onUploadImage: OnUploadImage };
   uploadedPanel: { onSelectImage: OnSelectImage };
-  styles?: { buttonWrapper?: string };
+  styles?: { buttonWrapper?: string; itemsWrapper?: string };
 }) => {
   return (
     <>
