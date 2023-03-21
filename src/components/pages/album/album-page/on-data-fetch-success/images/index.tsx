@@ -1,24 +1,11 @@
-import { AlbumImageProvider, useAlbumContext } from "~/album-page/_context";
-import AlbumImage from "./image";
+import { useAlbumContext } from "~/album-page/_context";
+import Populated from "./populated";
+import Unpopulated from "./Unpopulated";
 
 const Images = () => {
   const album = useAlbumContext();
 
-  return (
-    <div>
-      {!album.images.length ? (
-        <p>No images yet</p>
-      ) : (
-        <div className="mt-lg grid grid-cols-2 gap-xl">
-          {album.images.map((albumImage) => (
-            <AlbumImageProvider albumImage={albumImage} key={albumImage.id}>
-              <AlbumImage />
-            </AlbumImageProvider>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  return <div>{!album.images.length ? <Unpopulated /> : <Populated />}</div>;
 };
 
 export default Images;

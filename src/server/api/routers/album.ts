@@ -98,7 +98,7 @@ export const albumRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ album: z.object({ id: z.string(), index: z.number() }) }))
     .mutation(async ({ ctx, input }) => {
-      const albumsToUpdateIndex = await ctx.prisma.album.findMany({
+      const albumsToUpdate = await ctx.prisma.album.findMany({
         where: {
           index: {
             gt: input.album.index,
@@ -106,7 +106,7 @@ export const albumRouter = createTRPCRouter({
         },
       });
 
-      const updateFuncs = albumsToUpdateIndex.map((album) =>
+      const updateFuncs = albumsToUpdate.map((album) =>
         ctx.prisma.album.update({
           where: { id: album.id },
           data: { index: album.index - 1 },
@@ -208,5 +208,74 @@ export const albumRouter = createTRPCRouter({
           },
         },
       });
+    }),
+
+  deleteImage: protectedProcedure
+    .input(
+      z.object({
+        where: z.object({ albumId: z.string(), imageId: z.string() }),
+        data: z.object({ index: z.number() }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const deleteFunc = ctx.prisma.album.update({
+        where: { id: input.where.albumId },
+        data: {
+          images: {
+            delete: {
+              id: input.where.imageId,
+            },
+          },
+        },
+      });
+
+      const albumImagesToUpdate = await ctx.prisma.albumImage.findMany({
+        where: {
+          AND: [
+            {
+              albumId: input.where.albumId,
+            },
+            {
+              index: {
+                gt: input.data.index,
+              },
+            },
+          ],
+        },
+      });
+
+      const updateFuncs = albumImagesToUpdate.map((albumImage) =>
+        ctx.prisma.albumImage.update({
+          where: { id: albumImage.id },
+          data: { index: albumImage.index - 1 },
+        })
+      );
+
+      return ctx.prisma.$transaction([deleteFunc, ...updateFuncs]);
+    }),
+
+  reorderImages: protectedProcedure
+    .input(
+      z.object({
+        albums: z.array(z.object({ id: z.string(), index: z.number() })),
+        activeAlbum: z.object({ id: z.string(), index: z.number() }),
+        overAlbum: z.object({ id: z.string(), index: z.number() }),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const updateFuncs = getReorderedEntities({
+        active: input.activeAlbum,
+        over: input.overAlbum,
+        entities: input.albums,
+      }).map((album) =>
+        ctx.prisma.album.update({
+          where: {
+            id: album.id,
+          },
+          data: { index: album.index },
+        })
+      );
+
+      return ctx.prisma.$transaction(updateFuncs);
     }),
 });

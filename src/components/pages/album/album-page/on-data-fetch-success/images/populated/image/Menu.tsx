@@ -13,11 +13,13 @@ import {
   type OnUploadImage,
 } from "~/components/image/select-or-upload-image";
 import { Modal, WarningPanel } from "~/components/modal";
-import OpenedImagePanel from "./OpenedImagePanel";
+import OpenedImage from "./OpenedImage";
 
 const Menu = () => {
   return (
-    <div className="absolute right-1 top-1 z-20 flex items-center gap-sm rounded-md bg-white py-xxs px-xs opacity-0 shadow-lg transition-opacity duration-75 ease-in-out hover:!opacity-100 group-hover/albumImage:opacity-50">
+    <div
+      className={`absolute right-1 top-1 z-20 flex items-center gap-sm rounded-md bg-white py-xxs px-xs opacity-0 shadow-lg transition-opacity duration-75 ease-in-out hover:!opacity-100 group-hover/albumImage:opacity-50`}
+    >
       <ChangeImageMenu />
       <OpenAlbumImageModal />
       <DeleteModal />
@@ -63,12 +65,33 @@ const OpenAlbumImageModal = () => {
           </WithTooltip>
         </div>
       )}
-      panelContent={() => <OpenedImagePanel />}
+      panelContent={() => <OpenedImage />}
     />
   );
 };
 
 const DeleteModal = () => {
+  const album = useAlbumContext();
+  const albumImage = useAlbumImageContext();
+
+  const { refetch: refetchAlbum } = api.album.albumPageGetOne.useQuery(
+    { albumId: album.id },
+    {
+      enabled: false,
+    }
+  );
+
+  const deleteMutation = api.album.deleteImage.useMutation({
+    onSuccess: async () => {
+      await refetchAlbum();
+
+      toast(<Toast text="deleted image" type="success" />);
+    },
+    onError: () => {
+      toast(<Toast text="delete image failed" type="error" />);
+    },
+  });
+
   return (
     <Modal
       button={({ open }) => (
@@ -85,7 +108,13 @@ const DeleteModal = () => {
       )}
       panelContent={({ close }) => (
         <WarningPanel
-          callback={{ func: () => null }}
+          callback={{
+            func: () =>
+              deleteMutation.mutate({
+                data: { index: albumImage.index },
+                where: { albumId: album.id, imageId: albumImage.id },
+              }),
+          }}
           closeModal={close}
           text={{
             body: "Are you sure? This can't be undone.",

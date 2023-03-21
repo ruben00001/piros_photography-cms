@@ -2,6 +2,7 @@ import produce from "immer";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
+import { animated, useSpring } from "@react-spring/web";
 
 import { useAlbumContext, useAlbumImageContext } from "~/album-page/_context";
 import { api } from "~/utils/api";
@@ -13,8 +14,9 @@ import { CycleLeftIcon, CycleRightIcon } from "~/components/Icon";
 import MyCldImage from "~/components/image/MyCldImage";
 import { useModalVisibilityContext } from "~/components/modal";
 import TextAreaForm from "~/components/forms/TextAreaForm";
+import { useMeasure } from "react-use";
 
-const OpenedImagePanel = () => {
+const OpenedImage = () => {
   return (
     <>
       <CloseButton />
@@ -27,7 +29,7 @@ const OpenedImagePanel = () => {
   );
 };
 
-export default OpenedImagePanel;
+export default OpenedImage;
 
 const CloseButton = () => {
   const { close: closeModal } = useModalVisibilityContext();
@@ -54,6 +56,32 @@ const DescriptionPanel = () => {
     width: image.naturalWidth,
   });
 
+  /*   const [expandedPanelRef, { height: expandedPanelHeight }] =
+    useMeasure<HTMLDivElement>(); */
+  const [dummyExpandedPanelRef, { height: dummyExpandedPanelHeight }] =
+    useMeasure<HTMLDivElement>();
+
+  const [springs, api] = useSpring(() => ({
+    config: { tension: 280, friction: 60 },
+    from: { height: "0px" },
+  }));
+
+  const expand = () => {
+    api.start({
+      from: { height: "0px" },
+      to: { height: `${dummyExpandedPanelHeight}px` },
+    });
+    setIsExpanded(true);
+  };
+
+  const contract = () => {
+    api.start({
+      from: { height: `${dummyExpandedPanelHeight}px` },
+      to: { height: "0px" },
+    });
+    setIsExpanded(false);
+  };
+
   return (
     <div
       className={`text-gray-900`}
@@ -71,20 +99,34 @@ const DescriptionPanel = () => {
           </div>
           <button
             className="flex items-center gap-xs whitespace-nowrap text-xs text-gray-700"
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={isExpanded ? contract : expand}
             type="button"
           >
             <span>read {isExpanded ? "less" : "more"}</span>
           </button>
         </div>
       </div>
+      <animated.div style={{ overflowY: "hidden", ...springs }}>
+        <div
+          className={`overflow-y-auto pb-md text-gray-900 transition-opacity duration-150 ease-linear ${
+            isExpanded ? "opacity-100" : "opacity-0"
+          }`}
+          style={{
+            maxHeight: 200,
+          }}
+        >
+          <Description />
+          <p className="mt-sm font-mono text-sm text-base-content">
+            [ Comments will go here ]
+          </p>
+        </div>
+      </animated.div>
       <div
-        className={`overflow-y-auto pb-md text-gray-900 transition-opacity duration-150  ease-linear ${
-          isExpanded ? "opacity-100" : "opacity-0"
-        }`}
+        className="invisible absolute -z-50"
         style={{
           maxHeight: 200,
         }}
+        ref={dummyExpandedPanelRef}
       >
         <Description />
         <p className="mt-sm font-mono text-sm text-base-content">
@@ -200,7 +242,7 @@ const Description = () => {
     });
 
   return (
-    <div className="overflow-x-hidden font-serif tracking-wide">
+    <div className="overflow-x-hidden">
       <TextAreaForm
         onSubmit={({ inputValue }) =>
           updateDescriptionMutation.mutate({
@@ -235,20 +277,22 @@ const ImagePanel = () => {
 };
 
 const CycleImagesButtons = () => {
-  return (
+  return createPortal(
     <>
       <button
-        className="absolute left-sm top-1/2 z-10 -translate-y-1/2 text-4xl opacity-0 transition-opacity duration-150 ease-in-out group-hover/imageModal:opacity-100"
+        className="fixed left-sm top-1/2 z-50 -translate-y-1/2 text-4xl transition-opacity duration-150 ease-in-out group-hover/imageModal:opacity-100"
+        // className="fixed left-sm top-1/2 z-50 -translate-y-1/2 text-4xl opacity-0 transition-opacity duration-150 ease-in-out group-hover/imageModal:opacity-100"
         type="button"
       >
-        <CycleLeftIcon weight="duotone" color="white" fill="gray" />
+        <CycleLeftIcon weight="duotone" color="white" fill="black" />
       </button>
       <button
-        className="absolute right-sm top-1/2 z-10 -translate-y-1/2 text-4xl opacity-0 transition-opacity duration-150 ease-in-out group-hover/imageModal:opacity-100"
+        className="pacity-0 fixed right-sm top-1/2 z-50 -translate-y-1/2 text-4xl transition-opacity duration-150 ease-in-out group-hover/imageModal:opacity-100"
         type="button"
       >
         <CycleRightIcon weight="duotone" color="white" fill="black" />
       </button>
-    </>
+    </>,
+    document.body
   );
 };

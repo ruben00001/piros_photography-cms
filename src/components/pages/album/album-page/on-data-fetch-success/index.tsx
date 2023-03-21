@@ -1,8 +1,8 @@
-import CollapsableSection from "~/components/collapsable-section";
-import AddAlbumImageButton from "./AddAlbumImage";
 import { AlbumProvider } from "~/album-page/_context";
 import { type Album } from "~/album-page/_types";
 
+import CollapsableSection from "~/components/collapsable-section";
+import AddImageButton from "./AddImage";
 import MetaAndControls from "./MetaAndControls";
 import About from "./About";
 import Images from "./images";
@@ -21,7 +21,7 @@ const OnDataFetchSuccess = ({ album }: { album: Album }) => {
           showSectionText="Show add album image button"
           margin={{ bottom: { close: 0 } }}
         >
-          <AddAlbumImageButton />
+          <AddImageButton />
         </CollapsableSection>
         <div className="mt-lg">
           <About />

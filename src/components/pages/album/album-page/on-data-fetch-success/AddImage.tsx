@@ -11,7 +11,7 @@ import {
   type OnUploadImage,
 } from "~/components/image/select-or-upload-image";
 
-const AddAlbumImageButton = () => {
+const AddImageButton = () => {
   const onSelectImage = useAddUploadedImageToAlbum();
   const onUploadImage = useAddUploadImageToAlbum();
 
@@ -31,7 +31,7 @@ const AddAlbumImageButton = () => {
   );
 };
 
-export default AddAlbumImageButton;
+export default AddImageButton;
 
 const useAddUploadedImageToAlbum = (): OnSelectImage => {
   const album = useAlbumContext();
