@@ -7,12 +7,12 @@ import WithTooltip, {
 } from "~/components/data-display/WithTooltip";
 import { type MyOmit } from "~/types/utilities";
 
-export const TextForm = ({
+const DataTextInputForm = ({
   onSubmit,
   tooltip,
   input: { initialValue = "", minWidth, placeholder = "Write here" },
 }: {
-  onSubmit: ({ inputValue }: { inputValue: string }) => void;
+  onSubmit: (arg0: { inputValue: string; onSuccess: () => void }) => void;
   tooltip: MyOmit<TooltipProps, "children">;
   input: {
     initialValue?: string | null;
@@ -32,12 +32,13 @@ export const TextForm = ({
       return;
     }
 
-    prevValueRef.current = inputValue;
-
     const clean = DOMPurify.sanitize(inputValue);
 
     onSubmit({
       inputValue: clean,
+      onSuccess() {
+        prevValueRef.current = inputValue;
+      },
     });
   };
 
@@ -71,6 +72,8 @@ export const TextForm = ({
     </WithTooltip>
   );
 };
+
+export default DataTextInputForm;
 
 const TextInput = ({
   setValue,
@@ -147,5 +150,3 @@ const TextInput = ({
     </>
   );
 };
-
-export default TextInput;

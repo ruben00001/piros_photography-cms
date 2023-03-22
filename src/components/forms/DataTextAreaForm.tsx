@@ -4,7 +4,7 @@ import ReactTextareaAutosize from "react-textarea-autosize";
 
 import WithTooltip from "../data-display/WithTooltip";
 
-const TextAreaForm = ({
+const DataTextAreaForm = ({
   initialValue = "",
   onSubmit,
   tooltipText,
@@ -88,4 +88,4 @@ const TextAreaForm = ({
   );
 };
 
-export default TextAreaForm;
+export default DataTextAreaForm;

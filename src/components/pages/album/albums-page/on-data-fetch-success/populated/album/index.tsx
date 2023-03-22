@@ -7,7 +7,7 @@ import { useAlbumContext } from "~/albums-page/_context";
 
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
-import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
+import DataTextInputForm from "~/components/forms/DataTextInputForm";
 import { GoToPageIcon } from "~/components/Icon";
 import DndSortableElement from "~/components/dnd-kit/DndSortableElement";
 import AlbumMenu from "./Menu";
@@ -73,13 +73,15 @@ const TitleInput = () => {
 
   return (
     <div className="mb-xs text-2xl">
-      <TextInputForm
-        onSubmit={({ inputValue }) =>
-          updateTitle.mutate({ albumId: album.id, updatedTitle: inputValue })
+      <DataTextInputForm
+        onSubmit={({ inputValue, onSuccess }) =>
+          updateTitle.mutate(
+            { albumId: album.id, updatedTitle: inputValue },
+            { onSuccess }
+          )
         }
-        tooltipText="click to edit title"
-        initialValue={album.title}
-        placeholder="Album title"
+        input={{ initialValue: album.title, placeholder: "Album title..." }}
+        tooltip={{ text: "click to edit title" }}
       />
     </div>
   );

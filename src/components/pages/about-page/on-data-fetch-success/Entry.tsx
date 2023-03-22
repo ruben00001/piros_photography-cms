@@ -2,7 +2,7 @@
 import produce from "immer";
 import { toast } from "react-toastify";
 import Toast from "~/components/data-display/Toast";
-import TextAreaForm from "~/components/forms/TextAreaFormNEW";
+import DataTextAreaForm from "~/components/forms/TextAreaFormNEW";
 import { api } from "~/utils/api";
 
 const OnDataFetchSuccess = () => {
@@ -55,7 +55,7 @@ const BodyText = () => {
 
   return (
     <div>
-      <TextAreaForm
+      <DataTextAreaForm
         onSubmit={({ inputValue, onSuccess }) => {
           updateTitleMutation.mutate(
             { data: { text: inputValue } },

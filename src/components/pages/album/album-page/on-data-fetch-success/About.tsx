@@ -4,8 +4,8 @@ import { api } from "~/utils/api";
 import { useAlbumContext } from "~/album-page/_context";
 
 import Toast from "~/components/data-display/Toast";
-import TextAreaForm from "~/components/forms/TextAreaForm";
-import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
+import DataTextAreaForm from "~/components/forms/DataTextAreaForm";
+import DataTextInputForm from "~/components/forms/DataTextInputForm";
 
 const About = () => {
   return (
@@ -34,13 +34,15 @@ const Title = () => {
 
   return (
     <div className="text-2xl">
-      <TextInputForm
-        onSubmit={({ inputValue }) =>
-          updateTitle.mutate({ albumId: album.id, updatedTitle: inputValue })
-        }
-        tooltipText="click to edit title"
-        initialValue={album.title}
-        placeholder="Album title"
+      <DataTextInputForm
+        onSubmit={({ inputValue, onSuccess }) => {
+          updateTitle.mutate(
+            { albumId: album.id, updatedTitle: inputValue },
+            { onSuccess }
+          );
+        }}
+        input={{ initialValue: album.title, placeholder: "Album title..." }}
+        tooltip={{ text: "update title" }}
       />
     </div>
   );
@@ -64,19 +66,20 @@ const Description = () => {
   });
 
   return (
-    <div className="font-serif text-lg">
-      <TextAreaForm
-        onSubmit={({ inputValue }) =>
-          updateDescriptionMutation.mutate({
-            albumId: album.id,
-            updatedDescription: inputValue,
-          })
+    <div className="max-w-[700px] font-serif text-lg">
+      <DataTextAreaForm
+        onSubmit={({ inputValue, onSuccess }) =>
+          updateDescriptionMutation.mutate(
+            {
+              albumId: album.id,
+              updatedDescription: inputValue,
+            },
+            { onSuccess }
+          )
         }
         tooltipText="click to edit"
         initialValue={album.description}
         placeholder="Album description (optional)"
-        enableHowToSubmitMessage
-        enableBorderOnBlur
       />
     </div>
   );

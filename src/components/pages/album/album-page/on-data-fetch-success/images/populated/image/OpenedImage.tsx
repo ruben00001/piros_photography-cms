@@ -3,18 +3,18 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 import { animated, useSpring } from "@react-spring/web";
+import { useMeasure } from "react-use";
 
 import { useAlbumContext, useAlbumImageContext } from "~/album-page/_context";
 import { api } from "~/utils/api";
 import { calcImageDimensionsToFitToScreen } from "~/helpers/general";
 
 import Toast from "~/components/data-display/Toast";
-import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
 import { CycleLeftIcon, CycleRightIcon } from "~/components/Icon";
 import MyCldImage from "~/components/image/MyCldImage";
 import { useModalVisibilityContext } from "~/components/modal";
-import TextAreaForm from "~/components/forms/TextAreaForm";
-import { useMeasure } from "react-use";
+import TextInputForm from "~/components/forms/DataTextInputForm";
+import TextAreaForm from "~/components/forms/DataTextAreaForm";
 
 const OpenedImage = () => {
   return (
@@ -175,15 +175,20 @@ const Title = () => {
 
   return (
     <TextInputForm
-      onSubmit={({ inputValue }) =>
-        updateTitleMutation.mutate({
-          albumImageId: albumImage.id,
-          updatedTitle: inputValue,
-        })
+      onSubmit={({ inputValue, onSuccess }) =>
+        updateTitleMutation.mutate(
+          {
+            albumImageId: albumImage.id,
+            updatedTitle: inputValue,
+          },
+          { onSuccess }
+        )
       }
-      tooltipText="Click to update title"
-      initialValue={albumImage.title}
-      placeholder="Title (optional)"
+      input={{
+        initialValue: albumImage.title,
+        placeholder: "Title... (optional)",
+      }}
+      tooltip={{ text: "Click to update title" }}
     />
   );
 };
@@ -239,17 +244,18 @@ const Description = () => {
   return (
     <div className="overflow-x-hidden">
       <TextAreaForm
-        onSubmit={({ inputValue }) =>
-          updateDescriptionMutation.mutate({
-            albumImageId: albumImage.id,
-            updatedDescription: inputValue,
-          })
+        onSubmit={({ inputValue, onSuccess }) =>
+          updateDescriptionMutation.mutate(
+            {
+              albumImageId: albumImage.id,
+              updatedDescription: inputValue,
+            },
+            { onSuccess }
+          )
         }
         tooltipText="Click to update description"
         initialValue={albumImage.description}
         placeholder="Description (optional)"
-        enableBorderOnBlur
-        enableHowToSubmitMessage
       />
     </div>
   );

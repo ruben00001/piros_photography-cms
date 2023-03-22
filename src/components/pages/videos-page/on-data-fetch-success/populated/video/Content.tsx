@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import { useMeasure } from "react-use";
 import Toast from "~/components/data-display/Toast";
 
-import TextAreaForm from "~/components/forms/TextAreaFormNEW";
-import { TextForm } from "~/components/forms/TextInputFormDynamicNEW";
+import DataTextAreaForm from "~/components/forms/TextAreaFormNEW";
+import { DataTextInputForm } from "~/components/forms/DataTextInputForm";
 import VideoIFrame from "~/components/VideoIFrame";
 import { getYoutubeEmbedUrlFromId } from "~/helpers/youtube";
 import { api } from "~/utils/api";
@@ -66,7 +66,7 @@ const Title = () => {
 
   return (
     <div className="max-w-[80%] text-xl">
-      <TextForm
+      <DataTextInputForm
         input={{
           initialValue: video.title,
           minWidth: 300,
@@ -129,7 +129,7 @@ const Description = () => {
 
   return (
     <div className="mb-xs w-[90%] font-serif text-lg">
-      <TextAreaForm
+      <DataTextAreaForm
         initialValue={video.description}
         tooltipText="click to edit description"
         placeholder="Video description (optional)"
