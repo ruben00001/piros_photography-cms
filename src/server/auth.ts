@@ -5,6 +5,7 @@ import {
   type DefaultSession,
 } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
@@ -24,10 +25,9 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  /*    interface User {
+    role: 'admin';
+   } */
 }
 
 /**
@@ -37,6 +37,18 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
+    signIn({ account, profile }) {
+      // ! seems like can use prisma here. Create model of users with roles? Already exists (check db)
+      // ! delete unused google auth apps
+      console.log("account:", account);
+      console.log("profile:", profile);
+      if (account?.provider === "google") {
+        const isAdmin = profile?.email === "rub4sev@googlemail.com";
+
+        return isAdmin;
+      }
+      return true;
+    },
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
@@ -50,6 +62,10 @@ export const authOptions: NextAuthOptions = {
     GithubProvider({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
+    }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
     /**
      * ...add more providers here.

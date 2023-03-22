@@ -3,6 +3,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 
 export const Header = () => {
   const { data: sessionData } = useSession();
+  console.log("sessionData:", sessionData);
 
   return (
     <div className="navbar bg-primary text-primary-content">
