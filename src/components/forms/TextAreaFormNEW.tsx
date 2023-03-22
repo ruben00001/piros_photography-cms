@@ -11,8 +11,8 @@ const TextAreaForm = ({
   placeholder = "Write here",
 }: {
   initialValue?: string | null;
-  onSubmit: ({ inputValue }: { inputValue: string }) => void;
-  tooltipText: string;
+  onSubmit: (arg0: { inputValue: string; onSuccess: () => void }) => void;
+  tooltipText?: string;
   placeholder?: string;
 }) => {
   const [value, setValue] = useState(initialValue || "");
@@ -27,19 +27,20 @@ const TextAreaForm = ({
       return;
     }
 
-    prevValueRef.current = value;
-
     const clean = DOMPurify.sanitize(value);
 
     onSubmit({
       inputValue: clean,
+      onSuccess() {
+        prevValueRef.current = value;
+      },
     });
   };
 
   return (
     <WithTooltip
-      text={tooltipText}
-      isDisabled={isFocused}
+      text={tooltipText || ""}
+      isDisabled={isFocused || !tooltipText?.length}
       placement="top-start"
     >
       <div

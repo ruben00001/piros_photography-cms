@@ -3,7 +3,7 @@ import Videos from "./Videos";
 
 const Populated = () => {
   return (
-    <div className="p-lg">
+    <div className="">
       <div className="max-w-[400px]">
         <AddVideo />
       </div>

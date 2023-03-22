@@ -66,57 +66,63 @@ model VerificationToken {
 }
 
 model Album {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    index Int 
-    images AlbumImage[]
-    title String ?
-    description String ?
-    published Boolean @default(false)
-    coverImage Image ? @relation(fields: [coverImageId ], references: [id]) 
-    coverImageId String ?
-
-    // @@index([index], type: )
+    id           String       @id @default(cuid())
+    createdAt    DateTime     @default(now())
+    updatedAt    DateTime     @updatedAt
+    index        Int
+    images       AlbumImage[]
+    title        String?
+    description  String?
+    published    Boolean      @default(false)
+    coverImage   Image?       @relation(fields: [coverImageId], references: [id])
+    coverImageId String?
 }
 
 model AlbumImage {
-    id        String   @id @default(cuid())
-    createdAt  DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    title String ?
-    description String ?
-    image Image @relation(fields: [imageId ], references: [id])
-    imageId String
-    album Album @relation(fields: [albumId], references: [id])
-    albumId String
-    index Int 
+    id          String   @id @default(cuid())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    title       String?
+    description String?
+    image       Image    @relation(fields: [imageId], references: [id])
+    imageId     String
+    album       Album    @relation(fields: [albumId], references: [id])
+    albumId     String
+    index       Int
 }
 
 model ImageTag {
-    id        String   @id @default(cuid())
-    text String @unique
+    id     String  @id @default(cuid())
+    text   String  @unique
     images Image[]
 }
 
 model Image {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id String @id @default(cuid())
+
+    createdAt            DateTime     @default(now())
+    updatedAt            DateTime     @updatedAt
     cloudinary_public_id String
-    tags ImageTag[]
-    albumImages AlbumImage[]
-    albumCoverImages Album[]
-    naturalWidth Int  @map("width")
-    naturalHeight Int  @map("height")
+    tags                 ImageTag[]
+    albumImages          AlbumImage[]
+    albumCoverImages     Album[]
+    naturalWidth         Int          @map("width")
+    naturalHeight        Int          @map("height")
 }
 
 model YoutubeVideo {
+    id             String   @id @default(cuid())
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+    youtubeVideoId String
+    title          String?
+    description    String?
+    index          Int
+}
+
+model AboutText {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    youtubeVideoId String 
-    title String ?
-    description String ?
-    index Int
+    body      String
 }

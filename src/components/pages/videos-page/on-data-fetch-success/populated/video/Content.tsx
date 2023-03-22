@@ -128,7 +128,7 @@ const Description = () => {
     });
 
   return (
-    <div className="mb-xs w-[80%] font-serif text-lg">
+    <div className="mb-xs w-[90%] font-serif text-lg">
       <TextAreaForm
         initialValue={video.description}
         tooltipText="click to edit description"

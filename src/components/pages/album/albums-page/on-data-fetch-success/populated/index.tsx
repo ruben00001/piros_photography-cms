@@ -22,7 +22,7 @@ const Populated = () => {
   const albums = data as NonNullable<typeof data>;
 
   return (
-    <div className="p-lg">
+    <div>
       <div className="max-w-[400px]">
         <AddAlbum />
       </div>
