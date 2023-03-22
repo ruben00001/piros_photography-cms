@@ -111,3 +111,12 @@ model Image {
     naturalHeight Int  @map("height")
 }
 
+model YoutubeVideo {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    youtubeVideoId String 
+    title String ?
+    description String ?
+    index Int
+}

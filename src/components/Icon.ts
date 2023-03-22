@@ -21,6 +21,7 @@ import {
   ArrowSquareLeft,
   ArrowSquareRight,
   CaretRight,
+  Question,
 } from "phosphor-react";
 
 export {
@@ -47,4 +48,5 @@ export {
   ArrowSquareLeft as CycleLeftIcon,
   ArrowSquareRight as CycleRightIcon,
   CaretRight as CaretRightIcon,
+  Question as HelpIcon,
 };

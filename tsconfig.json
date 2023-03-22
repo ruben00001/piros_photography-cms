@@ -21,7 +21,8 @@
       "~/*": ["./src/*"],
       "~/album-containers": ["src/components/pages/album/_containers"],
       "~/albums-page/*": ["src/components/pages/album/albums-page/*"],
-      "~/album-page/*": ["src/components/pages/album/album-page/*"]
+      "~/album-page/*": ["src/components/pages/album/album-page/*"],
+      "~/videos-page/*": ["src/components/pages/videos-page/*"]
     },
     "noUnusedLocals": false,
     "noUnusedParameters": false

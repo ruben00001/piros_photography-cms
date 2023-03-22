@@ -113,7 +113,7 @@ const GoToPage = () => {
           <span className="text-mid text-secondary">
             <GoToPageIcon />
           </span>
-          <span className=" text-xs text-gray-400">Go to album</span>
+          <span className=" text-sm text-gray-400">Go to album</span>
         </div>
       </div>
     </Link>

@@ -4,6 +4,7 @@ import { albumImageRouter } from "./routers/albumImage";
 import { imageRouter } from "./routers/image";
 import { imageTagRouter } from "./routers/image-tag";
 import { imageAndAlbumTransactionRouter } from "./routers/transactions/ImageAndAlbum";
+import { youtubeVideoRouter } from "./routers/youtubeVideo";
 
 export const appRouter = createTRPCRouter({
   album: albumRouter,
@@ -11,6 +12,7 @@ export const appRouter = createTRPCRouter({
   image: imageRouter,
   albumImage: albumImageRouter,
   imageAndAlbumTransaction: imageAndAlbumTransactionRouter,
+  youtubeVideo: youtubeVideoRouter,
 });
 
 export type AppRouter = typeof appRouter;
