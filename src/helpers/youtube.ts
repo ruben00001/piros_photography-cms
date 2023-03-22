@@ -8,7 +8,7 @@ export const checkIsYoutubeUrl = (value: string) => {
   return isValid;
 };
 
-export const getYoutubeVideoIdFromUrlZ = z
+export const getYoutubeVideoIdFromUrl = z
   .function()
   .args(
     z.object({
@@ -22,37 +22,15 @@ export const getYoutubeVideoIdFromUrlZ = z
   .implement(({ youtubeUrl }) => {
     const regex = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
     const match = youtubeUrl.match(regex);
-    console.log("match:", match);
-
-    const zMatch = z
-      .string({ invalid_type_error: "is not youtube url" })
-      .regex(regex);
-
-    console.log("zMatch:", zMatch);
-
-    zMatch.parse(youtubeUrl);
 
     if (!match) {
-      return "no match";
+      return null;
     }
 
     const id = match[1];
 
     return id;
   });
-
-export const getYoutubeVideoIdFromUrl = (url: string) => {
-  const regex = /.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
-  const match = url.match(regex);
-
-  if (!match) {
-    return null;
-  }
-
-  const id = match[1];
-
-  return id;
-};
 
 export const getYoutubeEmbedUrlFromId = (id: string) => {
   const embedUrl = `https://www.youtube.com/embed/${id}`;

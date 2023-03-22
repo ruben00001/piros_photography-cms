@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { api } from "~/utils/api";
-import Populated from "./populated";
+import Populated from "./populated/Entry";
 import Unpopulated from "./unpopulated";
 
 const OnDataFetchSuccess = () => {

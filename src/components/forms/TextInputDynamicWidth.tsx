@@ -89,9 +89,9 @@ const TextInput = ({
           }
         }}
         style={{
-          width: inputWidth,
+          width: inputWidth > minWidth ? inputWidth : minWidth,
           // width: localIsFocused ? inputWidthEditing : inputWidth,
-          minWidth,
+          // minWidth,
         }}
         ref={inputRef}
       />

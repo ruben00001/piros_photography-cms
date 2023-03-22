@@ -8,11 +8,13 @@ export const TextInputForm = ({
   onSubmit,
   tooltipText,
   placeholder = "Write here",
+  minWidth,
 }: {
   initialValue?: string | null;
   onSubmit: ({ inputValue }: { inputValue: string }) => void;
   tooltipText?: string;
   placeholder?: string;
+  minWidth?: number;
 }) => {
   const [inputIsFocused, setInputIsFocused] = useState(false);
 
@@ -59,6 +61,7 @@ export const TextInputForm = ({
             isChange={isChange}
             onBlur={() => setInputIsFocused(false)}
             onFocus={() => setInputIsFocused(true)}
+            minWidth={minWidth}
           />
         </div>
       </form>

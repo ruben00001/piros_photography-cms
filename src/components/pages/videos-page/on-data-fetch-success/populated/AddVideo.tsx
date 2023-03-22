@@ -113,7 +113,7 @@ const YoutubeUrlForm = ({ closeForm }: { closeForm: () => void }) => {
         handleSubmit();
       }}
     >
-      <div className="min-w-[250px] rounded-md px-2xl">
+      <div className="min-w-[250px] rounded-md">
         <p className="mb-xs text-sm text-gray-300">Add new video</p>
         <div
           className={`relative rounded-sm border bg-gray-50  py-1 pr-sm ${
