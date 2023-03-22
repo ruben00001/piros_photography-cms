@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getReorderedEntities } from "~/helpers/process-data";
 import { getYoutubeVideoIdFromUrl } from "~/helpers/youtube";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -93,5 +94,34 @@ export const youtubeVideoRouter = createTRPCRouter({
       );
 
       return ctx.prisma.$transaction([...updateFuncs, deleteFunc]);
+    }),
+
+  reorder: protectedProcedure
+    .input(
+      z.object({
+        where: z.object({
+          activeVideo: z.object({ id: z.string(), index: z.number() }),
+          overVideo: z.object({ id: z.string(), index: z.number() }),
+        }),
+        currData: z.object({
+          allVideos: z.array(z.object({ id: z.string(), index: z.number() })),
+        }),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const updateFuncs = getReorderedEntities({
+        active: input.where.activeVideo,
+        over: input.where.overVideo,
+        entities: input.currData.allVideos,
+      }).map((video) =>
+        ctx.prisma.youtubeVideo.update({
+          where: {
+            id: video.id,
+          },
+          data: { index: video.index },
+        })
+      );
+
+      return ctx.prisma.$transaction(updateFuncs);
     }),
 });

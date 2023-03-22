@@ -1,5 +1,6 @@
 import produce from "immer";
 import { toast } from "react-toastify";
+import { useMeasure } from "react-use";
 import Toast from "~/components/data-display/Toast";
 import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
 import VideoIFrame from "~/components/VideoIFrame";
@@ -7,17 +8,19 @@ import { getYoutubeEmbedUrlFromId } from "~/helpers/youtube";
 import { api } from "~/utils/api";
 import { useVideoContext } from "~/videos-page/_context";
 
-const VideoContent = () => {
+const Content = () => {
   return (
-    <div>
-      <Title />
-      <Description />
-      <VideoEmbed />
+    <div className="flex justify-center">
+      <div className="w-full max-w-[600px]">
+        <Title />
+        <Description />
+        <VideoEmbed />
+      </div>
     </div>
   );
 };
 
-export default VideoContent;
+export default Content;
 
 const Title = () => {
   const video = useVideoContext();
@@ -139,13 +142,17 @@ const Description = () => {
 const VideoEmbed = () => {
   const { youtubeVideoId } = useVideoContext();
 
+  const [containerRef, { width, height }] = useMeasure<HTMLDivElement>();
+
   return (
-    <div>
-      <VideoIFrame
-        height={300}
-        src={getYoutubeEmbedUrlFromId(youtubeVideoId)}
-        width={500}
-      />
+    <div className="aspect-video" ref={containerRef}>
+      {width && height ? (
+        <VideoIFrame
+          src={getYoutubeEmbedUrlFromId(youtubeVideoId)}
+          height={height}
+          width={width}
+        />
+      ) : null}
     </div>
   );
 };

@@ -7,7 +7,7 @@ const Populated = () => {
       <div className="max-w-[400px]">
         <AddVideo />
       </div>
-      <div>
+      <div className="mt-md">
         <Videos />
       </div>
     </div>

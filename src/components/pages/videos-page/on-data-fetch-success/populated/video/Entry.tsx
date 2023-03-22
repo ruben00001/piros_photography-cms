@@ -1,11 +1,11 @@
-import VideoContent from "./Content";
-import VideoMenu from "./Menu";
+import Content from "./Content";
+import Menu from "./Menu";
 
 const Video = () => {
   return (
     <div className="group/video relative">
-      <VideoContent />
-      <VideoMenu />
+      <Content />
+      <Menu />
     </div>
   );
 };

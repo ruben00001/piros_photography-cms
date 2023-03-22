@@ -1,5 +1,5 @@
 import { AddFirstAlbumIcon } from "~/components/Icon";
-import AddVideo from "../AddVideo";
+import AddVideo from "./AddVideo";
 
 const Unpopulated = () => {
   return (

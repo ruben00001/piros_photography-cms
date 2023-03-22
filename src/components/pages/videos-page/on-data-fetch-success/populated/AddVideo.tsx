@@ -6,10 +6,11 @@ import { Transition } from "@headlessui/react";
 
 import { api } from "~/utils/api";
 
-import { ErrorIcon, PlusIcon, TickIcon } from "~/components/Icon";
+import { ErrorIcon, HelpIcon, PlusIcon, TickIcon } from "~/components/Icon";
 import Toast from "~/components/data-display/Toast";
 import Spinner from "~/components/Spinner";
 import { checkIsYoutubeUrl } from "~/helpers/youtube";
+import WithTooltip from "~/components/data-display/WithTooltip";
 
 const AddVideo = () => {
   const [formIsOpen, setFormIsOpen] = useState(false);
@@ -68,6 +69,8 @@ const YoutubeUrlForm = ({ closeForm }: { closeForm: () => void }) => {
   const inputValueIsInvalidYoutubeURL =
     inputValue.length && !checkIsYoutubeUrl(inputValue);
 
+  const cantSubmit = !inputValue.length || inputValueIsInvalidYoutubeURL;
+
   const { data: allVideos, refetch: refetchVideos } =
     api.youtubeVideo.getAll.useQuery();
 
@@ -106,7 +109,7 @@ const YoutubeUrlForm = ({ closeForm }: { closeForm: () => void }) => {
 
   return (
     <form
-      className="relative"
+      className="relative pr-2xl"
       onSubmit={(e) => {
         e.preventDefault();
 
@@ -120,7 +123,7 @@ const YoutubeUrlForm = ({ closeForm }: { closeForm: () => void }) => {
             inputValueIsInvalidYoutubeURL ? "border-my-alert-content" : ""
           }`}
         >
-          {/* <YoutubeURLHelp /> */}
+          <YoutubeURLHelp />
           <div
             className={`transition-transform duration-75 ease-in-out  ${
               isFocused || !inputValue.length
@@ -157,7 +160,12 @@ const YoutubeUrlForm = ({ closeForm }: { closeForm: () => void }) => {
           >
             Cancel
           </button>
-          <button className="my-btn my-btn-action" type="submit">
+          <button
+            className={`my-btn my-btn-action ${
+              cantSubmit ? "cursor-not-allowed opacity-50" : ""
+            }`}
+            type="submit"
+          >
             Submit
           </button>
         </div>
@@ -210,13 +218,15 @@ const CreateStatusPanel = ({
   );
 };
 
-/* const YoutubeURLHelp = () => {
+const YoutubeURLHelp = () => {
   return (
-    <WithTooltip text="how to get url">
+    <WithTooltip
+      text="simply copy the url from the url bar of a youtube video"
+      type="info"
+    >
       <span className="absolute -right-sm top-1/2 -translate-y-1/2 translate-x-full cursor-help rounded-full p-xxs text-gray-400 hover:bg-gray-100">
         <HelpIcon />
       </span>
     </WithTooltip>
   );
 };
- */
