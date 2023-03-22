@@ -2,7 +2,9 @@ import produce from "immer";
 import { toast } from "react-toastify";
 import { useMeasure } from "react-use";
 import Toast from "~/components/data-display/Toast";
-import { TextInputForm } from "~/components/forms/TextInputFormDynamic";
+
+import TextAreaForm from "~/components/forms/TextAreaFormNEW";
+import { TextForm } from "~/components/forms/TextInputFormDynamicNEW";
 import VideoIFrame from "~/components/VideoIFrame";
 import { getYoutubeEmbedUrlFromId } from "~/helpers/youtube";
 import { api } from "~/utils/api";
@@ -63,18 +65,22 @@ const Title = () => {
   });
 
   return (
-    <div className="text-2xl">
-      <TextInputForm
+    <div className="max-w-[80%] text-xl">
+      <TextForm
+        input={{
+          initialValue: video.title,
+          minWidth: 300,
+          placeholder: "Video title (optional)",
+        }}
         onSubmit={({ inputValue }) =>
           updateTitleMutation.mutate({
             data: { title: inputValue },
             where: { id: video.id },
           })
         }
-        tooltipText="click to edit title"
-        initialValue={video.title}
-        placeholder="Video title (optional)"
-        minWidth={300}
+        tooltip={{
+          text: "click to edit title",
+        }}
       />
     </div>
   );
@@ -122,18 +128,17 @@ const Description = () => {
     });
 
   return (
-    <div className="mb-xs font-serif text-lg">
-      <TextInputForm
+    <div className="mb-xs w-[80%] font-serif text-lg">
+      <TextAreaForm
+        initialValue={video.description}
+        tooltipText="click to edit description"
+        placeholder="Video description (optional)"
         onSubmit={({ inputValue }) =>
           updateDescriptionMutation.mutate({
             data: { description: inputValue },
             where: { id: video.id },
           })
         }
-        tooltipText="click to edit description"
-        initialValue={video.description}
-        placeholder="Video description (optional)"
-        minWidth={300}
       />
     </div>
   );
