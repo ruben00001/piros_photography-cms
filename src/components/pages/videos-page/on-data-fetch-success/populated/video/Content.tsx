@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import { useMeasure } from "react-use";
 import Toast from "~/components/data-display/Toast";
 
-import DataTextAreaForm from "~/components/forms/TextAreaFormNEW";
-import { DataTextInputForm } from "~/components/forms/DataTextInputForm";
+import DataTextAreaForm from "~/components/forms/DataTextAreaForm";
+import DataTextInputForm from "~/components/forms/DataTextInputForm";
 import VideoIFrame from "~/components/VideoIFrame";
 import { getYoutubeEmbedUrlFromId } from "~/helpers/youtube";
 import { api } from "~/utils/api";

@@ -64,6 +64,7 @@ const Content = () => {
 const PageLinks = () => {
   return (
     <div className="flex flex-col gap-sm">
+      <PageLink route="/" text="Home" />
       <PageLink route="/albums" text="Albums" />
       <PageLink route="/videos" text="Videos" />
       <div className="mt-sm">

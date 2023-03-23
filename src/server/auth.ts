@@ -39,8 +39,6 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ account, profile }) {
-      // ! seems like can use prisma here. Create model of users with roles? Already exists (check db)
-      // ! delete unused google auth apps
       if (account?.provider === "google") {
         const isAdmin = await prisma.admin.count({
           where: { googleEmail: profile?.email },
@@ -51,8 +49,6 @@ export const authOptions: NextAuthOptions = {
       return false;
     },
     session({ session, user }) {
-      console.log("session:", session);
-      console.log("user:", user);
       if (session.user) {
         session.user.id = user.id;
         session.user.role = user.role;

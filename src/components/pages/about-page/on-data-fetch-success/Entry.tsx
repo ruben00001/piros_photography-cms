@@ -1,21 +1,26 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import produce from "immer";
 import { toast } from "react-toastify";
-import Toast from "~/components/data-display/Toast";
-import DataTextAreaForm from "~/components/forms/TextAreaFormNEW";
+
 import { api } from "~/utils/api";
+
+import Toast from "~/components/data-display/Toast";
+import DataTextAreaForm from "~/components/forms/DataTextAreaForm";
+import { ContentBodyLayout } from "~/components/layout/ContentBody";
 
 const OnDataFetchSuccess = () => {
   return (
-    <div className="p-lg">
-      <h1 className="text-xl text-gray-400">About Page</h1>
-      <p className="mt-xxs text-sm text-gray-300">
-        Edit the main text for the about page below.
-      </p>
-      <div className="mt-xl">
-        <BodyText />
+    <ContentBodyLayout>
+      <div className="p-lg">
+        <h1 className="text-xl text-gray-400">About Page</h1>
+        <p className="mt-xxs text-sm text-gray-300">
+          Edit the main text for the about page below.
+        </p>
+        <div className="mt-xl">
+          <BodyText />
+        </div>
       </div>
-    </div>
+    </ContentBodyLayout>
   );
 };
 
