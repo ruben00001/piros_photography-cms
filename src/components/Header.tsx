@@ -2,7 +2,8 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 
 export const Header = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
+  console.log("status:", status);
   console.log("sessionData:", sessionData);
 
   return (
