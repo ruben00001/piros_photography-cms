@@ -39,8 +39,8 @@ export const imageRouter = createTRPCRouter({
       return ctx.prisma.image.create({
         data: {
           cloudinary_public_id: input.cloudinary_public_id,
-          height: input.height,
-          width: input.width,
+          naturalHeight: input.height,
+          naturalWidth: input.width,
           tags: {
             connect: tags,
           },
