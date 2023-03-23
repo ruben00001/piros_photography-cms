@@ -1,4 +1,7 @@
+import { signOut } from "next-auth/react";
 import { Menu, Transition } from "@headlessui/react";
+import Link from "next/link";
+
 import { MainMenuIcon, SignOutIcon } from "../Icon";
 
 export const SideBarMenu = () => {
@@ -49,15 +52,7 @@ const Content = () => {
           Piros <br />
           Photography
         </div>
-        {/* <div className="flex flex-col gap-sm items-start">
-          {displayPageLinks.map((link) => (
-            <PageLink {...link} key={link.label}>
-              <span css={[s_pageLink.linkArrowIcon]}>
-                <ArrowRight />
-              </span>
-            </PageLink>
-          ))}
-        </div> */}
+        <PageLinks />
       </div>
       <div>
         <Logout />
@@ -66,18 +61,40 @@ const Content = () => {
   );
 };
 
+const PageLinks = () => {
+  return (
+    <div className="flex flex-col gap-sm">
+      <PageLink route="/albums" text="Albums" />
+      <PageLink route="/videos" text="Videos" />
+      <div className="mt-sm">
+        <PageLink route="/about" text="About" />
+      </div>
+    </div>
+  );
+};
+
+const PageLink = ({ route, text }: { text: string; route: string }) => {
+  return (
+    <Link href={route} passHref>
+      <div className="text-gray-600 transition-colors duration-75 ease-in-out hover:text-gray-800">
+        {text}
+      </div>
+    </Link>
+  );
+};
+
 const Logout = () => {
   return (
     <button
       className="group flex cursor-pointer items-center gap-sm capitalize text-gray-600"
-      // onClick={signOut}
+      onClick={() => void signOut()}
       type="button"
     >
       <span className="text-2xl text-gray-400 transition-colors duration-75 ease-in-out group-hover:text-my-alert-content">
         <SignOutIcon />
       </span>
       <span className="transition-colors duration-75 ease-in-out hover:text-gray-800">
-        Logout
+        Sign out
       </span>
     </button>
   );
