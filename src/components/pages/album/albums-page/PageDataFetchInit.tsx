@@ -16,7 +16,7 @@ const FetchAlbumsWrapper = ({ children }: { children: ReactElement }) => {
 
   if (isInitialLoading) {
     return (
-      <div className="my-screen-center">
+      <div className="my-screen-center z-50 bg-white/60">
         <p className="font-mono">Loading...</p>
       </div>
     );

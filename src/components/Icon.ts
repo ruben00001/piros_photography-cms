@@ -22,6 +22,8 @@ import {
   ArrowSquareRight,
   CaretRight,
   Question,
+  List,
+  SignOut,
 } from "phosphor-react";
 
 export {
@@ -37,7 +39,7 @@ export {
   WarningCircle as ErrorIcon,
   Check as SuccessIcon,
   MagnifyingGlass as SearchIcon,
-  DotsThreeOutline as MenuIcon,
+  DotsThreeOutline as ComponentMenuIcon,
   DotsSixVertical as GrabHandleIcon,
   Info as InfoIcon,
   FolderSimplePlus as AddFirstAlbumIcon,
@@ -49,4 +51,6 @@ export {
   ArrowSquareRight as CycleRightIcon,
   CaretRight as CaretRightIcon,
   Question as HelpIcon,
+  List as MainMenuIcon,
+  SignOut as SignOutIcon,
 };

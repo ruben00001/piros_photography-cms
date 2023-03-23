@@ -1,5 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import { signIn, signOut, useSession } from "next-auth/react";
+import { SideBarMenu } from "./header/SideBarMenu";
+
+// index page as sign in
+// page routes
+// sign out
+// deploy panel
 
 export const Header = () => {
   const { data: sessionData, status } = useSession();
@@ -7,10 +13,8 @@ export const Header = () => {
   console.log("sessionData:", sessionData);
 
   return (
-    <div className="navbar bg-primary text-primary-content">
-      <div className="flex-1 pl-5 text-3xl font-bold">
-        {sessionData?.user?.name ? `Notes for ${sessionData.user.name}` : ""}
-      </div>
+    <div className="navbar flex justify-between bg-primary text-primary-content">
+      <SideBarMenu />
       <div className="flex-none gap-2">
         <div className="dropdown-end dropdown">
           {sessionData?.user ? (

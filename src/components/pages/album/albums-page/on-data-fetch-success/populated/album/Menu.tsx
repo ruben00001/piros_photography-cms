@@ -4,7 +4,7 @@ import { api } from "~/utils/api";
 import { useAlbumContext } from "~/albums-page/_context";
 
 import WithTooltip from "~/components/data-display/WithTooltip";
-import { DeleteIcon, MenuIcon } from "~/components/Icon";
+import { DeleteIcon, ComponentMenuIcon } from "~/components/Icon";
 import MyMenu, { MenuItem } from "~/components/MyMenu";
 import { Modal, WarningPanel } from "~/components/modal";
 import Toast from "~/components/data-display/Toast";
@@ -16,7 +16,7 @@ const AlbumMenu = () => {
         button={({ isOpen }) => (
           <WithTooltip text="Album menu" placement="top" isDisabled={isOpen}>
             <div className="transition-colors duration-75 ease-in-out hover:!text-gray-700 group-hover/album:text-gray-300">
-              <MenuIcon />
+              <ComponentMenuIcon />
             </div>
           </WithTooltip>
         )}

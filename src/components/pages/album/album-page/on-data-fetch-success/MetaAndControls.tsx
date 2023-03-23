@@ -6,7 +6,7 @@ import { useAlbumContext } from "~/album-page/_context";
 
 import Toast from "~/components/data-display/Toast";
 import WithTooltip from "~/components/data-display/WithTooltip";
-import { DeleteIcon, MenuIcon } from "~/components/Icon";
+import { DeleteIcon, ComponentMenuIcon } from "~/components/Icon";
 import { Modal, WarningPanel } from "~/components/modal";
 import MyMenu from "~/components/MyMenu";
 import CoverImage from "./CoverImage";
@@ -54,7 +54,7 @@ const AlbumMenu = () => {
     <MyMenu
       button={
         <div className="text-gray-300 transition-colors duration-75 ease-in-out hover:!text-gray-600 group-hover:text-gray-400">
-          <MenuIcon />
+          <ComponentMenuIcon />
         </div>
       }
       styles={{ itemsWrapper: "right-0" }}
