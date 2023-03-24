@@ -1,5 +1,5 @@
 import { createTRPCRouter } from "~/server/api/trpc";
-import { aboutTextRouter } from "./routers/aboutText";
+import { aboutPageRouter } from "./routers/aboutText";
 import { albumRouter } from "./routers/album";
 import { albumImageRouter } from "./routers/albumImage";
 import { imageRouter } from "./routers/image";
@@ -14,7 +14,7 @@ export const appRouter = createTRPCRouter({
   albumImage: albumImageRouter,
   imageAndAlbumTransaction: imageAndAlbumTransactionRouter,
   youtubeVideo: youtubeVideoRouter,
-  aboutText: aboutTextRouter,
+  aboutPage: aboutPageRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -12,7 +12,7 @@ export default function PageDataFetchInit({
 
 const FetchAboutTextWrapper = ({ children }: { children: ReactElement }) => {
   const { isFetchedAfterMount, isInitialLoading, isError } =
-    api.aboutText.getText.useQuery();
+    api.aboutPage.getText.useQuery();
 
   if (isInitialLoading) {
     return (

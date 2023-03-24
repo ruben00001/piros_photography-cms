@@ -27,18 +27,18 @@ const OnDataFetchSuccess = () => {
 export default OnDataFetchSuccess;
 
 const BodyText = () => {
-  const { data } = api.aboutText.getText.useQuery();
+  const { data } = api.aboutPage.getText.useQuery();
   const aboutText = data as NonNullable<typeof data>;
 
   const apiUtils = api.useContext();
 
-  const updateTitleMutation = api.aboutText.updateBody.useMutation({
+  const updateTitleMutation = api.aboutPage.updateBody.useMutation({
     async onMutate(mutationInput) {
-      const prevData = apiUtils.aboutText.getText.getData();
+      const prevData = apiUtils.aboutPage.getText.getData();
 
-      await apiUtils.aboutText.getText.cancel();
+      await apiUtils.aboutPage.getText.cancel();
 
-      apiUtils.aboutText.getText.setData(undefined, (currData) => {
+      apiUtils.aboutPage.getText.setData(undefined, (currData) => {
         if (!currData) {
           return prevData;
         }
