@@ -110,8 +110,6 @@ const DndSortableWrapper = ({ children }: { children: ReactElement[] }) => {
           return;
         }
 
-        console.log("onReorder triggered ...");
-
         reorderMutation.mutate({
           activeAlbum: {
             id: activeId,

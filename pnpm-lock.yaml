@@ -63,7 +63,6 @@ specifiers:
   typescript: ^4.9.5
   uid: ^2.0.1
   zod: ^3.20.6
-  zustand: ^4.3.6
 
 dependencies:
   '@dnd-kit/core': 6.0.5_biqbaboplfbrettd7655fr4n2y
@@ -98,7 +97,6 @@ dependencies:
   superjson: 1.9.1
   uid: 2.0.1
   zod: 3.20.6
-  zustand: 4.3.6_immer@9.0.19+react@18.2.0
 
 devDependencies:
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.7
@@ -6662,21 +6660,4 @@ packages:
 
   /zod/3.20.6:
     resolution: {integrity: sha512-oyu0m54SGCtzh6EClBVqDDlAYRz4jrVtKwQ7ZnsEmMI9HnzuZFj8QFwAY1M5uniIYACdGvv0PBWPF2kO0aNofA==}
-    dev: false
-
-  /zustand/4.3.6_immer@9.0.19+react@18.2.0:
-    resolution: {integrity: sha512-6J5zDxjxLE+yukC2XZWf/IyWVKnXT9b9HUv09VJ/bwGCpKNcaTqp7Ws28Xr8jnbvnZcdRaidztAPsXFBIqufiw==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      immer: '>=9.0'
-      react: '>=16.8'
-    peerDependenciesMeta:
-      immer:
-        optional: true
-      react:
-        optional: true
-    dependencies:
-      immer: 9.0.19
-      react: 18.2.0
-      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
