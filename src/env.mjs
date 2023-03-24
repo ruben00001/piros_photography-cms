@@ -21,8 +21,6 @@ const server = z.object({
   // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
-  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
-  NEXT_PUBLIC_CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
 });
 
@@ -31,7 +29,8 @@ const server = z.object({
  * built with invalid env vars. To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 const client = z.object({
-  // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
+  NEXT_PUBLIC_CLOUDINARY_API_KEY: z.string(),
 });
 
 /**

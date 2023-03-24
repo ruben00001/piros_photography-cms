@@ -2,6 +2,7 @@ import { z } from "zod";
 import { v2 as cloudinary } from "cloudinary";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { env } from "~/env.mjs";
 
 export const imageRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
@@ -18,7 +19,8 @@ export const imageRouter = createTRPCRouter({
 
       const signature = cloudinary.utils.api_sign_request(
         { timestamp, upload_preset },
-        process.env.CLOUDINARY_API_SECRET as string
+        // process.env.CLOUDINARY_API_SECRET as string
+        env.CLOUDINARY_API_SECRET
       );
 
       return { signature, timestamp };

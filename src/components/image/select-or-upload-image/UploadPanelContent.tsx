@@ -7,7 +7,7 @@ import {
 } from "~/context/StringArrState";
 import { api } from "~/utils/api";
 
-import { FileImageIcon, TickIcon } from "~/components/Icon";
+import { ErrorIcon, FileImageIcon, TickIcon } from "~/components/Icon";
 import Tags from "~/components/image/select-or-upload-image/tags";
 import Spinner from "~/components/Spinner";
 import { handleUploadImage } from "~/helpers/cloudinary";
@@ -85,13 +85,13 @@ const UploadFunctionality = ({
         throw new Error("no signatureData");
       }
 
-      const { cloudinary_public_id } = await handleUploadImage({
+      const uploadRes = await handleUploadImage({
         file: imageFile,
         signatureData,
       });
 
       onUploadImage({
-        cloudinary_public_id,
+        cloudinary_public_id: uploadRes.cloudinary_public_id,
         naturalHeight: imageDimensions.naturalHeight,
         naturalWidth: imageDimensions.naturalWidth,
         tagIds,
@@ -106,7 +106,6 @@ const UploadFunctionality = ({
         },
       });
     } catch (error) {
-      console.log("error:", error);
       setCreateImageStatus("error");
     }
   };
@@ -140,7 +139,9 @@ const UploadFunctionality = ({
           </button>
         )}
       </div>
-      {createImageStatus === "pending" || createImageStatus === "success" ? (
+      {createImageStatus === "pending" ||
+      createImageStatus === "success" ||
+      createImageStatus === "error" ? (
         <div className="absolute left-0 top-0 z-10 grid h-full w-full place-items-center rounded-2xl bg-white bg-opacity-70">
           <div className="flex items-center gap-sm">
             {createImageStatus === "pending" ? (
@@ -148,12 +149,19 @@ const UploadFunctionality = ({
                 <Spinner />
                 <p className="font-mono">Uploading image...</p>
               </>
-            ) : (
+            ) : createImageStatus === "success" ? (
               <>
                 <span className="text-success">
                   <TickIcon />
                 </span>
                 <p className="font-mono">Upload success</p>
+              </>
+            ) : (
+              <>
+                <span className="text-my-error-content">
+                  <ErrorIcon />
+                </span>
+                <p className="font-mono">Upload error</p>
               </>
             )}
           </div>
@@ -170,6 +178,8 @@ const ImageFileDisplay = ({
   file: File;
   onLoad: (arg0: { naturalHeight: number; naturalWidth: number }) => void;
 }) => {
+  // was a bug where onLoad was causing constant re-render of this component
+  const [isLoaded, setIsLoaded] = useState(false);
   const imgSrc = URL.createObjectURL(file);
 
   return (
@@ -182,6 +192,10 @@ const ImageFileDisplay = ({
           className="bg-gray-50"
           alt=""
           onLoad={(e) => {
+            if (isLoaded) {
+              return;
+            }
+            setIsLoaded(true);
             onLoad({
               naturalHeight: e.currentTarget.naturalHeight,
               naturalWidth: e.currentTarget.naturalWidth,

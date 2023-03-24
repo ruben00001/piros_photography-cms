@@ -40,7 +40,7 @@ export const AdminAuthenticatedLayout = ({
       <div className="my-screen-center bg-gray-50">
         <div className="rounded-md bg-white/80 p-lg ">
           {status === "loading" ? (
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col items-center gap-md">
               <Spinner />
               <p className="font-mono">Checking authentication status...</p>
             </div>
