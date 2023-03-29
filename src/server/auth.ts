@@ -1,15 +1,16 @@
 import { type GetServerSidePropsContext } from "next";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { type Role } from "@prisma/client";
 import {
   getServerSession,
-  type NextAuthOptions,
   type DefaultSession,
   type DefaultUser,
+  type NextAuthOptions,
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
-import { type Role } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -31,14 +32,9 @@ declare module "next-auth" {
   }
 }
 
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
- */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    async signIn({ account, profile }) {
+    /*     async signIn({ account, profile }) {
       if (account?.provider === "google") {
         const isAdmin = await prisma.admin.count({
           where: { googleEmail: profile?.email },
@@ -47,12 +43,11 @@ export const authOptions: NextAuthOptions = {
         return Boolean(isAdmin);
       }
       return false;
-    },
+    }, */
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
         session.user.role = user.role;
-        // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;
     },

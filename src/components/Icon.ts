@@ -54,5 +54,5 @@ export {
   Question as HelpIcon,
   List as MainMenuIcon,
   SignOut as SignOutIcon,
-  Toolbox as UnderContstructionIcon,
+  Toolbox as UnderConstructionIcon,
 };
