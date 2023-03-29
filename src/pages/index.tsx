@@ -1,20 +1,22 @@
 import { type NextPage } from "next";
+
 import {
   AdminAuthenticatedLayout,
-  SiteLayout,
   ContentBodyLayout,
+  SiteLayout,
 } from "~/components/layout";
+import PageContent from "~/home/Entry";
 
-const Home: NextPage = () => {
+const HomePage: NextPage = () => {
   return (
     <SiteLayout>
       <AdminAuthenticatedLayout>
         <ContentBodyLayout>
-          <div>Home page</div>
+          <PageContent />
         </ContentBodyLayout>
       </AdminAuthenticatedLayout>
     </SiteLayout>
   );
 };
 
-export default Home;
+export default HomePage;

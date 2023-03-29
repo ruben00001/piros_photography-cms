@@ -4,5 +4,6 @@
   "emmet.triggerExpansionOnTab": false,
   "editor.acceptSuggestionOnCommitCharacter": false,
   "workbench.editor.labelFormat": "short",
-  "css.lint.unknownAtRules": "ignore"
+  "css.lint.unknownAtRules": "ignore",
+  "editor.codeActionsOnSave": { "source.fixAll.eslint": true }
 }

@@ -1,5 +1,5 @@
 import { AdminAuthenticatedLayout, SiteLayout } from "~/components/layout";
-import AlbumPage from "~/components/pages/album/album-page";
+import AlbumPage from "~/components/my-pages/album";
 
 export default function Page() {
   return (

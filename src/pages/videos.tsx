@@ -1,5 +1,5 @@
 import { AdminAuthenticatedLayout, SiteLayout } from "~/components/layout";
-import PageContent from "~/videos-page/Entry";
+import PageContent from "~/components/my-pages/videos-page/Entry";
 
 const VideosPage = () => {
   return (

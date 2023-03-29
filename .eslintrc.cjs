@@ -33,8 +33,9 @@ const config = {
     ],
     "@typescript-eslint/no-unused-vars": "error",
     "prefer-const": "error",
+    "@typescript-eslint/ban-ts-comment": "off",
   },
-  ignorePatterns: ["**/*.js"],
+  ignorePatterns: ["**/*.js", "**/*.jsx"],
 };
 
 module.exports = config;

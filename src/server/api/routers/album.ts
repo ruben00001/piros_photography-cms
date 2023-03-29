@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { getReorderedEntities } from "~/helpers/process-data";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -14,7 +15,7 @@ export const albumRouter = createTRPCRouter({
     .input(
       z.object({
         albumId: z.string(),
-      })
+      }),
     )
     .query(({ ctx, input }) => {
       return ctx.prisma.album.findUnique({
@@ -40,6 +41,43 @@ export const albumRouter = createTRPCRouter({
         },
       });
     }),
+
+  /*   createPopulate: protectedProcedure
+    .input(
+      z.object({
+        title: z.string(),
+        index: z.number(),
+        cloudinary_public_ids: z.array(z.string()),
+        coverImageCloudPubId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const images = await ctx.prisma.image.findMany({
+        where: { cloudinary_public_id: { in: input.cloudinary_public_ids } },
+      });
+
+      const coverImage = await ctx.prisma.image.findFirst({
+        where: { cloudinary_public_id: input.coverImageCloudPubId },
+      });
+      console.log("coverImage:", coverImage);
+
+      return ctx.prisma.album.create({
+        data: {
+          title: input.title,
+          published: true,
+          index: input.index,
+          images: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            // create: [{ imageId: images[0]!.id, index: 0 }],
+            create: images.map((image, index) => ({
+              imageId: image.id,
+              index,
+            })),
+          },
+          coverImageId: coverImage?.id,
+        },
+      });
+    }), */
 
   updateTitle: protectedProcedure
     .input(z.object({ albumId: z.string(), updatedTitle: z.string() }))
@@ -105,12 +143,13 @@ export const albumRouter = createTRPCRouter({
           },
         },
       });
+      console.log("albumsToUpdate:", albumsToUpdate);
 
       const updateFuncs = albumsToUpdate.map((album) =>
         ctx.prisma.album.update({
           where: { id: album.id },
           data: { index: album.index - 1 },
-        })
+        }),
       );
 
       const deleteFunc = ctx.prisma.album.delete({
@@ -128,7 +167,7 @@ export const albumRouter = createTRPCRouter({
         albums: z.array(z.object({ id: z.string(), index: z.number() })),
         activeAlbum: z.object({ id: z.string(), index: z.number() }),
         overAlbum: z.object({ id: z.string(), index: z.number() }),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       const updateFuncs = getReorderedEntities({
@@ -141,7 +180,7 @@ export const albumRouter = createTRPCRouter({
             id: album.id,
           },
           data: { index: album.index },
-        })
+        }),
       );
 
       return ctx.prisma.$transaction(updateFuncs);
@@ -167,7 +206,7 @@ export const albumRouter = createTRPCRouter({
         data: z.object({
           image: z.object({ id: z.string(), index: z.number() }),
         }),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.album.update({
@@ -190,7 +229,7 @@ export const albumRouter = createTRPCRouter({
       z.object({
         where: z.object({ albumId: z.string(), imageId: z.string() }),
         data: z.object({ imageId: z.string() }),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.album.update({
@@ -215,7 +254,7 @@ export const albumRouter = createTRPCRouter({
       z.object({
         where: z.object({ albumId: z.string(), imageId: z.string() }),
         data: z.object({ index: z.number() }),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const deleteFunc = ctx.prisma.album.update({
@@ -248,7 +287,7 @@ export const albumRouter = createTRPCRouter({
         ctx.prisma.albumImage.update({
           where: { id: albumImage.id },
           data: { index: albumImage.index - 1 },
-        })
+        }),
       );
 
       return ctx.prisma.$transaction([deleteFunc, ...updateFuncs]);
@@ -260,7 +299,7 @@ export const albumRouter = createTRPCRouter({
         albumImages: z.array(z.object({ id: z.string(), index: z.number() })),
         activeAlbumImage: z.object({ id: z.string(), index: z.number() }),
         overAlbumImage: z.object({ id: z.string(), index: z.number() }),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       const updateFuncs = getReorderedEntities({
@@ -273,7 +312,7 @@ export const albumRouter = createTRPCRouter({
             id: albumImage.id,
           },
           data: { index: albumImage.index },
-        })
+        }),
       );
 
       return ctx.prisma.$transaction(updateFuncs);

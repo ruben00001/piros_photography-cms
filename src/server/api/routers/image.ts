@@ -1,8 +1,8 @@
-import { z } from "zod";
 import { v2 as cloudinary } from "cloudinary";
+import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { env } from "~/env.mjs";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const imageRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
@@ -19,8 +19,7 @@ export const imageRouter = createTRPCRouter({
 
       const signature = cloudinary.utils.api_sign_request(
         { timestamp, upload_preset },
-        // process.env.CLOUDINARY_API_SECRET as string
-        env.CLOUDINARY_API_SECRET
+        env.CLOUDINARY_API_SECRET,
       );
 
       return { signature, timestamp };
@@ -30,10 +29,10 @@ export const imageRouter = createTRPCRouter({
     .input(
       z.object({
         cloudinary_public_id: z.string(),
-        width: z.number(),
-        height: z.number(),
+        naturalWidth: z.number(),
+        naturalHeight: z.number(),
         tagIds: z.optional(z.array(z.string())),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const tags = input.tagIds?.map((tagId) => ({ id: tagId }));
@@ -41,8 +40,8 @@ export const imageRouter = createTRPCRouter({
       return ctx.prisma.image.create({
         data: {
           cloudinary_public_id: input.cloudinary_public_id,
-          naturalHeight: input.height,
-          naturalWidth: input.width,
+          naturalHeight: input.naturalHeight,
+          naturalWidth: input.naturalWidth,
           tags: {
             connect: tags,
           },

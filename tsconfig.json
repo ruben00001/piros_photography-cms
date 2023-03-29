@@ -19,11 +19,12 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "~/album-containers": ["src/components/pages/album/_containers"],
-      "~/albums-page/*": ["src/components/pages/album/albums-page/*"],
-      "~/album-page/*": ["src/components/pages/album/album-page/*"],
-      "~/videos-page/*": ["src/components/pages/videos-page/*"],
-      "~/about-page/*": ["src/components/pages/about-page/*"]
+      "~/album-containers": ["src/components/my-pages/album/_containers"],
+      "~/albums-page/*": ["src/components/my-pages/albums/*"],
+      "~/album-page/*": ["src/components/my-pages/album/*"],
+      "~/videos-page/*": ["src/components/my-pages/videos-page/*"],
+      "~/about-page/*": ["src/components/my-pages/about/*"],
+      "~/home/*": ["src/components/my-pages/home/*"]
     },
     "noUnusedLocals": false,
     "noUnusedParameters": false
@@ -36,5 +37,5 @@
     "**/*.cjs",
     "**/*.mjs"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/pages/test.jsx"]
 }

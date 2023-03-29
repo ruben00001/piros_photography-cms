@@ -1,5 +1,5 @@
 import { AdminAuthenticatedLayout, SiteLayout } from "~/components/layout";
-import PageContent from "~/about-page/Entry";
+import PageContent from "~/components/my-pages/about/Entry";
 
 const AboutPage = () => {
   return (

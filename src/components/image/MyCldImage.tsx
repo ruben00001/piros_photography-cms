@@ -1,12 +1,13 @@
-import { CldImage } from "next-cloudinary";
 import { useState } from "react";
+import { CldImage } from "next-cloudinary";
+
 import { SpinnerIcon } from "../Icon";
 
 const MyCldImage = ({
-  src,
+  publicId,
   dimensions,
 }: {
-  src: string;
+  publicId: string;
   dimensions: { width: number; height: number };
 }) => {
   const [blurImgIsLoaded, setBlurImgIsLoaded] = useState(false);
@@ -28,7 +29,7 @@ const MyCldImage = ({
           className={`absolute left-0 top-0 ${
             qualityImgIsLoaded ? "opacity-0" : "opacity-100"
           }`}
-          src={src}
+          src={publicId}
           {...dimensions}
           style={dimensions}
           effects={[{ blur: "1000" }]}
@@ -39,7 +40,7 @@ const MyCldImage = ({
         />
         <CldImage
           className={`${!qualityImgIsLoaded ? "opacity-0" : "opacity-100"}`}
-          src={src}
+          src={publicId}
           {...dimensions}
           style={dimensions}
           alt=""

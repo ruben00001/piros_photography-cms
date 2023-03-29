@@ -1,14 +1,13 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { useState, type ReactElement } from "react";
+import { useMeasure } from "react-use";
 
-import { fuzzySearch } from "~/helpers/query-data";
 import { api, type RouterOutputs } from "~/utils/api";
-
+import SearchInput from "~/components/SearchInput";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import MyCldImage from "~/components/image/MyCldImage";
-import SearchInput from "~/components/SearchInput";
 import { calcImageDimensions } from "~/helpers/general";
-import { useMeasure } from "react-use";
+import { fuzzySearch } from "~/helpers/query-data";
 
 export type OnSelectImage = (arg0: { imageId: string }) => void;
 
@@ -154,7 +153,7 @@ const Image = ({
         <WithTooltip text="Click to add" type="action">
           <div className="flex flex-grow flex-col">
             <MyCldImage
-              src={image.cloudinary_public_id}
+              publicId={image.cloudinary_public_id}
               dimensions={calcImageDimensions({
                 constraint: {
                   maxDecimal: { height: 1, width: 1 },
