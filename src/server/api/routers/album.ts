@@ -143,7 +143,6 @@ export const albumRouter = createTRPCRouter({
           },
         },
       });
-      console.log("albumsToUpdate:", albumsToUpdate);
 
       const updateFuncs = albumsToUpdate.map((album) =>
         ctx.prisma.album.update({

@@ -20,6 +20,7 @@ import {
   Question,
   SignOut,
   Spinner,
+  TagSimple,
   Toolbox,
   Trash,
   Upload,
@@ -55,4 +56,5 @@ export {
   List as MainMenuIcon,
   SignOut as SignOutIcon,
   Toolbox as UnderConstructionIcon,
+  TagSimple as TagIcon,
 };

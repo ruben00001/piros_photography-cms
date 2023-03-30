@@ -58,4 +58,72 @@ export const imageRouter = createTRPCRouter({
         },
       });
     }),
+
+  delete: protectedProcedure
+    .input(z.object({ imageId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const deleteFunc = ctx.prisma.image.delete({
+        where: {
+          id: input.imageId,
+        },
+      });
+
+      // get related albumImageIds
+      // const connectedImages =
+
+      // get related albums
+
+      // update index
+
+      return ctx.prisma.$transaction([deleteFunc]);
+    }),
+
+  addTag: protectedProcedure
+    .input(
+      z.object({
+        where: z.object({ imageId: z.string() }),
+        data: z.object({
+          text: z.string(),
+        }),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.image.update({
+        where: { id: input.where.imageId },
+        data: {
+          tags: {
+            connectOrCreate: {
+              create: {
+                text: input.data.text,
+              },
+              where: {
+                text: input.data.text,
+              },
+            },
+          },
+        },
+      });
+    }),
+
+  removeTag: protectedProcedure
+    .input(
+      z.object({
+        where: z.object({ imageId: z.string() }),
+        data: z.object({
+          tagId: z.string(),
+        }),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.image.update({
+        where: { id: input.where.imageId },
+        data: {
+          tags: {
+            disconnect: {
+              id: input.data.tagId,
+            },
+          },
+        },
+      });
+    }),
 });

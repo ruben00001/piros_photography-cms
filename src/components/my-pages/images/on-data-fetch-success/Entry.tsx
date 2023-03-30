@@ -3,22 +3,19 @@
 
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useMeasure } from "react-use";
 
 import { api } from "~/utils/api";
 import { UploadIcon } from "~/components/Icon";
 import SearchInput from "~/components/SearchInput";
 import Toast from "~/components/data-display/Toast";
-import MyCldImage from "~/components/image/MyCldImage";
 import UploadPanelContent, {
   type OnUploadImage,
 } from "~/components/image/select-or-upload-image/UploadPanelContent";
 import { ContentBodyLayout } from "~/components/layout/ContentBody";
 import { ModalPanelWrapper } from "~/components/modal/PanelWrapper";
-import { calcImageDimensions } from "~/helpers/general";
 import { fuzzySearch } from "~/helpers/query-data";
-import { ImageProvider, useImageContext } from "../_context";
-import { type Image } from "../_types";
+import { ImageProvider } from "../_context";
+import Image from "./image/Entry";
 
 const OnDataFetchSuccess = () => {
   return (
@@ -158,52 +155,5 @@ const ImagesGrid = ({ query }: { query: string }) => {
         </ImageProvider>
       ))}
     </div>
-  );
-};
-
-const Image = () => {
-  const image = useImageContext();
-
-  const [containerRef, { width: containerWidth }] =
-    useMeasure<HTMLDivElement>();
-
-  return (
-    <div
-      className="my-hover-bg relative flex aspect-square flex-col rounded-lg border border-base-200 p-sm"
-      ref={containerRef}
-    >
-      {containerWidth ? (
-        <div className="flex flex-grow flex-col">
-          <MyCldImage
-            publicId={image.cloudinary_public_id}
-            dimensions={calcImageDimensions({
-              constraint: {
-                value: { height: containerWidth, width: containerWidth },
-              },
-              image: {
-                height: image.naturalHeight,
-                width: image.naturalWidth,
-              },
-            })}
-          />
-        </div>
-      ) : null}
-    </div>
-  );
-};
-
-// delete: show if used or not; can delete if used;
-// edit tags
-// full screen
-// show metadata? when uploaded, updated
-// show which album used in?
-
-const UnusedBadge = () => {
-  return <div></div>;
-};
-
-const ImageMenu = () => {
-  return (
-    <div className="absolute right-xs top-xs z-30 opacity-0 transition-opacity duration-75 ease-in-out group-hover/album:opacity-100"></div>
   );
 };

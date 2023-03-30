@@ -26,15 +26,16 @@ export function fuzzySearch<TEntity extends { id: string }>({
 
 export function findEntityById<TEntity extends { id: string }>(
   entities: TEntity[],
-  findById: string
+  findById: string,
 ) {
   const match = entities.find((entity) => entity.id === findById);
   return match;
 }
 
+/** returns items of arr1 not in arr2 */
 export function arrayDivergence<TItem extends { id: string }>(
   items1: TItem[],
-  items2: TItem[]
+  items2: TItem[],
 ) {
   const ids1 = items1.map((item) => item.id);
   const ids2 = items2.map((item) => item.id);
@@ -47,7 +48,7 @@ export function arrayDivergence<TItem extends { id: string }>(
 
 export function arrOfObjsIncludesValue<
   TItem extends { [key: string]: TItemKey },
-  TItemKey extends string
+  TItemKey extends string,
 >(items: TItem[], key: string, value: string) {
   return Boolean(items.find((item) => item[key] === value));
 }

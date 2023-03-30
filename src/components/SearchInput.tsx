@@ -30,6 +30,7 @@ const SearchInput = ({
           placeholder={placeholder}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
+          autoComplete="off"
         />
       </div>
     </>
