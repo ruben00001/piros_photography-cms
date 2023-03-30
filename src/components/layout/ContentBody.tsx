@@ -8,7 +8,7 @@ export const ContentBodyLayout = ({
   maxWidth?: number;
 }) => {
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center overflow-x-hidden">
       <div className={`w-full`} style={{ maxWidth }}>
         {children}
       </div>

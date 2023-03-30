@@ -24,7 +24,8 @@
       "~/album-page/*": ["src/components/my-pages/album/*"],
       "~/videos-page/*": ["src/components/my-pages/videos-page/*"],
       "~/about-page/*": ["src/components/my-pages/about/*"],
-      "~/home/*": ["src/components/my-pages/home/*"]
+      "~/home/*": ["src/components/my-pages/home/*"],
+      "~/images/*": ["src/components/my-pages/images/*"]
     },
     "noUnusedLocals": false,
     "noUnusedParameters": false

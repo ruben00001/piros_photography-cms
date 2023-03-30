@@ -7,7 +7,7 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 export const imageRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.image.findMany({
-      orderBy: { updatedAt: "asc" },
+      orderBy: { updatedAt: "desc" },
       include: { tags: true },
     });
   }),
