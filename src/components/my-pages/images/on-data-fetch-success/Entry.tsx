@@ -19,7 +19,7 @@ import Image from "./image/Entry";
 
 const OnDataFetchSuccess = () => {
   return (
-    <ContentBodyLayout>
+    <ContentBodyLayout maxWidth={1800}>
       <div className="p-lg">
         <h1 className="text-xl text-gray-400">Images Page</h1>
         <p className="mt-xxs text-sm text-gray-300">
@@ -116,7 +116,9 @@ const useUploadImage = (): OnUploadImage => {
 const Images = () => {
   const [tagQuery, setTagQuery] = useState("");
 
-  const { data: allImages } = api.image.imagesPageGetAll.useQuery();
+  const { data: allImages } = api.image.imagesPageGetAll.useQuery(undefined, {
+    enabled: false,
+  });
 
   return (
     <div>
@@ -135,7 +137,9 @@ const Images = () => {
 };
 
 const ImagesGrid = ({ query }: { query: string }) => {
-  const { data } = api.image.imagesPageGetAll.useQuery();
+  const { data } = api.image.imagesPageGetAll.useQuery(undefined, {
+    enabled: false,
+  });
   const allImages = data as NonNullable<typeof data>;
 
   const imagesByQuery = fuzzySearch({

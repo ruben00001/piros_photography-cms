@@ -11,7 +11,7 @@ import { fuzzySearch } from "~/helpers/query-data";
 
 export type OnSelectImage = (arg0: { imageId: string }) => void;
 
-type Image = RouterOutputs["image"]["getAll"][0];
+type Image = RouterOutputs["image"]["uploadPanelGetAll"][0];
 
 const UploadedPanelContent = ({
   onSelectImage,
@@ -46,7 +46,7 @@ const UploadedPanelContent = ({
 export default UploadedPanelContent;
 
 const ImagesStatusWrapper = ({ children }: { children: ReactElement }) => {
-  const { isError, isLoading } = api.image.getAll.useQuery();
+  const { isError, isLoading } = api.image.uploadPanelGetAll.useQuery();
 
   return (
     <div>
@@ -70,7 +70,7 @@ const Images = ({
 }) => {
   const [tagQuery, setTagQuery] = useState("");
 
-  const { data: allImages } = api.image.getAll.useQuery();
+  const { data: allImages } = api.image.uploadPanelGetAll.useQuery();
 
   return (
     <div>
@@ -101,7 +101,7 @@ const ImagesGrid = ({
   onSelectImage: OnSelectImage;
   closeModal: () => void;
 }) => {
-  const { data: allImages } = api.image.getAll.useQuery();
+  const { data: allImages } = api.image.uploadPanelGetAll.useQuery();
 
   if (!allImages) {
     return <p>Something went wrong...</p>;
@@ -109,7 +109,7 @@ const ImagesGrid = ({
 
   const imagesByQuery = fuzzySearch({
     entities: allImages,
-    keys: ["tags.text"],
+    keys: ["tags.text", "albumImages.album.title", "albumCoverImages.title"],
     pattern: query,
   });
 

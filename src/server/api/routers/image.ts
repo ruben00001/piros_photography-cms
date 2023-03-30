@@ -5,10 +5,26 @@ import { env } from "~/env.mjs";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const imageRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(({ ctx }) => {
+  uploadPanelGetAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.image.findMany({
       orderBy: { updatedAt: "desc" },
-      include: { tags: true },
+      include: {
+        tags: true,
+        albumImages: {
+          select: {
+            album: {
+              select: {
+                title: true,
+              },
+            },
+          },
+        },
+        albumCoverImages: {
+          select: {
+            title: true,
+          },
+        },
+      },
     });
   }),
 

@@ -1,3 +1,5 @@
+import { DebounceInput } from "react-debounce-input";
+
 import { SearchIcon, XCircleIcon } from "./Icon";
 import WithTooltip from "./data-display/WithTooltip";
 
@@ -24,7 +26,7 @@ const SearchInput = ({
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <SearchIcon />
         </div>
-        <input
+        <DebounceInput
           type="text"
           id={inputId}
           className="block w-full rounded-md border border-base-300 px-xs py-xs pl-10 text-sm text-gray-900 outline-none transition-colors focus-within:bg-gray-50"
@@ -32,6 +34,7 @@ const SearchInput = ({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           autoComplete="off"
+          debounceTimeout={500}
         />
         {inputValue.length ? (
           <WithTooltip text="clear input">
