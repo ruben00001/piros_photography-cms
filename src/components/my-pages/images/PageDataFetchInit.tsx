@@ -12,7 +12,7 @@ export default function PageDataFetchInit({
 
 const FetchImagesWrapper = ({ children }: { children: ReactElement }) => {
   const { isFetchedAfterMount, isInitialLoading, isError } =
-    api.image.getAll.useQuery();
+    api.image.imagesPageGetAll.useQuery();
 
   if (isInitialLoading) {
     return (

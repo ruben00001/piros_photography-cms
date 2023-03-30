@@ -1,6 +1,6 @@
-import { signOut } from "next-auth/react";
-import { Menu, Transition } from "@headlessui/react";
 import Link from "next/link";
+import { Menu, Transition } from "@headlessui/react";
+import { signOut } from "next-auth/react";
 
 import { MainMenuIcon, SignOutIcon } from "../Icon";
 
@@ -69,6 +69,9 @@ const PageLinks = () => {
       <PageLink route="/videos" text="Videos" />
       <div className="mt-sm">
         <PageLink route="/about" text="About" />
+      </div>
+      <div className="mt-sm">
+        <PageLink route="/images" text="Images" />
       </div>
     </div>
   );

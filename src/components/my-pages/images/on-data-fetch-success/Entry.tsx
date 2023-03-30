@@ -5,11 +5,10 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useMeasure } from "react-use";
 
-import { api, type RouterOutputs } from "~/utils/api";
+import { api } from "~/utils/api";
 import { UploadIcon } from "~/components/Icon";
 import SearchInput from "~/components/SearchInput";
 import Toast from "~/components/data-display/Toast";
-import WithTooltip from "~/components/data-display/WithTooltip";
 import MyCldImage from "~/components/image/MyCldImage";
 import UploadPanelContent, {
   type OnUploadImage,
@@ -18,6 +17,8 @@ import { ContentBodyLayout } from "~/components/layout/ContentBody";
 import { ModalPanelWrapper } from "~/components/modal/PanelWrapper";
 import { calcImageDimensions } from "~/helpers/general";
 import { fuzzySearch } from "~/helpers/query-data";
+import { ImageProvider, useImageContext } from "../_context";
+import { type Image } from "../_types";
 
 const OnDataFetchSuccess = () => {
   return (
@@ -77,9 +78,12 @@ const UploadNew = () => {
 };
 
 const useUploadImage = (): OnUploadImage => {
-  const { refetch: refetchImages } = api.image.getAll.useQuery(undefined, {
-    enabled: false,
-  });
+  const { refetch: refetchImages } = api.image.imagesPageGetAll.useQuery(
+    undefined,
+    {
+      enabled: false,
+    },
+  );
 
   const createImageMutation = api.image.create.useMutation({
     onSuccess: async () => {
@@ -115,7 +119,7 @@ const useUploadImage = (): OnUploadImage => {
 const Images = () => {
   const [tagQuery, setTagQuery] = useState("");
 
-  const { data: allImages } = api.image.getAll.useQuery();
+  const { data: allImages } = api.image.imagesPageGetAll.useQuery();
 
   return (
     <div>
@@ -134,8 +138,9 @@ const Images = () => {
 };
 
 const ImagesGrid = ({ query }: { query: string }) => {
-  const { data } = api.image.getAll.useQuery();
+  const { data } = api.image.imagesPageGetAll.useQuery();
   const allImages = data as NonNullable<typeof data>;
+  console.log("allImages:", allImages);
 
   const imagesByQuery = fuzzySearch({
     entities: allImages,
@@ -148,15 +153,17 @@ const ImagesGrid = ({ query }: { query: string }) => {
   ) : (
     <div className="grid cursor-pointer grid-cols-3 gap-sm pr-2 xl:grid-cols-4">
       {imagesByQuery.map((image) => (
-        <Image image={image} key={image.id} />
+        <ImageProvider image={image} key={image.id}>
+          <Image />
+        </ImageProvider>
       ))}
     </div>
   );
 };
 
-type Image = RouterOutputs["image"]["getAll"][0];
+const Image = () => {
+  const image = useImageContext();
 
-const Image = ({ image }: { image: Image }) => {
   const [containerRef, { width: containerWidth }] =
     useMeasure<HTMLDivElement>();
 
@@ -190,6 +197,10 @@ const Image = ({ image }: { image: Image }) => {
 // full screen
 // show metadata? when uploaded, updated
 // show which album used in?
+
+const UnusedBadge = () => {
+  return <div></div>;
+};
 
 const ImageMenu = () => {
   return (

@@ -12,6 +12,16 @@ export const imageRouter = createTRPCRouter({
     });
   }),
 
+  imagesPageGetAll: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.image.findMany({
+      orderBy: { updatedAt: "desc" },
+      include: {
+        tags: true,
+        _count: { select: { albumCoverImages: true, albumImages: true } },
+      },
+    });
+  }),
+
   createSignature: protectedProcedure
     .input(z.object({ upload_preset: z.literal("signed") }))
     .query(({ input: { upload_preset } }) => {
