@@ -1,9 +1,9 @@
 import { type ImageTag } from "@prisma/client";
 
-import WithTooltip from "~/components/data-display/WithTooltip";
-import { RemoveIcon } from "~/components/Icon";
-import { useStringArrStateContext as useTagsIdContext } from "~/context/StringArrState";
 import { api } from "~/utils/api";
+import { RemoveIcon } from "~/components/Icon";
+import WithTooltip from "~/components/data-display/WithTooltip";
+import { useStringArrStateContext as useTagsIdContext } from "~/context/StringArrState";
 import InputSelect from "./input-select";
 
 // const addTag = z.function().args(z.object({ newId: z.string() }));
@@ -61,12 +61,7 @@ const Tag = ({ tag }: { tag: ImageTag }) => {
         <p className="text-sm text-gray-600 transition-colors duration-75 ease-in-out group-hover:text-gray-800">
           {tag.text}
         </p>
-        {/*       <WithWarning
-        warningText={{ heading: "Delete keyword from image?" }}
-        callbackToConfirm={removeKeyword}
-        type="moderate"
-      > */}
-        <WithTooltip text="remove tag from image" type="action">
+        <WithTooltip text="remove tag" type="action">
           <span
             className="absolute top-0 right-0 z-10 origin-bottom-left -translate-y-3 translate-x-3 cursor-pointer rounded-full bg-white p-1 text-xs text-gray-400 opacity-0 transition-all duration-75 ease-in-out hover:scale-110 hover:bg-warning hover:text-warning-content group-hover:opacity-100"
             onClick={() => removeTag(tag.id)}
@@ -74,7 +69,6 @@ const Tag = ({ tag }: { tag: ImageTag }) => {
             <RemoveIcon />
           </span>
         </WithTooltip>
-        {/* </WithWarning> */}
       </div>
     </div>
   );

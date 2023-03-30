@@ -3,14 +3,14 @@
 // click on match to submit;
 // input size - full width;
 
-import { type ImageTag } from "@prisma/client";
 import { useState } from "react";
+import { type ImageTag } from "@prisma/client";
 
-import { arrayDivergence, findEntityById } from "~/helpers/query-data";
-import useHovered from "~/hooks/useHovered";
 import { api } from "~/utils/api";
 import WithTooltip from "~/components/data-display/WithTooltip";
 import TextInput from "~/components/forms/TextInput";
+import { arrayDivergence, findEntityById } from "~/helpers/query-data";
+import useHovered from "~/hooks/useHovered";
 
 type Props = {
   parent: {
@@ -84,7 +84,7 @@ function Input({ input, parent }: InputProps) {
 
   const { refetch: findTagWithText } = api.imageTag.findTagWithText.useQuery(
     { text: input.value },
-    { enabled: false }
+    { enabled: false },
   );
 
   const handleSubmit = async () => {
@@ -102,7 +102,7 @@ function Input({ input, parent }: InputProps) {
 
     const tagIsRelatedParent = findEntityById(
       parent.imageTags,
-      matchingTagQuery.data.matchingTag.id
+      matchingTagQuery.data.matchingTag.id,
     );
 
     if (tagIsRelatedParent) {
@@ -120,7 +120,7 @@ function Input({ input, parent }: InputProps) {
           void handleSubmit();
         }}
       >
-        <div className="relative">
+        <div className="relative text-sm">
           <TextInput
             setValue={(value) => input.updateValue(value)}
             value={input.value}
@@ -162,10 +162,10 @@ function Select({ input, allImageTags, parent }: SelectProps) {
 
   return (
     <div
-      className={`absolute -bottom-2 w-full translate-y-full rounded-sm border border-base-200 bg-white py-sm px-xs text-sm shadow-lg transition-all delay-75 ease-in-out ${
+      className={`absolute -bottom-2 w-full translate-y-full rounded-sm border border-base-200 bg-white text-sm shadow-lg transition-all delay-75 ease-in-out ${
         show
-          ? "max-h-[200px] max-w-full overflow-y-auto opacity-100"
-          : "max-h-0 max-w-0 overflow-hidden  p-0 opacity-0"
+          ? "max-h-[200px] max-w-full overflow-y-auto py-sm px-xs opacity-100 "
+          : "max-h-0 max-w-0 overflow-hidden border-0 p-0 opacity-0"
       }`}
       {...hoverHandlers}
     >

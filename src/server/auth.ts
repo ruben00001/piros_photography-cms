@@ -34,7 +34,7 @@ declare module "next-auth" {
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    /*     async signIn({ account, profile }) {
+    async signIn({ account, profile }) {
       if (account?.provider === "google") {
         const isAdmin = await prisma.admin.count({
           where: { googleEmail: profile?.email },
@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
         return Boolean(isAdmin);
       }
       return false;
-    }, */
+    },
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;

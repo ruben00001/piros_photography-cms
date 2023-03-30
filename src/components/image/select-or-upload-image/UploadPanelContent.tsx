@@ -1,18 +1,17 @@
-import NextImage from "next/image";
 import { useState, type ChangeEvent } from "react";
+import NextImage from "next/image";
+import { toast } from "react-toastify";
 
+import { api } from "~/utils/api";
+import { ErrorIcon, FileImageIcon, TickIcon } from "~/components/Icon";
+import Spinner from "~/components/Spinner";
+import Toast from "~/components/data-display/Toast";
+import Tags from "~/components/image/select-or-upload-image/tags";
 import {
   StringArrStateProvider as TagsIdProvider,
   useStringArrStateContext as useTagsIdContext,
 } from "~/context/StringArrState";
-import { api } from "~/utils/api";
-
-import { ErrorIcon, FileImageIcon, TickIcon } from "~/components/Icon";
-import Tags from "~/components/image/select-or-upload-image/tags";
-import Spinner from "~/components/Spinner";
 import { handleUploadImage } from "~/helpers/cloudinary";
-import { toast } from "react-toastify";
-import Toast from "~/components/data-display/Toast";
 
 export type OnUploadImage = (arg0: {
   cloudinary_public_id: string;
@@ -65,7 +64,7 @@ const UploadFunctionality = ({
     {
       upload_preset: "signed",
     },
-    { enabled: false }
+    { enabled: false },
   );
 
   const handleCreateImage = async () => {
@@ -112,15 +111,17 @@ const UploadFunctionality = ({
 
   return (
     <div>
-      {imageFile ? (
-        <ImageFileDisplay file={imageFile} onLoad={setImageDimensions} />
-      ) : null}
-      <ImageFileInput isFile={Boolean(imageFile)} setFile={setImageFile} />
-      {imageFile ? (
-        <div className="mt-md">
-          <Tags />
-        </div>
-      ) : null}
+      <div className="max-h-[60vh] overflow-y-auto pr-xs">
+        {imageFile ? (
+          <ImageFileDisplay file={imageFile} onLoad={setImageDimensions} />
+        ) : null}
+        <ImageFileInput isFile={Boolean(imageFile)} setFile={setImageFile} />
+        {imageFile ? (
+          <div className="mt-md">
+            <Tags />
+          </div>
+        ) : null}
+      </div>
       <div className="mt-lg flex items-center justify-between pt-sm">
         <button
           className="my-btn my-btn-neutral"

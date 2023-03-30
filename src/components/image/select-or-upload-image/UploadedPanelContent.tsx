@@ -116,7 +116,7 @@ const ImagesGrid = ({
   return !imagesByQuery.length ? (
     <p className="text-gray-600">No matches</p>
   ) : (
-    <div className="grid cursor-pointer grid-cols-4 gap-sm">
+    <div className="grid cursor-pointer grid-cols-3 gap-sm pr-2 xl:grid-cols-4">
       {imagesByQuery.map((image) => (
         <Image
           image={image}
@@ -138,26 +138,26 @@ const Image = ({
   onSelectImage: OnSelectImage;
   closeModal: () => void;
 }) => {
-  const [containerRef, { width }] = useMeasure<HTMLDivElement>();
+  const [containerRef, { width: containerWidth }] =
+    useMeasure<HTMLDivElement>();
 
   return (
     <div
-      className="my-hover-bg flex flex-col rounded-lg border border-base-200 p-sm"
+      className="my-hover-bg flex aspect-square flex-col rounded-lg border border-base-200 p-sm"
       onClick={() => {
         onSelectImage({ imageId: image.id });
         closeModal();
       }}
       ref={containerRef}
     >
-      {width ? (
+      {containerWidth ? (
         <WithTooltip text="Click to add" type="action">
           <div className="flex flex-grow flex-col">
             <MyCldImage
               publicId={image.cloudinary_public_id}
               dimensions={calcImageDimensions({
                 constraint: {
-                  maxDecimal: { height: 1, width: 1 },
-                  value: { height: width, width },
+                  value: { height: containerWidth, width: containerWidth },
                 },
                 image: {
                   height: image.naturalHeight,

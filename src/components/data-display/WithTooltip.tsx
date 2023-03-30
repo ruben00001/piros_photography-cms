@@ -42,7 +42,7 @@ const WithTooltip = ({
       {show
         ? createPortal(
             <div
-              className={`z-40 whitespace-nowrap rounded-sm font-sans text-sm transition-opacity duration-75 ease-in-out ${
+              className={`z-50 whitespace-nowrap rounded-sm font-sans text-sm transition-opacity duration-75 ease-in-out ${
                 !show ? "invisible opacity-0" : "visible opacity-100"
               }`}
               {...getTooltipProps()}
@@ -67,7 +67,7 @@ const WithTooltip = ({
                 </div>
               )}
             </div>,
-            document.body
+            document.body,
           )
         : null}
     </>

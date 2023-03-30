@@ -36,18 +36,22 @@ export const calcImageDimensions = z
       image: z.object({ width: z.number(), height: z.number() }),
       constraint: z.object({
         value: z.object({ width: z.number(), height: z.number() }),
-        maxDecimal: z.object({
-          width: z.number().gt(0).lte(1),
-          height: z.number().gt(0).lte(1),
-        }),
+        maxDecimal: z.optional(
+          z.object({
+            width: z.number().gt(0).lte(1),
+            height: z.number().gt(0).lte(1),
+          }),
+        ),
       }),
-    })
+    }),
   )
   .implement(({ constraint, image }) => {
     const imageAspectRatio = image.width / image.height;
 
-    const maxWidth = constraint.value.width * constraint.maxDecimal.width;
-    const maxHeight = constraint.value.height * constraint.maxDecimal.height;
+    const maxWidth =
+      constraint.value.width * (constraint.maxDecimal?.width || 1);
+    const maxHeight =
+      constraint.value.height * (constraint.maxDecimal?.height || 1);
 
     let width = maxWidth;
     let height = width / imageAspectRatio;
