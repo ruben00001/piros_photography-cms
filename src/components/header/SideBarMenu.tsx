@@ -67,9 +67,7 @@ const PageLinks = () => {
       <PageLink route="/" text="Home" />
       <PageLink route="/albums" text="Albums" />
       <PageLink route="/videos" text="Videos" />
-      <div className="mt-sm">
-        <PageLink route="/about" text="About" />
-      </div>
+      <PageLink route="/about" text="About" />
       <div className="mt-sm">
         <PageLink route="/images" text="Images" />
       </div>
