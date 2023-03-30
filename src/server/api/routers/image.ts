@@ -18,6 +18,20 @@ export const imageRouter = createTRPCRouter({
       include: {
         tags: true,
         _count: { select: { albumCoverImages: true, albumImages: true } },
+        albumImages: {
+          select: {
+            album: {
+              select: {
+                title: true,
+              },
+            },
+          },
+        },
+        albumCoverImages: {
+          select: {
+            title: true,
+          },
+        },
       },
     });
   }),

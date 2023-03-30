@@ -26,6 +26,7 @@ const TextInput = ({
     input?: string;
   };
 }) => {
+  const [autoFocusReset, setAutoFocusReset] = useState(false);
   const [localIsFocused, setLocalIsFocused] = useState(false);
 
   const showPressEnterMessage =
@@ -49,7 +50,13 @@ const TextInput = ({
         placeholder={placeholder}
         type="text"
         autoComplete="off"
-        onFocus={() => {
+        autoFocus={false}
+        onFocus={(e) => {
+          if (!autoFocusReset) {
+            e.currentTarget.blur();
+            setAutoFocusReset(true);
+            return;
+          }
           setLocalIsFocused(true);
           if (onFocus) {
             onFocus();

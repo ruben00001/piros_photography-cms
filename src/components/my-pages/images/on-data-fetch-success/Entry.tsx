@@ -122,7 +122,7 @@ const Images = () => {
     <div>
       {!allImages?.length ? null : (
         <SearchInput
-          placeholder="Search by tag"
+          placeholder="Search by tag or album title"
           inputValue={tagQuery}
           setInputValue={setTagQuery}
         />
@@ -137,11 +137,10 @@ const Images = () => {
 const ImagesGrid = ({ query }: { query: string }) => {
   const { data } = api.image.imagesPageGetAll.useQuery();
   const allImages = data as NonNullable<typeof data>;
-  console.log("allImages:", allImages);
 
   const imagesByQuery = fuzzySearch({
     entities: allImages,
-    keys: ["tags.text"],
+    keys: ["tags.text", "albumImages.album.title", "albumCoverImages.title"],
     pattern: query,
   });
 

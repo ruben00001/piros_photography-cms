@@ -26,6 +26,7 @@ import {
   Upload,
   Warning,
   WarningCircle,
+  XCircle,
 } from "@phosphor-icons/react";
 
 export {
@@ -57,4 +58,5 @@ export {
   SignOut as SignOutIcon,
   Toolbox as UnderConstructionIcon,
   TagSimple as TagIcon,
+  XCircle as XCircleIcon,
 };

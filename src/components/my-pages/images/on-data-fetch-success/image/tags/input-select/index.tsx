@@ -70,6 +70,8 @@ function Input({ setIsFocused, updateValue, value }: InputProps) {
     },
   });
 
+  // ! prevent autofocus on input!!!
+
   return (
     <div className="relative inline-block">
       <form

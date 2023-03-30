@@ -86,16 +86,16 @@ const OpenImageModal = () => {
   return (
     <Modal
       button={({ open }) => (
-        <div
-          className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:brightness-90 group-hover/image:text-base-content"
-          onClick={open}
-        >
-          <WithTooltip text="Open image" yOffset={15}>
+        <WithTooltip text="Open image" yOffset={15}>
+          <div
+            className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:brightness-90 group-hover/image:text-base-content"
+            onClick={open}
+          >
             <span className="">
               <ExpandIcon />
             </span>
-          </WithTooltip>
-        </div>
+          </div>
+        </WithTooltip>
       )}
       panelContent={() => <OpenedImage />}
     />
@@ -148,21 +148,21 @@ const MenuDeleteModal = () => {
   return (
     <Modal
       button={({ open }) => (
-        <div
-          className={`rounded-md px-2 py-2 text-sm transition-all duration-75 ease-in-out hover:bg-my-alert ${
-            isUsed ? "cursor-not-allowed opacity-70" : "cursor-pointer"
-          }`}
-          onClick={() => (!isUsed ? open() : null)}
+        <WithTooltip
+          text={isUsed ? "Can't delete because in use" : "Delete image"}
+          yOffset={15}
         >
-          <WithTooltip
-            text={isUsed ? "Can't delete because in use" : "Delete image"}
-            yOffset={15}
+          <div
+            className={`rounded-md px-2 py-2 text-sm transition-all duration-75 ease-in-out hover:bg-my-alert ${
+              isUsed ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+            }`}
+            onClick={() => (!isUsed ? open() : null)}
           >
             <span className="text-my-alert-content">
               <DeleteIcon />
             </span>
-          </WithTooltip>
-        </div>
+          </div>
+        </WithTooltip>
       )}
       panelContent={({ close: closeModal }) => (
         <WarningPanel
@@ -194,16 +194,16 @@ const EditTagsModal = () => {
   return (
     <Modal
       button={({ open }) => (
-        <div
-          className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:brightness-90 group-hover/image:text-base-content"
-          onClick={open}
-        >
-          <WithTooltip text="Edit tags" yOffset={15}>
+        <WithTooltip text="Edit tags" yOffset={15}>
+          <div
+            className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:brightness-90 group-hover/image:text-base-content"
+            onClick={open}
+          >
             <span className="">
               <TagIcon />
             </span>
-          </WithTooltip>
-        </div>
+          </div>
+        </WithTooltip>
       )}
       panelContent={() => <EditTagsPanelContent />}
     />

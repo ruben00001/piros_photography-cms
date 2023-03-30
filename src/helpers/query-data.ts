@@ -15,7 +15,7 @@ export function fuzzySearch<TEntity extends { id: string }>({
 
   const fuse = new Fuse(entities, {
     includeScore: true,
-    keys: keys,
+    keys,
     minMatchCharLength: pattern.length < 2 ? 1 : pattern.length < 6 ? 2 : 4,
   });
 
