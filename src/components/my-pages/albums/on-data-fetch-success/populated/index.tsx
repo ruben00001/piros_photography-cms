@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { api } from "~/utils/api";
 import Toast from "~/components/data-display/Toast";
 import DndSortableContext from "~/components/dnd-kit/DndSortableContext";
+import DataTextInputForm from "~/components/forms/DataTextInputForm";
 import { AlbumProvider } from "~/components/my-pages/albums/_context";
 import {
   getReorderedEntities,
@@ -22,7 +23,10 @@ const Populated = () => {
 
   return (
     <div>
-      <div className="max-w-[400px]">
+      <div className="">
+        <Titles />
+      </div>
+      <div className="mt-lg max-w-[400px]">
         <AddAlbum />
       </div>
       <div className="mt-lg grid grid-cols-2 gap-xl">
@@ -39,6 +43,87 @@ const Populated = () => {
 };
 
 export default Populated;
+
+const Titles = () => {
+  return (
+    <div>
+      <Title />
+      <SubTitle />
+    </div>
+  );
+};
+
+const Title = () => {
+  const { data } = api.albumsPage.getText.useQuery(undefined, {
+    enabled: false,
+  });
+  const pageText = data as NonNullable<typeof data>;
+
+  const updateTitleMutation = api.albumsPage.updateTitle.useMutation({
+    onSuccess: () => {
+      toast(<Toast text="Title updated" type="success" />);
+    },
+    onError: () => {
+      toast(
+        <Toast text="Something went wrong updating the title" type="error" />,
+      );
+    },
+  });
+
+  return (
+    <div className="text-6xl">
+      <DataTextInputForm
+        input={{ initialValue: pageText.title, placeholder: "Page title..." }}
+        onSubmit={({ inputValue, onSuccess }) =>
+          updateTitleMutation.mutate(
+            { data: { text: inputValue } },
+            { onSuccess },
+          )
+        }
+        tooltip={{ text: "click to update page title" }}
+      />
+    </div>
+  );
+};
+
+const SubTitle = () => {
+  const { data } = api.albumsPage.getText.useQuery(undefined, {
+    enabled: false,
+  });
+  const pageText = data as NonNullable<typeof data>;
+
+  const updateTitleMutation = api.albumsPage.updateSubTitle.useMutation({
+    onSuccess: () => {
+      toast(<Toast text="Subtitle updated" type="success" />);
+    },
+    onError: () => {
+      toast(
+        <Toast
+          text="Something went wrong updating the subtitle"
+          type="error"
+        />,
+      );
+    },
+  });
+
+  return (
+    <div className="text-2xl">
+      <DataTextInputForm
+        input={{
+          initialValue: pageText.subTitle,
+          placeholder: "Page subtitle (optional)...",
+        }}
+        onSubmit={({ inputValue, onSuccess }) =>
+          updateTitleMutation.mutate(
+            { data: { text: inputValue } },
+            { onSuccess },
+          )
+        }
+        tooltip={{ text: "click to update page subtitle" }}
+      />
+    </div>
+  );
+};
 
 const DndSortableWrapper = ({ children }: { children: ReactElement[] }) => {
   const { data } = api.album.albumsPageGetAll.useQuery(undefined, {

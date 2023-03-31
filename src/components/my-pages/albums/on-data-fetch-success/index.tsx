@@ -10,7 +10,7 @@ const OnDataFetchSuccess = () => {
   return (
     <ContentBodyLayout maxWidth={1800}>
       <div className="p-lg">
-        <h1 className="text-xl text-gray-300">Albums Page</h1>
+        {/* <h1 className="text-xl text-gray-300">Albums Page</h1> */}
         <div>
           {!allAlbums!.length ? (
             <div className="mt-lg">

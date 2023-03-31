@@ -11,10 +11,16 @@ export default function PageDataFetchInit({
 }
 
 const FetchAlbumsWrapper = ({ children }: { children: ReactElement }) => {
-  const { isFetchedAfterMount, isInitialLoading, isError } =
-    api.album.albumsPageGetAll.useQuery();
+  const {
+    isInitialLoading: isInitialLoadingGetAlbums,
+    isError: isGetAlbumsError,
+  } = api.album.albumsPageGetAll.useQuery();
+  const {
+    isInitialLoading: isInitialLoadingPageText,
+    isError: isGetPageTextError,
+  } = api.albumsPage.getText.useQuery();
 
-  if (isInitialLoading) {
+  if (isInitialLoadingGetAlbums || isInitialLoadingPageText) {
     return (
       <div className="my-screen-center z-50 bg-white/60">
         <p className="font-mono">Loading...</p>
@@ -22,7 +28,7 @@ const FetchAlbumsWrapper = ({ children }: { children: ReactElement }) => {
     );
   }
 
-  if (isFetchedAfterMount && isError) {
+  if (isGetAlbumsError || isGetPageTextError) {
     return (
       <div className="my-screen-center">
         <div className="max-w-xl">
