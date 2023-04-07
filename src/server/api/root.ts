@@ -6,6 +6,7 @@ import { albumsPageRouter } from "./routers/albumsPage";
 import { imageRouter } from "./routers/image";
 import { imageTagRouter } from "./routers/image-tag";
 import { imageAndAlbumTransactionRouter } from "./routers/transactions/ImageAndAlbum";
+import { vercelRouter } from "./routers/vercel";
 import { youtubeVideoRouter } from "./routers/youtubeVideo";
 
 export const appRouter = createTRPCRouter({
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   youtubeVideo: youtubeVideoRouter,
   aboutPage: aboutPageRouter,
   albumsPage: albumsPageRouter,
+  vercel: vercelRouter,
 });
 
 export type AppRouter = typeof appRouter;

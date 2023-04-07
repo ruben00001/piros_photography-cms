@@ -1,4 +1,5 @@
 import { useEffect, type ReactElement } from "react";
+
 import { ModalPanelWrapper } from "./PanelWrapper";
 import { ModalVisibilityProvider } from "./VisibiltyContext";
 
@@ -8,8 +9,8 @@ export const Modal = ({
   styles,
   onVisibilityChange,
 }: {
-  button: (arg0: { open: () => void }) => ReactElement;
-  panelContent: (arg0: { close: () => void }) => ReactElement;
+  button: ((arg0: { open: () => void }) => ReactElement) | ReactElement;
+  panelContent: ReactElement | ((arg0: { close: () => void }) => ReactElement);
   styles?: { parentPanel?: string };
   onVisibilityChange?: { open?: () => void; close?: () => void };
 }) => {
@@ -17,9 +18,11 @@ export const Modal = ({
     <ModalVisibilityProvider>
       {({ open, close, isOpen }) => (
         <>
-          {button({ open })}
+          {typeof button === "function" ? button({ open }) : button}
           <ModalPanelWrapper isOpen={isOpen} closeModal={close} styles={styles}>
-            {panelContent({ close })}
+            {typeof panelContent === "function"
+              ? panelContent({ close })
+              : panelContent}
           </ModalPanelWrapper>
           {onVisibilityChange ? (
             <OnVisibilityChange

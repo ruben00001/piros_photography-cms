@@ -5,6 +5,7 @@ import {
   CaretDown,
   CaretRight,
   Check,
+  CloudArrowUp,
   CornersOut,
   DotsSixVertical,
   DotsThreeOutline,
@@ -59,4 +60,5 @@ export {
   Toolbox as UnderConstructionIcon,
   TagSimple as TagIcon,
   XCircle as XCircleIcon,
+  CloudArrowUp as DeployIcon,
 };
