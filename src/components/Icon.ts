@@ -1,4 +1,5 @@
 import {
+  ArrowClockwise,
   ArrowSquareLeft,
   ArrowSquareRight,
   CaretDoubleRight,
@@ -61,4 +62,5 @@ export {
   TagSimple as TagIcon,
   XCircle as XCircleIcon,
   CloudArrowUp as DeployIcon,
+  ArrowClockwise as RefreshIcon,
 };

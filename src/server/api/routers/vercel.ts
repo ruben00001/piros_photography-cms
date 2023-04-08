@@ -3,7 +3,7 @@ import axios from "axios";
 import { z } from "zod";
 
 import { env } from "~/env.mjs";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 const headers = {
   Authorization: `Bearer ${env.NEXT_PUBLIC_VERCEL_AUTH_KEY}`,
@@ -30,15 +30,13 @@ const deploymentsResValidator = z.object({
 });
 
 export const vercelRouter = createTRPCRouter({
-  getLatestDeploy: publicProcedure.query(async () => {
+  getLatestDeploy: protectedProcedure.query(async () => {
     const res = await axios.get(
       `https://api.vercel.com/v9/projects/${env.NEXT_PUBLIC_VERCEL_FRONTEND_PROJECT_ID}`,
       {
         headers,
       },
     );
-
-    console.log("res:", res.data);
 
     if (res.status !== 200) {
       throw new TRPCError({
@@ -50,6 +48,14 @@ export const vercelRouter = createTRPCRouter({
 
     const validated = deploymentsResValidator.parse(res);
 
-    return validated;
+    return validated.data.latestDeployments[0];
+  }),
+
+  deploy: protectedProcedure.mutation(async () => {
+    await axios.post(
+      `https://api.vercel.com/v1/integrations/deploy/${env.NEXT_PUBLIC_VERCEL_FRONTEND_PROJECT_ID}/${env.NEXT_PUBLIC_VERCEL_FRONTEND_DEPLOY_HOOK_KEY}`,
+    );
+
+    return null;
   }),
 });

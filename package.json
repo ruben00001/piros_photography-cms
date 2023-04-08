@@ -33,6 +33,7 @@
     "dompurify": "^3.0.1",
     "fuse.js": "^6.6.2",
     "immer": "^9.0.19",
+    "javascript-time-ago": "^2.5.9",
     "next": "^13.2.1",
     "next-auth": "^4.19.0",
     "next-cloudinary": "^4.0.0",
