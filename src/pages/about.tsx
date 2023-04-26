@@ -1,13 +1,13 @@
-import { AdminAuthenticatedLayout, SiteLayout } from "~/components/layout";
-import PageContent from "~/components/my-pages/about/Entry";
+import Layout from "~/components/layouts";
+import PageContent from "~/about-page/Entry";
 
 const AboutPage = () => {
   return (
-    <SiteLayout>
-      <AdminAuthenticatedLayout>
+    <Layout.Site>
+      <Layout.Admin>
         <PageContent />
-      </AdminAuthenticatedLayout>
-    </SiteLayout>
+      </Layout.Admin>
+    </Layout.Site>
   );
 };
 

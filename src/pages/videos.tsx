@@ -1,13 +1,13 @@
-import { AdminAuthenticatedLayout, SiteLayout } from "~/components/layout";
-import PageContent from "~/components/my-pages/videos-page/Entry";
+import PageContent from "~/components/+my-pages/videos/Entry";
+import Layout from "~/components/layouts";
 
 const VideosPage = () => {
   return (
-    <SiteLayout title={{ pageName: "Videos" }}>
-      <AdminAuthenticatedLayout>
+    <Layout.Site title={{ pageName: "Videos" }}>
+      <Layout.Admin>
         <PageContent />
-      </AdminAuthenticatedLayout>
-    </SiteLayout>
+      </Layout.Admin>
+    </Layout.Site>
   );
 };
 

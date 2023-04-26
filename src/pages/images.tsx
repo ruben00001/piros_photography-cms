@@ -1,14 +1,12 @@
-import { AdminAuthenticatedLayout, SiteLayout } from "~/components/layout";
-import PageContent from "~/components/my-pages/images/Entry";
+import PageContent from "~/components/+my-pages/images/Entry";
+import Layout from "~/components/layouts";
 
-const ImagesPage = () => {
-  return (
-    <SiteLayout>
-      <AdminAuthenticatedLayout>
-        <PageContent />
-      </AdminAuthenticatedLayout>
-    </SiteLayout>
-  );
-};
+const ImagesPage = () => (
+  <Layout.Site>
+    <Layout.Admin>
+      <PageContent />
+    </Layout.Admin>
+  </Layout.Site>
+);
 
 export default ImagesPage;

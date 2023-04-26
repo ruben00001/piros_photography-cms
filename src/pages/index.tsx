@@ -1,22 +1,14 @@
 import { type NextPage } from "next";
 
-import {
-  AdminAuthenticatedLayout,
-  ContentBodyLayout,
-  SiteLayout,
-} from "~/components/layout";
+import Layout from "~/components/layouts";
 import PageContent from "~/home/Entry";
 
-const HomePage: NextPage = () => {
-  return (
-    <SiteLayout>
-      <AdminAuthenticatedLayout>
-        <ContentBodyLayout>
-          <PageContent />
-        </ContentBodyLayout>
-      </AdminAuthenticatedLayout>
-    </SiteLayout>
-  );
-};
+const HomePage: NextPage = () => (
+  <Layout.Site>
+    <Layout.Admin>
+      <PageContent />
+    </Layout.Admin>
+  </Layout.Site>
+);
 
 export default HomePage;

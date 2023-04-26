@@ -1,12 +1,12 @@
-import { AdminAuthenticatedLayout, SiteLayout } from "~/components/layout";
-import AlbumPage from "~/components/my-pages/album";
+import AlbumPage from "~/components/+my-pages/album";
+import Layout from "~/components/layouts";
 
 export default function Page() {
   return (
-    <SiteLayout title={{ pageName: "Album" }}>
-      <AdminAuthenticatedLayout>
+    <Layout.Site title={{ pageName: "Album" }}>
+      <Layout.Admin>
         <AlbumPage />
-      </AdminAuthenticatedLayout>
-    </SiteLayout>
+      </Layout.Admin>
+    </Layout.Site>
   );
 }
