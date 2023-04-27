@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 const myId = "about-text-id";
 
@@ -13,7 +17,7 @@ export const aboutPageRouter = createTRPCRouter({
     });
   }),
 
-  updateBody: protectedProcedure
+  updateBody: adminProcedure
     .input(z.object({ data: z.object({ text: z.string() }) }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.aboutPage.update({

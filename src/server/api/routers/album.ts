@@ -1,7 +1,11 @@
 import { z } from "zod";
 
 import { getReorderedEntities } from "~/helpers/process-data";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 export const albumRouter = createTRPCRouter({
   albumsPageGetAll: protectedProcedure.query(({ ctx }) => {
@@ -24,11 +28,10 @@ export const albumRouter = createTRPCRouter({
           coverImage: true,
           images: { include: { image: true }, orderBy: { index: "asc" } },
         },
-        // include: { coverImage: true, images: input.includeImages || false },
       });
     }),
 
-  create: protectedProcedure
+  create: adminProcedure
     .input(z.object({ title: z.string(), index: z.optional(z.number()) }))
     .mutation(async ({ ctx, input }) => {
       const index = input.index || (await ctx.prisma.album.count());
@@ -42,44 +45,7 @@ export const albumRouter = createTRPCRouter({
       });
     }),
 
-  /*   createPopulate: protectedProcedure
-    .input(
-      z.object({
-        title: z.string(),
-        index: z.number(),
-        cloudinary_public_ids: z.array(z.string()),
-        coverImageCloudPubId: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const images = await ctx.prisma.image.findMany({
-        where: { cloudinary_public_id: { in: input.cloudinary_public_ids } },
-      });
-
-      const coverImage = await ctx.prisma.image.findFirst({
-        where: { cloudinary_public_id: input.coverImageCloudPubId },
-      });
-      console.log("coverImage:", coverImage);
-
-      return ctx.prisma.album.create({
-        data: {
-          title: input.title,
-          published: true,
-          index: input.index,
-          images: {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            // create: [{ imageId: images[0]!.id, index: 0 }],
-            create: images.map((image, index) => ({
-              imageId: image.id,
-              index,
-            })),
-          },
-          coverImageId: coverImage?.id,
-        },
-      });
-    }), */
-
-  updateTitle: protectedProcedure
+  updateTitle: adminProcedure
     .input(z.object({ albumId: z.string(), updatedTitle: z.string() }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.album.update({
@@ -90,7 +56,7 @@ export const albumRouter = createTRPCRouter({
       });
     }),
 
-  updateDescription: protectedProcedure
+  updateDescription: adminProcedure
     .input(z.object({ albumId: z.string(), updatedDescription: z.string() }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.album.update({
@@ -101,7 +67,7 @@ export const albumRouter = createTRPCRouter({
       });
     }),
 
-  checkTitleIsUnique: protectedProcedure
+  checkTitleIsUnique: adminProcedure
     .input(z.object({ title: z.string() }))
     .query(async ({ ctx, input }) => {
       const matchingAlbum = await ctx.prisma.album.findFirst({
@@ -116,7 +82,7 @@ export const albumRouter = createTRPCRouter({
       return Boolean(!matchingAlbum);
     }),
 
-  updateCoverImage: protectedProcedure
+  updateCoverImage: adminProcedure
     .input(z.object({ albumId: z.string(), imageId: z.string() }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.album.update({
@@ -133,7 +99,7 @@ export const albumRouter = createTRPCRouter({
       });
     }),
 
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(z.object({ album: z.object({ id: z.string(), index: z.number() }) }))
     .mutation(async ({ ctx, input }) => {
       const albumsToUpdate = await ctx.prisma.album.findMany({
@@ -160,7 +126,7 @@ export const albumRouter = createTRPCRouter({
       return ctx.prisma.$transaction([...updateFuncs, deleteFunc]);
     }),
 
-  reorder: protectedProcedure
+  reorder: adminProcedure
     .input(
       z.object({
         albums: z.array(z.object({ id: z.string(), index: z.number() })),
@@ -185,7 +151,7 @@ export const albumRouter = createTRPCRouter({
       return ctx.prisma.$transaction(updateFuncs);
     }),
 
-  updatePublishStatus: protectedProcedure
+  updatePublishStatus: adminProcedure
     .input(z.object({ albumId: z.string(), isPublished: z.boolean() }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.album.update({
@@ -198,7 +164,7 @@ export const albumRouter = createTRPCRouter({
       });
     }),
 
-  addImage: protectedProcedure
+  addImage: adminProcedure
     .input(
       z.object({
         where: z.object({ albumId: z.string() }),
@@ -223,7 +189,7 @@ export const albumRouter = createTRPCRouter({
       });
     }),
 
-  updateImage: protectedProcedure
+  updateImage: adminProcedure
     .input(
       z.object({
         where: z.object({ albumId: z.string(), imageId: z.string() }),
@@ -248,7 +214,7 @@ export const albumRouter = createTRPCRouter({
       });
     }),
 
-  deleteImage: protectedProcedure
+  deleteImage: adminProcedure
     .input(
       z.object({
         where: z.object({ albumId: z.string(), imageId: z.string() }),
@@ -292,7 +258,7 @@ export const albumRouter = createTRPCRouter({
       return ctx.prisma.$transaction([deleteFunc, ...updateFuncs]);
     }),
 
-  reorderImages: protectedProcedure
+  reorderImages: adminProcedure
     .input(
       z.object({
         albumImages: z.array(z.object({ id: z.string(), index: z.number() })),

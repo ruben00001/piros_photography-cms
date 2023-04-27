@@ -10,7 +10,7 @@ export const SiteLayout = ({
 }) => (
   <>
     <Head>
-      <title>Piros Photography{title ? ` - ${title.pageName}` : ""}</title>
+      <title>{title ? ` - ${title.pageName}` : "Piros Photography"}</title>
       <link rel="icon" href="/favicon.ico" />
     </Head>
     {children}

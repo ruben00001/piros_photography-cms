@@ -1,7 +1,7 @@
 import { type ReactElement } from "react";
 
 import { MyMenu, MyModal } from "~/components/ui-display";
-import { ImageIcon, UploadIcon } from "~/components/ui-elements/Icon";
+import { ImageIcon, UploadIcon } from "~/components/ui-elements";
 import { ImageModalsVisibilityProvider } from "../ImageModalsVisibiltyContext";
 import { UploadPanelContent, type OnUploadImage } from "../UploadPanelContent";
 import {

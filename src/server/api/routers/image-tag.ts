@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 export const imageTagRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
@@ -17,7 +21,7 @@ export const imageTagRouter = createTRPCRouter({
       });
     }),
 
-  create: protectedProcedure
+  create: adminProcedure
     .input(z.object({ text: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.imageTag.create({
@@ -27,7 +31,7 @@ export const imageTagRouter = createTRPCRouter({
       });
     }),
 
-  updateText: protectedProcedure
+  updateText: adminProcedure
     .input(z.object({ tagId: z.string(), updatedText: z.string() }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.imageTag.update({

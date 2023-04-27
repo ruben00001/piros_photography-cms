@@ -5,8 +5,12 @@ import { useMeasure } from "react-use";
 
 import { api } from "~/utils/api";
 import { MyToast, MyTransition } from "~/components/ui-display";
-import { MySpinner } from "~/components/ui-elements";
-import { ErrorIcon, PlusIcon, TickIcon } from "~/components/ui-elements/Icon";
+import {
+  ErrorIcon,
+  MySpinner,
+  PlusIcon,
+  TickIcon,
+} from "~/components/ui-elements";
 
 const AddAlbum = ({ centerButton }: { centerButton?: boolean }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);

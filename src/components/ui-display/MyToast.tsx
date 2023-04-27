@@ -3,7 +3,7 @@ import {
   ErrorIcon,
   InfoIcon,
   SuccessIcon,
-} from "../ui-elements/Icon";
+} from "../ui-elements/PhosphorIcons";
 
 export const MyToast = ({
   text,

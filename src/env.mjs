@@ -22,6 +22,7 @@ const server = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   CLOUDINARY_API_SECRET: z.string(),
+  GUEST_PASSWORD: z.string(),
 });
 
 /**
@@ -58,6 +59,7 @@ const processEnv = {
   NEXT_PUBLIC_VERCEL_AUTH_KEY: process.env.NEXT_PUBLIC_VERCEL_AUTH_KEY,
   NEXT_PUBLIC_VERCEL_FRONTEND_DEPLOY_HOOK_KEY:
     process.env.NEXT_PUBLIC_VERCEL_FRONTEND_DEPLOY_HOOK_KEY,
+  GUEST_PASSWORD: process.env.GUEST_PASSWORD,
 };
 
 // Don't touch the part below

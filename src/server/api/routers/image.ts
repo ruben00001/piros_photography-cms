@@ -2,7 +2,11 @@ import { v2 as cloudinary } from "cloudinary";
 import { z } from "zod";
 
 import { env } from "~/env.mjs";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 export const imageRouter = createTRPCRouter({
   uploadPanelGetAll: protectedProcedure.query(({ ctx }) => {
@@ -52,7 +56,7 @@ export const imageRouter = createTRPCRouter({
     });
   }),
 
-  createSignature: protectedProcedure
+  createSignature: adminProcedure
     .input(z.object({ upload_preset: z.literal("signed") }))
     .query(({ input: { upload_preset } }) => {
       const timestamp = Math.round(new Date().getTime() / 1000);
@@ -65,7 +69,7 @@ export const imageRouter = createTRPCRouter({
       return { signature, timestamp };
     }),
 
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         cloudinary_public_id: z.string(),
@@ -89,7 +93,7 @@ export const imageRouter = createTRPCRouter({
       });
     }),
 
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(z.object({ imageId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const deleteFunc = ctx.prisma.image.delete({
@@ -98,17 +102,10 @@ export const imageRouter = createTRPCRouter({
         },
       });
 
-      // get related albumImageIds
-      // const connectedImages =
-
-      // get related albums
-
-      // update index
-
       return ctx.prisma.$transaction([deleteFunc]);
     }),
 
-  addTag: protectedProcedure
+  addTag: adminProcedure
     .input(
       z.object({
         where: z.object({ imageId: z.string() }),
@@ -135,7 +132,7 @@ export const imageRouter = createTRPCRouter({
       });
     }),
 
-  removeTag: protectedProcedure
+  removeTag: adminProcedure
     .input(
       z.object({
         where: z.object({ imageId: z.string() }),

@@ -1,5 +1,5 @@
 import Layout from "~/components/layouts";
-import { UnderConstructionIcon } from "~/components/ui-elements/Icon";
+import { UnderConstructionIcon } from "~/components/ui-elements";
 
 const HomePage = () => {
   return (

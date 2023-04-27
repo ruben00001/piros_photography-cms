@@ -59,6 +59,10 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  pages: {
+    signIn: "/auth/sign-in",
+    error: "/auth/error",
+  },
 };
 
 /**

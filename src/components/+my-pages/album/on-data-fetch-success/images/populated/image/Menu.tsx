@@ -11,11 +11,7 @@ import {
   type OnUploadImage,
 } from "~/components/site-parts/select-or-upload-image";
 import { MyModal, MyToast, WithTooltip } from "~/components/ui-display";
-import {
-  DeleteIcon,
-  ExpandIcon,
-  ImageIcon,
-} from "~/components/ui-elements/Icon";
+import { DeleteIcon, ExpandIcon, ImageIcon } from "~/components/ui-elements";
 import { WarningPanel } from "~/components/ui-written";
 import OpenedImage from "./OpenedImage";
 

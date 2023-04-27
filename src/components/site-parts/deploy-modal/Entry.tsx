@@ -85,7 +85,7 @@ const UploadButton = () => {
         ) : null}
       </div>
       {deployMutation.error ? (
-        <p className="mt-1 text-sm text-my-error-content">
+        <p className="mt-1 text-sm lowercase text-my-error-content">
           {deployMutation.error.message}
         </p>
       ) : null}

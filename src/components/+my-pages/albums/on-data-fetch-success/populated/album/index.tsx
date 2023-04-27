@@ -7,7 +7,7 @@ import { api } from "~/utils/api";
 import { useAlbumContext } from "~/components/+my-pages/albums/_context";
 import { DataTextInputForm, DndKit } from "~/components/ui-compounds";
 import { MyToast, WithTooltip } from "~/components/ui-display";
-import { GoToPageIcon } from "~/components/ui-elements/Icon";
+import { GoToPageIcon } from "~/components/ui-elements";
 import CoverImage from "./CoverImage";
 import AlbumMenu from "./Menu";
 

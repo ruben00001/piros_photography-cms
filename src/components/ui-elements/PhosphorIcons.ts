@@ -13,6 +13,7 @@ import {
   FileImage,
   FileMinus,
   FolderSimplePlus,
+  GoogleLogo,
   HandsClapping,
   Image,
   Info,
@@ -26,6 +27,7 @@ import {
   Toolbox,
   Trash,
   Upload,
+  User,
   Warning,
   WarningCircle,
   XCircle,
@@ -63,4 +65,6 @@ export {
   XCircle as XCircleIcon,
   CloudArrowUp as DeployIcon,
   ArrowClockwise as RefreshIcon,
+  User as UserIcon,
+  GoogleLogo as GoogleLogoIcon,
 };

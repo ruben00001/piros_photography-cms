@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { api } from "~/utils/api";
 import { useAlbumContext } from "~/components/+my-pages/album/_context";
 import { MyMenu, MyModal, MyToast, WithTooltip } from "~/components/ui-display";
-import { ComponentMenuIcon, DeleteIcon } from "~/components/ui-elements/Icon";
+import { ComponentMenuIcon, DeleteIcon } from "~/components/ui-elements";
 import { WarningPanel } from "~/components/ui-written";
 import CoverImage from "./CoverImage";
 

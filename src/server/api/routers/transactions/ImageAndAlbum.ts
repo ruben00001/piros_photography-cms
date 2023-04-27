@@ -1,10 +1,10 @@
 import { uid } from "uid";
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { adminProcedure, createTRPCRouter } from "~/server/api/trpc";
 
 export const imageAndAlbumTransactionRouter = createTRPCRouter({
-  createImageAndAddToBody: protectedProcedure
+  createImageAndAddToBody: adminProcedure
     .input(
       z.object({
         where: z.object({ albumId: z.string() }),
@@ -17,7 +17,7 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
           }),
           albumImage: z.object({ index: z.number() }),
         }),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       const newImageId = uid();
@@ -51,7 +51,7 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
       return ctx.prisma.$transaction([createImage, addImageToAlbum]);
     }),
 
-  createImageAndUpdateBodyImage: protectedProcedure
+  createImageAndUpdateBodyImage: adminProcedure
     .input(
       z.object({
         where: z.object({ albumId: z.string(), imageId: z.string() }),
@@ -63,7 +63,7 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
             tagIds: z.optional(z.array(z.string())),
           }),
         }),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       const newImageId = uid();
@@ -101,7 +101,7 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
       return ctx.prisma.$transaction([createImage, updateBodyImage]);
     }),
 
-  createImageAndUpdateCoverImage: protectedProcedure
+  createImageAndUpdateCoverImage: adminProcedure
     .input(
       z.object({
         where: z.object({ albumId: z.string() }),
@@ -113,7 +113,7 @@ export const imageAndAlbumTransactionRouter = createTRPCRouter({
             tagIds: z.optional(z.array(z.string())),
           }),
         }),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       const newImageId = uid();

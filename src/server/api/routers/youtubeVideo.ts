@@ -1,23 +1,28 @@
 import { z } from "zod";
+
 import { getReorderedEntities } from "~/helpers/process-data";
 import { getYoutubeVideoIdFromUrl } from "~/helpers/youtube";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 export const youtubeVideoRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.youtubeVideo.findMany({ orderBy: { index: "asc" } });
   }),
 
-  create: protectedProcedure
+  create: adminProcedure
     .input(
       z.object({
         index: z.number(),
         youtubeUrl: z
           .string()
           .regex(
-            /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
+            /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/,
           ),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       const youtubeVideoId = getYoutubeVideoIdFromUrl({
@@ -33,12 +38,12 @@ export const youtubeVideoRouter = createTRPCRouter({
       });
     }),
 
-  updateTitle: protectedProcedure
+  updateTitle: adminProcedure
     .input(
       z.object({
         where: z.object({ id: z.string() }),
         data: z.object({ title: z.string() }),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.youtubeVideo.update({
@@ -49,12 +54,12 @@ export const youtubeVideoRouter = createTRPCRouter({
       });
     }),
 
-  updateDescription: protectedProcedure
+  updateDescription: adminProcedure
     .input(
       z.object({
         where: z.object({ id: z.string() }),
         data: z.object({ description: z.string() }),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.youtubeVideo.update({
@@ -65,11 +70,11 @@ export const youtubeVideoRouter = createTRPCRouter({
       });
     }),
 
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(
       z.object({
         where: z.object({ id: z.string(), index: z.number() }),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const deleteFunc = ctx.prisma.youtubeVideo.delete({
@@ -90,13 +95,13 @@ export const youtubeVideoRouter = createTRPCRouter({
         ctx.prisma.youtubeVideo.update({
           where: { id: youtubeVideo.id },
           data: { index: youtubeVideo.index - 1 },
-        })
+        }),
       );
 
       return ctx.prisma.$transaction([...updateFuncs, deleteFunc]);
     }),
 
-  reorder: protectedProcedure
+  reorder: adminProcedure
     .input(
       z.object({
         where: z.object({
@@ -106,7 +111,7 @@ export const youtubeVideoRouter = createTRPCRouter({
         currData: z.object({
           allVideos: z.array(z.object({ id: z.string(), index: z.number() })),
         }),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       const updateFuncs = getReorderedEntities({
@@ -119,7 +124,7 @@ export const youtubeVideoRouter = createTRPCRouter({
             id: video.id,
           },
           data: { index: video.index },
-        })
+        }),
       );
 
       return ctx.prisma.$transaction(updateFuncs);

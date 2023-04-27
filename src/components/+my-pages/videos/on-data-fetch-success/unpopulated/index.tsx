@@ -1,4 +1,4 @@
-import { AddFirstAlbumIcon } from "~/components/ui-elements/Icon";
+import { AddFirstAlbumIcon } from "~/components/ui-elements";
 import AddVideo from "./AddVideo";
 
 const Unpopulated = () => {

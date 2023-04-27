@@ -1,6 +1,6 @@
 import { MyTransition } from "../ui-display";
 import { MySpinner } from "../ui-elements";
-import { ErrorIcon, InfoIcon, TickIcon } from "../ui-elements/Icon";
+import { ErrorIcon, InfoIcon, TickIcon } from "../ui-elements/PhosphorIcons";
 
 type OperationStatus = "error" | "idle" | "loading" | "success";
 

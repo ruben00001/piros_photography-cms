@@ -4,12 +4,12 @@ import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
 import { MyToast } from "~/components/ui-display";
-import { MySpinner } from "~/components/ui-elements";
 import {
   ErrorIcon,
   FileImageIcon,
+  MySpinner,
   TickIcon,
-} from "~/components/ui-elements/Icon";
+} from "~/components/ui-elements";
 import {
   StringArrStateProvider as TagsIdProvider,
   useStringArrStateContext as useTagsIdContext,

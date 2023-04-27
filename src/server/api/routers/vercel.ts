@@ -3,7 +3,11 @@ import axios from "axios";
 import { z } from "zod";
 
 import { env } from "~/env.mjs";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 const headers = {
   Authorization: `Bearer ${env.NEXT_PUBLIC_VERCEL_AUTH_KEY}`,
@@ -51,14 +55,7 @@ export const vercelRouter = createTRPCRouter({
     return validated.data.latestDeployments[0];
   }),
 
-  deploy: protectedProcedure.mutation(async ({ ctx }) => {
-    if (ctx.session.user.role !== "ADMIN") {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        cause: "Not authorised",
-        message: "Not authorised",
-      });
-    }
+  deploy: adminProcedure.mutation(async () => {
     await axios.post(
       `https://api.vercel.com/v1/integrations/deploy/${env.NEXT_PUBLIC_VERCEL_FRONTEND_PROJECT_ID}/${env.NEXT_PUBLIC_VERCEL_FRONTEND_DEPLOY_HOOK_KEY}`,
     );

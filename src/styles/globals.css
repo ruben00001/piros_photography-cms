@@ -42,3 +42,8 @@
     @apply fixed inset-0 grid place-items-center;
   }
 }
+
+body,
+.__next-auth-theme-light {
+  background-color: "white" !important;
+}

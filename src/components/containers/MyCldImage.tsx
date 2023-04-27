@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CldImage } from "next-cloudinary";
 
-import { SpinnerIcon } from "../ui-elements/Icon";
+import { SpinnerIcon } from "../ui-elements/PhosphorIcons";
 
 export const MyCldImage = ({
   publicId,

@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "~/server/api/trpc";
 
 const myId = "albums-page-id";
 
@@ -13,7 +17,7 @@ export const albumsPageRouter = createTRPCRouter({
     });
   }),
 
-  updateTitle: protectedProcedure
+  updateTitle: adminProcedure
     .input(z.object({ data: z.object({ text: z.string() }) }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.albumsPage.update({
@@ -24,7 +28,7 @@ export const albumsPageRouter = createTRPCRouter({
       });
     }),
 
-  updateSubTitle: protectedProcedure
+  updateSubTitle: adminProcedure
     .input(z.object({ data: z.object({ text: z.string() }) }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.albumsPage.update({
