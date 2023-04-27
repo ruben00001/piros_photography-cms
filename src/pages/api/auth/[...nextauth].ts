@@ -2,8 +2,13 @@ import { randomUUID } from "crypto";
 import { type NextApiRequest, type NextApiResponse } from "next";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { type Role } from "@prisma/client";
 import Cookies from "cookies";
-import NextAuth, { type NextAuthOptions } from "next-auth";
+import NextAuth, {
+  type DefaultSession,
+  type DefaultUser,
+  type NextAuthOptions,
+} from "next-auth";
 import { decode, encode } from "next-auth/jwt";
 import CredentialProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -20,7 +25,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 export default handler;
 
-/* declare module "next-auth" {
+declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
@@ -32,7 +37,7 @@ export default handler;
   interface User extends DefaultUser {
     role: Role;
   }
-} */
+}
 
 export function requestWrapper(
   req: NextApiRequest,
@@ -129,26 +134,20 @@ export function requestWrapper(
         clientSecret: env.GOOGLE_CLIENT_SECRET,
       }),
       CredentialProvider({
-        name: "CredentialProvider",
+        name: "Guest Password",
         credentials: {
-          email: { label: "Email", type: "text", placeholder: "jsmith" },
-          password: { label: "Password", type: "password" },
+          password: { label: "Guest Password", type: "password" },
         },
         async authorize(credentials) {
-          console.log(credentials);
+          if (credentials?.password !== env.GUEST_PASSWORD) return null;
 
-          // verifying if credential email exists on db
-          const user = await prisma.user.findUnique({
+          const user = await prisma.user.findFirst({
             where: {
-              email: credentials?.email,
+              role: "GUEST",
             },
           });
 
           if (!user) return null;
-
-          // if (user.password === null) return null;
-
-          // if (user.password !== credentials?.password) return null;
 
           return user;
         },

@@ -23,7 +23,7 @@ export const AdminAuthenticatedLayout = ({
         void router.push("/api/auth/signin");
       }, 500);
     }
-    if (status === "authenticated" && sessionData.user.role !== "ADMIN") {
+    if (status === "authenticated" && sessionData.user.role === "USER") {
       setTimeout(() => {
         void signOut();
         void router.push("/api/auth/signin");
@@ -34,7 +34,7 @@ export const AdminAuthenticatedLayout = ({
   if (
     status === "loading" ||
     status === "unauthenticated" ||
-    (status === "authenticated" && sessionData.user.role !== "ADMIN")
+    (status === "authenticated" && sessionData.user.role === "USER")
   ) {
     return (
       <LoadingScreen
