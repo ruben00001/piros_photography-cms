@@ -144,7 +144,9 @@ const Image = ({
 
   return (
     <div
-      className="my-hover-bg flex aspect-square flex-col rounded-lg border border-base-200 p-sm"
+      className={`my-hover-bg flex aspect-square flex-col rounded-lg border border-base-200 p-sm ${
+        !isAdmin ? "cursor-not-allowed" : ""
+      }`}
       onClick={() => {
         if (!isAdmin) {
           return;

@@ -138,7 +138,9 @@ const UploadFunctionality = ({
         </button>
         {!imageFile ? null : (
           <button
-            className="my-btn my-btn-action"
+            className={`my-btn my-btn-action ${
+              !isAdmin ? "cursor-not-allowed" : ""
+            }`}
             onClick={() => void handleCreateImage()}
             type="button"
           >

@@ -44,14 +44,12 @@ const Populated = () => {
 
 export default Populated;
 
-const Titles = () => {
-  return (
-    <div>
-      <Title />
-      <SubTitle />
-    </div>
-  );
-};
+const Titles = () => (
+  <div>
+    <Title />
+    <SubTitle />
+  </div>
+);
 
 const Title = () => {
   const { data } = api.albumsPage.getText.useQuery(undefined, {

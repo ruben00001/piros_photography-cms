@@ -69,7 +69,9 @@ const UploadButton = () => {
   return (
     <div>
       <div
-        className="relative inline-flex cursor-pointer items-center gap-3 rounded-sm border border-blue-500 bg-blue-100 py-1 px-3 text-blue-500 transition-colors duration-75 ease-in-out hover:bg-blue-200"
+        className={`relative inline-flex cursor-pointer items-center gap-3 rounded-sm border border-blue-500 bg-blue-100 py-1 px-3 text-blue-500 transition-colors duration-75 ease-in-out hover:bg-blue-200 ${
+          !isAdmin ? "cursor-not-allowed" : ""
+        }`}
         onClick={() => {
           if (!isAdmin) {
             return;
