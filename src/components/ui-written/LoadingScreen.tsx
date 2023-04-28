@@ -6,15 +6,11 @@ export const LoadingScreen = ({
 }: {
   text: string;
   showSpinner?: boolean;
-}) => {
-  return (
-    <div className="my-screen-center">
-      <div className="rounded-md bg-white/80 p-lg ">
-        <div className="flex flex-col items-center gap-md">
-          {showSpinner ? <MySpinner /> : <div />}
-          <p className="font-mono">{text}</p>
-        </div>
-      </div>
+}) => (
+  <div className="my-screen-center">
+    <div className="flex flex-col items-center gap-md">
+      {showSpinner ? <MySpinner /> : <div />}
+      <p className="font-mono">{text}</p>
     </div>
-  );
-};
+  </div>
+);

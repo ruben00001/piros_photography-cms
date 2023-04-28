@@ -13,6 +13,7 @@ import {
 import { MyModal, MyToast, WithTooltip } from "~/components/ui-display";
 import { DeleteIcon, ExpandIcon, ImageIcon } from "~/components/ui-elements";
 import { WarningPanel } from "~/components/ui-written";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import OpenedImage from "./OpenedImage";
 
 const Menu = () => {
@@ -92,6 +93,8 @@ const DeleteModal = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <MyModal.DefaultButtonAndPanel
       button={({ openModal }) => (
@@ -110,6 +113,7 @@ const DeleteModal = () => {
         <WarningPanel
           callback={{
             func: () =>
+              isAdmin &&
               deleteMutation.mutate({
                 data: { index: albumImage.index },
                 where: { albumId: album.id, imageId: albumImage.id },

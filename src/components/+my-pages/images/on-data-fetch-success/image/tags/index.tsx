@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { api } from "~/utils/api";
 import { MyToast, WithTooltip } from "~/components/ui-display";
 import { RemoveIcon } from "~/components/ui-elements";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import { useImageContext } from "../../../_context";
 import InputSelect from "./input-select";
 
@@ -60,6 +61,9 @@ const Tag = ({ tag }: { tag: ImageTag }) => {
       toast(<MyToast text="Something went wrong remvoing tag" type="error" />);
     },
   });
+
+  const isAdmin = useIsAdmin();
+
   return (
     <div className="group relative rounded-md border border-base-200 transition-colors duration-75 ease-in-out hover:border-base-300">
       <div className="py-1 px-2 transition-colors duration-75 ease-in-out group-hover:bg-base-200">
@@ -70,6 +74,7 @@ const Tag = ({ tag }: { tag: ImageTag }) => {
           <span
             className="absolute top-0 right-0 z-10 origin-bottom-left -translate-y-3 translate-x-3 cursor-pointer rounded-full bg-white p-1 text-xs text-gray-400 opacity-0 transition-all duration-75 ease-in-out hover:scale-110 hover:bg-warning hover:text-warning-content group-hover:opacity-100"
             onClick={() =>
+              isAdmin &&
               removeTagMutation.mutate({
                 data: { tagId: tag.id },
                 where: { imageId: image.id },

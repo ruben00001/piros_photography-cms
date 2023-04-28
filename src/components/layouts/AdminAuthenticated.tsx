@@ -31,20 +31,18 @@ export const AdminAuthenticatedLayout = ({
     }
   }, [status, sessionData?.user.role, router]);
 
+  if (status === "loading") {
+    return (
+      <LoadingScreen text={"Checking authentication status"} showSpinner />
+    );
+  }
+
   if (
-    status === "loading" ||
     status === "unauthenticated" ||
     (status === "authenticated" && sessionData.user.role === "USER")
   ) {
     return (
-      <LoadingScreen
-        text={
-          status === "loading"
-            ? "Checking authentication status"
-            : "Not authenticated. Redirecting..."
-        }
-        showSpinner={status === "loading"}
-      />
+      <LoadingScreen text={"Not authenticated. Redirecting..."} showSpinner />
     );
   }
 

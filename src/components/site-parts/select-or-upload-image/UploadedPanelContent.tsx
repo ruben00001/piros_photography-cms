@@ -8,6 +8,7 @@ import { SearchInput } from "~/components/ui-compounds";
 import { WithTooltip } from "~/components/ui-display";
 import { calcImageDimensions } from "~/helpers/general";
 import { fuzzySearch } from "~/helpers/query-data";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 export type OnSelectImage = (arg0: { imageId: string }) => void;
 
@@ -139,10 +140,16 @@ const Image = ({
   const [containerRef, { width: containerWidth }] =
     useMeasure<HTMLDivElement>();
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div
       className="my-hover-bg flex aspect-square flex-col rounded-lg border border-base-200 p-sm"
       onClick={() => {
+        if (!isAdmin) {
+          return;
+        }
+
         onSelectImage({ imageId: image.id });
         closeModal();
       }}

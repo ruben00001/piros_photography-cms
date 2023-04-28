@@ -5,27 +5,26 @@ import { useVideoContext } from "~/components/+my-pages/videos/_context";
 import { MyMenu, MyModal, MyToast, WithTooltip } from "~/components/ui-display";
 import { ComponentMenuIcon, DeleteIcon } from "~/components/ui-elements";
 import { WarningPanel } from "~/components/ui-written";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
-const VideoMenu = () => {
-  return (
-    <div className="absolute right-xs top-xs z-30 opacity-0 transition-opacity duration-75 ease-in-out group-hover/video:opacity-100">
-      <MyMenu
-        button={({ isOpen }) => (
-          <WithTooltip text="Video menu" placement="top" isDisabled={isOpen}>
-            <div className="transition-colors duration-75 ease-in-out hover:!text-gray-700 group-hover/video:text-gray-300">
-              <ComponentMenuIcon />
-            </div>
-          </WithTooltip>
-        )}
-        styles={{ itemsWrapper: "right-0" }}
-      >
-        <MyMenu.Item>
-          <DeleteModal />
-        </MyMenu.Item>
-      </MyMenu>
-    </div>
-  );
-};
+const VideoMenu = () => (
+  <div className="absolute right-xs top-xs z-30 opacity-0 transition-opacity duration-75 ease-in-out group-hover/video:opacity-100">
+    <MyMenu
+      button={({ isOpen }) => (
+        <WithTooltip text="Video menu" placement="top" isDisabled={isOpen}>
+          <div className="transition-colors duration-75 ease-in-out hover:!text-gray-700 group-hover/video:text-gray-300">
+            <ComponentMenuIcon />
+          </div>
+        </WithTooltip>
+      )}
+      styles={{ itemsWrapper: "right-0" }}
+    >
+      <MyMenu.Item>
+        <DeleteModal />
+      </MyMenu.Item>
+    </MyMenu>
+  </div>
+);
 
 export default VideoMenu;
 
@@ -50,11 +49,15 @@ const DeleteModal = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <MyModal.DefaultButtonAndPanel
       button={({ openModal }) => (
         <div
-          className="cursor-pointer rounded-md px-2 py-2 text-sm transition-all duration-75 ease-in-out hover:bg-my-alert"
+          className={`cursor-pointer rounded-md px-2 py-2 text-sm transition-all duration-75 ease-in-out hover:bg-my-alert ${
+            !isAdmin ? "cursor-not-allowed" : ""
+          }`}
           onClick={openModal}
         >
           <WithTooltip text="Delete video" yOffset={15}>
@@ -67,7 +70,10 @@ const DeleteModal = () => {
       panelContent={({ closeModal }) => (
         <WarningPanel
           callback={{
-            func: () =>
+            func: () => {
+              if (!isAdmin) {
+                return;
+              }
               deleteMutation.mutate(
                 {
                   where: { id: video.id, index: video.index },
@@ -77,7 +83,8 @@ const DeleteModal = () => {
                     closeModal();
                   },
                 },
-              ),
+              );
+            },
           }}
           closeModal={closeModal}
           text={{

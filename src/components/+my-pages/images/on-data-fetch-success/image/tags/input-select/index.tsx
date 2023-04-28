@@ -8,6 +8,7 @@ import { TextInput } from "~/components/ui-compounds";
 import { MyToast, WithTooltip } from "~/components/ui-display";
 import { arrayDivergence } from "~/helpers/query-data";
 import useHovered from "~/hooks/useHovered";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 function InputSelect() {
   const [inputIsFocused, setInputIsFocused] = useState(false);
@@ -69,13 +70,18 @@ function Input({ setIsFocused, updateValue, value }: InputProps) {
     },
   });
 
-  // ! prevent autofocus on input!!!
+  const isAdmin = useIsAdmin();
 
   return (
     <div className="relative inline-block">
       <form
         onSubmit={(e) => {
           e.preventDefault();
+
+          if (!isAdmin) {
+            return;
+          }
+
           addTagMutation.mutate({
             data: { text: value },
             where: { imageId: image.id },
@@ -139,6 +145,8 @@ function Select({ input }: SelectProps) {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div
       className={`absolute -bottom-2 w-full translate-y-full rounded-sm border border-base-200 bg-white text-sm shadow-lg transition-all delay-75 ease-in-out ${
@@ -162,13 +170,19 @@ function Select({ input }: SelectProps) {
               key={tag.id}
             >
               <div
-                className="cursor-pointer rounded-sm py-xxs px-xs hover:bg-base-200"
-                onClick={() =>
+                className={`cursor-pointer rounded-sm py-xxs px-xs hover:bg-base-200 ${
+                  !isAdmin ? "cursor-not-allowed" : ""
+                }`}
+                onClick={() => {
+                  if (!isAdmin) {
+                    return;
+                  }
+
                   addTagMutation.mutate({
                     data: { text: tag.text },
                     where: { imageId: image.id },
-                  })
-                }
+                  });
+                }}
               >
                 <div>
                   <p className="text-base-content">{tag.text}</p>

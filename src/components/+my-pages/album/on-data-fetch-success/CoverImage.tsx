@@ -11,6 +11,7 @@ import { MyToast, WithTooltip } from "~/components/ui-display";
 import { ImageIcon } from "~/components/ui-elements";
 import { ImagePlaceholder } from "~/components/ui-written";
 import { calcImageDimensions } from "~/helpers/general";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import { useAlbumContext } from "../_context/AlbumState";
 
 const CoverImage = () => {
@@ -111,7 +112,10 @@ const useUploadedImage = (): OnSelectImage => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return ({ imageId }) =>
+    isAdmin &&
     updateCoverImageMutation.mutate({
       albumId: album.id,
       imageId,
@@ -144,6 +148,8 @@ const useUploadImage = (): OnUploadImage => {
       },
     });
 
+  const isAdmin = useIsAdmin();
+
   return ({
     cloudinary_public_id,
     naturalHeight,
@@ -151,6 +157,7 @@ const useUploadImage = (): OnUploadImage => {
     onSuccess,
     tagIds,
   }) =>
+    isAdmin &&
     createImageAndAddToAlbumMutation.mutate(
       {
         data: {

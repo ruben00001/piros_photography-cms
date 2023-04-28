@@ -15,6 +15,7 @@ import {
   sortByIndex,
 } from "~/helpers/process-data";
 import { findEntityById } from "~/helpers/query-data";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import AlbumImage from "./image";
 
 const Populated = () => {
@@ -105,10 +106,16 @@ const ImagesDndSortableContext = ({
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <DndKit.Context
       elementIds={mapIds(album.images)}
       onReorder={({ activeId, overId }) => {
+        if (!isAdmin) {
+          return;
+        }
+
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const activeAlbum = findEntityById(album.images, activeId)!;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

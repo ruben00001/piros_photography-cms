@@ -14,6 +14,7 @@ import {
   TickIcon,
 } from "~/components/ui-elements";
 import { checkIsYoutubeUrl } from "~/helpers/youtube";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 const AddVideo = () => {
   const [formIsOpen, setFormIsOpen] = useState(false);
@@ -83,7 +84,13 @@ const YoutubeUrlForm = ({ closeForm }: { closeForm: () => void }) => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   const handleSubmit = () => {
+    if (!isAdmin) {
+      return;
+    }
+
     if (!inputValue.length || inputValueIsInvalidYoutubeURL) {
       return;
     }
@@ -165,7 +172,7 @@ const YoutubeUrlForm = ({ closeForm }: { closeForm: () => void }) => {
           </button>
           <button
             className={`my-btn my-btn-action ${
-              cantSubmit ? "cursor-not-allowed opacity-50" : ""
+              !isAdmin || cantSubmit ? "cursor-not-allowed opacity-50" : ""
             }`}
             type="submit"
           >

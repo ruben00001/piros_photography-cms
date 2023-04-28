@@ -1,11 +1,18 @@
-import PageDataFetchInit from "./PageDataFetchInit";
+import { api } from "~/utils/api";
+import { PageDataInit } from "~/components/ui-written";
 import OnDataFetchSuccess from "./on-data-fetch-success/Entry";
 
 const Entry = () => {
+  const { isFetchedAfterMount, isInitialLoading, isError } =
+    api.youtubeVideo.getAll.useQuery();
+
   return (
-    <PageDataFetchInit>
+    <PageDataInit
+      isError={isFetchedAfterMount && isError}
+      isLoading={isInitialLoading}
+    >
       <OnDataFetchSuccess />
-    </PageDataFetchInit>
+    </PageDataInit>
   );
 };
 

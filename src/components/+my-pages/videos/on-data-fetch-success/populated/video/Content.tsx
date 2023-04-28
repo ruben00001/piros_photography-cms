@@ -8,6 +8,7 @@ import { DataTextAreaForm, DataTextInputForm } from "~/components/ui-compounds";
 import { MyToast } from "~/components/ui-display";
 import { VideoIFrame } from "~/components/ui-elements";
 import { getYoutubeEmbedUrlFromId } from "~/helpers/youtube";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 const Content = () => (
   <div className="flex justify-center">
@@ -61,6 +62,8 @@ const Title = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div className="max-w-[80%] text-xl">
       <DataTextInputForm
@@ -69,12 +72,15 @@ const Title = () => {
           minWidth: 300,
           placeholder: "Video title (optional)",
         }}
-        onSubmit={({ inputValue }) =>
+        onSubmit={({ inputValue }) => {
+          if (!isAdmin) {
+            return;
+          }
           updateTitleMutation.mutate({
             data: { title: inputValue },
             where: { id: video.id },
-          })
-        }
+          });
+        }}
         tooltip={{
           text: "click to edit title",
         }}
@@ -124,18 +130,24 @@ const Description = () => {
       },
     });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div className="mb-xs w-[90%] font-serif text-lg">
       <DataTextAreaForm
         initialValue={video.description}
         tooltipText="click to edit description"
         placeholder="Video description (optional)"
-        onSubmit={({ inputValue }) =>
+        onSubmit={({ inputValue }) => {
+          if (!isAdmin) {
+            return;
+          }
+
           updateDescriptionMutation.mutate({
             data: { description: inputValue },
             where: { id: video.id },
-          })
-        }
+          });
+        }}
       />
     </div>
   );

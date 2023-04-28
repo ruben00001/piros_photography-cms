@@ -4,12 +4,15 @@ import { api, type RouterOutputs } from "~/utils/api";
 import { WithTooltip } from "~/components/ui-display";
 import { InfoIcon, RefreshIcon, SpinnerIcon } from "~/components/ui-elements";
 import { timeAgo } from "~/helpers/time-ago";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 const LatestDeploy = () => {
   const latestDeployQuery = api.vercel.getLatestDeploy.useQuery(undefined, {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
+
+  const isAdmin = useIsAdmin();
 
   return (
     <div className="mt-8">
@@ -27,8 +30,11 @@ const LatestDeploy = () => {
                 latestDeployQuery.isFetching
                   ? "cursor-auto opacity-40"
                   : "opacity-100"
-              }`}
+              } ${!isAdmin ? "cursor-not-allowed" : ""}`}
               onClick={() => {
+                if (!isAdmin) {
+                  return;
+                }
                 if (latestDeployQuery.isFetching) {
                   return;
                 }

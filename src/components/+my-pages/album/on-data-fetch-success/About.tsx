@@ -4,15 +4,14 @@ import { api } from "~/utils/api";
 import { useAlbumContext } from "~/components/+my-pages/album/_context";
 import { DataTextAreaForm, DataTextInputForm } from "~/components/ui-compounds";
 import { MyToast } from "~/components/ui-display";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
-const About = () => {
-  return (
-    <div>
-      <Title />
-      <Description />
-    </div>
-  );
-};
+const About = () => (
+  <div>
+    <Title />
+    <Description />
+  </div>
+);
 
 export default About;
 
@@ -30,10 +29,16 @@ const Title = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div className="text-2xl">
       <DataTextInputForm
         onSubmit={({ inputValue, onSuccess }) => {
+          if (!isAdmin) {
+            return;
+          }
+
           updateTitle.mutate(
             { albumId: album.id, updatedTitle: inputValue },
             { onSuccess },
@@ -63,10 +68,13 @@ const Description = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div className="max-w-[700px] font-serif text-lg">
       <DataTextAreaForm
         onSubmit={({ inputValue, onSuccess }) =>
+          isAdmin &&
           updateDescriptionMutation.mutate(
             {
               albumId: album.id,

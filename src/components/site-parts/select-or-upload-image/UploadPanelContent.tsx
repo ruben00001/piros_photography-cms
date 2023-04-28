@@ -15,6 +15,7 @@ import {
   useStringArrStateContext as useTagsIdContext,
 } from "~/context/StringArrState";
 import { handleUploadImage } from "~/helpers/cloudinary";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import Tags from "./tags";
 
 export type OnUploadImage = (arg0: {
@@ -67,7 +68,12 @@ const UploadFunctionality = ({
     { enabled: false },
   );
 
+  const isAdmin = useIsAdmin();
+
   const handleCreateImage = async () => {
+    if (!isAdmin) {
+      return;
+    }
     if (!imageFile || !imageDimensions) {
       return;
     }

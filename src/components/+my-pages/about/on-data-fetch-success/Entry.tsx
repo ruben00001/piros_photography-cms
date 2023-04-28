@@ -6,6 +6,7 @@ import { api } from "~/utils/api";
 import { ContentBodyLayout } from "~/components/layouts/ContentBody";
 import { DataTextAreaForm } from "~/components/ui-compounds";
 import { MyToast } from "~/components/ui-display";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 const OnDataFetchSuccess = () => (
   <ContentBodyLayout>
@@ -55,10 +56,16 @@ const BodyText = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div>
       <DataTextAreaForm
         onSubmit={({ inputValue, onSuccess }) => {
+          if (!isAdmin) {
+            return;
+          }
+
           updateTitleMutation.mutate(
             { data: { text: inputValue } },
             { onSuccess },

@@ -11,6 +11,7 @@ import {
   PlusIcon,
   TickIcon,
 } from "~/components/ui-elements";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 const AddAlbum = () => {
   const [formIsOpen, setFormIsOpen] = useState(false);
@@ -101,11 +102,17 @@ const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
     );
   };
 
+  const isAdmin = useIsAdmin();
+
   return (
     <form
       className="relative"
       onSubmit={(e) => {
         e.preventDefault();
+
+        if (!isAdmin) {
+          return;
+        }
 
         handleSubmit();
       }}
@@ -142,7 +149,12 @@ const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
           >
             Cancel
           </button>
-          <button className="my-btn my-btn-action" type="submit">
+          <button
+            className={`my-btn my-btn-action ${
+              !isAdmin ? "cursor-not-allowed" : ""
+            }`}
+            type="submit"
+          >
             Submit
           </button>
         </div>

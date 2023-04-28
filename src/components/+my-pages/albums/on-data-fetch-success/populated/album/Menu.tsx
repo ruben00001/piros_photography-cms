@@ -5,6 +5,7 @@ import { useAlbumContext } from "~/components/+my-pages/albums/_context";
 import { MyMenu, MyModal, MyToast, WithTooltip } from "~/components/ui-display";
 import { ComponentMenuIcon, DeleteIcon } from "~/components/ui-elements";
 import { WarningPanel } from "~/components/ui-written";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 const AlbumMenu = () => {
   return (
@@ -50,6 +51,8 @@ const DeleteModal = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <MyModal.DefaultButtonAndPanel
       button={({ openModal }) => (
@@ -68,6 +71,7 @@ const DeleteModal = () => {
         <WarningPanel
           callback={{
             func: () =>
+              isAdmin &&
               deleteMutation.mutate(
                 {
                   album: { id: album.id, index: album.index },

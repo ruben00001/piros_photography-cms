@@ -11,6 +11,7 @@ import { TextInput } from "~/components/ui-compounds";
 import { WithTooltip } from "~/components/ui-display";
 import { arrayDivergence, findEntityById } from "~/helpers/query-data";
 import useHovered from "~/hooks/useHovered";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 type Props = {
   parent: {
@@ -84,7 +85,13 @@ function Input({ input, parent }: InputProps) {
     { enabled: false },
   );
 
+  const isAdmin = useIsAdmin();
+
   const handleSubmit = async () => {
+    if (!isAdmin) {
+      return;
+    }
+
     const matchingTagQuery = await findTagWithText();
 
     if (matchingTagQuery.data === undefined) {
@@ -157,6 +164,8 @@ function Select({ input, allImageTags, parent }: SelectProps) {
     ? unrelatedData
     : unrelatedData.filter((tag) => tag.text.includes(input.value));
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div
       className={`absolute -bottom-2 w-full translate-y-full rounded-sm border border-base-200 bg-white text-sm shadow-lg transition-all delay-75 ease-in-out ${
@@ -178,8 +187,15 @@ function Select({ input, allImageTags, parent }: SelectProps) {
               key={tag.id}
             >
               <div
-                className="cursor-pointer rounded-sm py-xxs px-xs hover:bg-base-200"
-                onClick={() => parent.addTagTo(tag.id)}
+                className={`cursor-pointer rounded-sm py-xxs px-xs hover:bg-base-200 ${
+                  !isAdmin ? "cursor-not-allowed" : ""
+                }`}
+                onClick={() => {
+                  if (!isAdmin) {
+                    return;
+                  }
+                  parent.addTagTo(tag.id);
+                }}
               >
                 <div>
                   <p className="text-base-content">{tag.text}</p>

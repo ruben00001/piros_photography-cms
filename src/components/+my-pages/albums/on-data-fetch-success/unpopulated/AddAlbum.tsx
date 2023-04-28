@@ -11,6 +11,7 @@ import {
   PlusIcon,
   TickIcon,
 } from "~/components/ui-elements";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 const AddAlbum = ({ centerButton }: { centerButton?: boolean }) => {
   const [formIsOpen, setFormIsOpen] = useState(false);
@@ -103,11 +104,17 @@ const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
     );
   };
 
+  const isAdmin = useIsAdmin();
+
   return (
     <form
       className="relative flex flex-col gap-lg"
       onSubmit={(e) => {
         e.preventDefault();
+
+        if (!isAdmin) {
+          return;
+        }
 
         handleSubmit();
       }}

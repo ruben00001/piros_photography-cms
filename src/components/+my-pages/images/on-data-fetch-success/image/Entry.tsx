@@ -10,6 +10,7 @@ import {
   calcImageDimensions,
   calcImageDimensionsToFitToScreen,
 } from "~/helpers/general";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import { useImageContext } from "../../_context";
 import Tags from "./tags";
 
@@ -142,6 +143,8 @@ const MenuDeleteModal = () => {
 
   const isUsed = image._count.albumCoverImages || image._count.albumImages;
 
+  const isAdmin = useIsAdmin();
+
   return (
     <MyModal.DefaultButtonAndPanel
       button={({ openModal }) => (
@@ -151,7 +154,9 @@ const MenuDeleteModal = () => {
         >
           <div
             className={`rounded-md px-2 py-2 text-sm transition-all duration-75 ease-in-out hover:bg-my-alert ${
-              isUsed ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+              isUsed || !isAdmin
+                ? "cursor-not-allowed opacity-70"
+                : "cursor-pointer"
             }`}
             onClick={() => (!isUsed ? openModal() : null)}
           >
@@ -165,6 +170,7 @@ const MenuDeleteModal = () => {
         <WarningPanel
           callback={{
             func: () =>
+              isAdmin &&
               deleteMutation.mutate(
                 {
                   imageId: image.id,

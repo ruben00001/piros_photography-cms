@@ -9,6 +9,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import { WithTooltip } from "~/components/ui-display";
 import { GrabHandleIcon } from "~/components/ui-elements";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 export const DndSortableElement = ({
   isDisabled = false,
@@ -24,6 +25,8 @@ export const DndSortableElement = ({
   const animateLayoutChanges: AnimateLayoutChanges = (args) =>
     defaultAnimateLayoutChanges({ ...args });
 
+  const isAdmin = useIsAdmin();
+
   const {
     attributes,
     listeners,
@@ -34,7 +37,7 @@ export const DndSortableElement = ({
     isDragging,
   } = useSortable({
     id: elementId,
-    disabled: isDisabled,
+    disabled: isDisabled || !isAdmin,
     strategy: rectSortingStrategy,
     animateLayoutChanges,
   });
@@ -59,7 +62,11 @@ export const DndSortableElement = ({
             <button
               className="text-2xl"
               style={{
-                cursor: isDragging ? "grabbing" : "grab",
+                cursor: isAdmin
+                  ? "not-allowed"
+                  : isDragging
+                  ? "grabbing"
+                  : "grab",
               }}
               type="button"
               {...attributes}

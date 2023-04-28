@@ -42,46 +42,40 @@ export const SideBarMenu = () => (
   </Menu>
 );
 
-const Content = () => {
-  return (
-    <div className="flex min-h-full flex-col gap-3xl">
-      <div className="flex flex-col items-start gap-xl">
-        <div className="text-xl font-medium uppercase">
-          Piros <br />
-          Photography
-        </div>
-        <PageLinks />
+const Content = () => (
+  <div className="flex min-h-full flex-col gap-3xl">
+    <div className="flex flex-col items-start gap-xl">
+      <div className="text-xl font-medium uppercase">
+        Piros <br />
+        Photography
       </div>
-      <div>
-        <Logout />
-      </div>
+      <PageLinks />
     </div>
-  );
-};
-
-const PageLinks = () => {
-  return (
-    <div className="flex flex-col gap-sm">
-      <PageLink route="/" text="Home" />
-      <PageLink route="/albums" text="Albums" />
-      <PageLink route="/videos" text="Videos" />
-      <PageLink route="/about" text="About" />
-      <div className="mt-sm">
-        <PageLink route="/images" text="Images" />
-      </div>
+    <div>
+      <Logout />
     </div>
-  );
-};
+  </div>
+);
 
-const PageLink = ({ route, text }: { text: string; route: string }) => {
-  return (
-    <Link href={route} passHref>
-      <div className="text-gray-600 transition-colors duration-75 ease-in-out hover:text-gray-800">
-        {text}
-      </div>
-    </Link>
-  );
-};
+const PageLinks = () => (
+  <div className="flex flex-col gap-sm">
+    <PageLink route="/" text="Home" />
+    <PageLink route="/albums" text="Albums" />
+    <PageLink route="/videos" text="Videos" />
+    <PageLink route="/about" text="About" />
+    <div className="mt-sm">
+      <PageLink route="/images" text="Images" />
+    </div>
+  </div>
+);
+
+const PageLink = ({ route, text }: { text: string; route: string }) => (
+  <Link href={route} passHref>
+    <div className="text-gray-600 transition-colors duration-75 ease-in-out hover:text-gray-800">
+      {text}
+    </div>
+  </Link>
+);
 
 const Logout = () => (
   <button

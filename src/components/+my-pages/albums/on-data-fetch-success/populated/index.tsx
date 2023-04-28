@@ -11,6 +11,7 @@ import {
   sortByIndex,
 } from "~/helpers/process-data";
 import { findEntityById } from "~/helpers/query-data";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import AddAlbum from "./AddAlbum";
 import Album from "./album";
 
@@ -69,11 +70,14 @@ const Title = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div className="text-6xl">
       <DataTextInputForm
         input={{ initialValue: pageText.title, placeholder: "Page title..." }}
         onSubmit={({ inputValue, onSuccess }) =>
+          isAdmin &&
           updateTitleMutation.mutate(
             { data: { text: inputValue } },
             { onSuccess },
@@ -105,6 +109,8 @@ const SubTitle = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div className="text-2xl">
       <DataTextInputForm
@@ -113,6 +119,7 @@ const SubTitle = () => {
           placeholder: "Page subtitle (optional)...",
         }}
         onSubmit={({ inputValue, onSuccess }) =>
+          isAdmin &&
           updateTitleMutation.mutate(
             { data: { text: inputValue } },
             { onSuccess },
@@ -178,10 +185,15 @@ const DndSortableWrapper = ({ children }: { children: ReactElement[] }) => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <DndKit.Context
       elementIds={mapIds(albums)}
       onReorder={({ activeId, overId }) => {
+        if (!isAdmin) {
+          return;
+        }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const activeAlbum = findEntityById(albums, activeId)!;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

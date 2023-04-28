@@ -1,11 +1,24 @@
-import PageDataFetchInit from "./PageDataFetchInit";
+import { api } from "~/utils/api";
+import { PageDataInit } from "~/components/ui-written";
 import OnDataFetchSuccess from "./on-data-fetch-success";
 
 const AlbumsPage = () => {
+  const {
+    isInitialLoading: isInitialLoadingGetAlbums,
+    isError: isGetAlbumsError,
+  } = api.album.albumsPageGetAll.useQuery();
+  const {
+    isInitialLoading: isInitialLoadingPageText,
+    isError: isGetPageTextError,
+  } = api.albumsPage.getText.useQuery();
+
   return (
-    <PageDataFetchInit>
+    <PageDataInit
+      isError={isGetAlbumsError || isGetPageTextError}
+      isLoading={isInitialLoadingGetAlbums || isInitialLoadingPageText}
+    >
       <OnDataFetchSuccess />
-    </PageDataFetchInit>
+    </PageDataInit>
   );
 };
 

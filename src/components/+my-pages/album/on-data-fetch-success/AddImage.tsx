@@ -8,6 +8,7 @@ import {
 } from "~/components/site-parts/select-or-upload-image";
 import { MyToast } from "~/components/ui-display";
 import { PlusIcon } from "~/components/ui-elements";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import { useAlbumContext } from "../_context/AlbumState";
 
 const AddImageButton = () => {
@@ -53,7 +54,10 @@ const useAddUploadedImageToAlbum = (): OnSelectImage => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return ({ imageId }) =>
+    isAdmin &&
     addBodyImageMutation.mutate({
       data: { image: { id: imageId, index: album.images.length } },
       where: { albumId: album.id },
@@ -86,6 +90,8 @@ const useAddUploadImageToAlbum = (): OnUploadImage => {
       },
     });
 
+  const isAdmin = useIsAdmin();
+
   return ({
     cloudinary_public_id,
     naturalHeight,
@@ -93,6 +99,7 @@ const useAddUploadImageToAlbum = (): OnUploadImage => {
     onSuccess,
     tagIds,
   }) =>
+    isAdmin &&
     createImageAndAddToAlbumMutation.mutate(
       {
         data: {

@@ -15,6 +15,7 @@ import { DataTextAreaForm, DataTextInputForm } from "~/components/ui-compounds";
 import { MyModal, MyToast } from "~/components/ui-display";
 import { CycleLeftIcon, CycleRightIcon } from "~/components/ui-elements";
 import { calcImageDimensionsToFitToScreen } from "~/helpers/general";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 const OpenedImage = () => (
   <>
@@ -171,9 +172,12 @@ const Title = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <DataTextInputForm
       onSubmit={({ inputValue, onSuccess }) =>
+        isAdmin &&
         updateTitleMutation.mutate(
           {
             albumImageId: albumImage.id,
@@ -239,10 +243,13 @@ const Description = () => {
       },
     });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div className="overflow-x-hidden">
       <DataTextAreaForm
         onSubmit={({ inputValue, onSuccess }) =>
+          isAdmin &&
           updateDescriptionMutation.mutate(
             {
               albumImageId: albumImage.id,

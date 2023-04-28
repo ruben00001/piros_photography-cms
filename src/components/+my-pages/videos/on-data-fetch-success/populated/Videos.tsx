@@ -12,10 +12,13 @@ import {
   sortByIndex,
 } from "~/helpers/process-data";
 import { findEntityById } from "~/helpers/query-data";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import Video from "./video/Entry";
 
 const Videos = () => {
   const { data } = api.youtubeVideo.getAll.useQuery();
+
+  const isAdmin = useIsAdmin();
 
   return (
     <div className="flex justify-center">
@@ -23,7 +26,11 @@ const Videos = () => {
         <div className="flex flex-col gap-lg">
           <DndSortableWrapper>
             {data!.map((youtubeVideo) => (
-              <DndKit.Element elementId={youtubeVideo.id} key={youtubeVideo.id}>
+              <DndKit.Element
+                elementId={youtubeVideo.id}
+                isDisabled={!isAdmin}
+                key={youtubeVideo.id}
+              >
                 <VideoProvider video={youtubeVideo}>
                   <Video />
                 </VideoProvider>
@@ -92,10 +99,15 @@ const DndSortableWrapper = ({ children }: { children: ReactElement[] }) => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <DndKit.Context
       elementIds={mapIds(videos)}
       onReorder={({ activeId, overId }) => {
+        if (!isAdmin) {
+          return;
+        }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const activeVideo = findEntityById(videos, activeId)!;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

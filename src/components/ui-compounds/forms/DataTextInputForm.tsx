@@ -3,6 +3,7 @@ import DOMPurify from "dompurify";
 import { useMeasure } from "react-use";
 
 import { WithTooltip, type TooltipProps } from "~/components/ui-display";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import { type MyOmit } from "~/types/utilities";
 
 export const DataTextInputForm = ({
@@ -42,6 +43,8 @@ export const DataTextInputForm = ({
 
   const containerRef = useRef<HTMLFormElement>(null);
 
+  const isAdmin = useIsAdmin();
+
   return (
     <WithTooltip
       {...tooltip}
@@ -52,6 +55,9 @@ export const DataTextInputForm = ({
         className="relative inline-block max-w-full"
         onSubmit={(e) => {
           e.preventDefault();
+          if (!isAdmin) {
+            return;
+          }
           handleSubmit();
         }}
         ref={containerRef}

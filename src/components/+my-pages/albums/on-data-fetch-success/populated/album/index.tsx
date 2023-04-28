@@ -8,6 +8,7 @@ import { useAlbumContext } from "~/components/+my-pages/albums/_context";
 import { DataTextInputForm, DndKit } from "~/components/ui-compounds";
 import { MyToast, WithTooltip } from "~/components/ui-display";
 import { GoToPageIcon } from "~/components/ui-elements";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import CoverImage from "./CoverImage";
 import AlbumMenu from "./Menu";
 
@@ -76,10 +77,13 @@ const TitleInput = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div className="mb-xs text-2xl">
       <DataTextInputForm
         onSubmit={({ inputValue, onSuccess }) =>
+          isAdmin &&
           updateTitle.mutate(
             { albumId: album.id, updatedTitle: inputValue },
             { onSuccess },

@@ -3,6 +3,7 @@
 import { api } from "~/utils/api";
 import { MyModal, WithTooltip } from "~/components/ui-display";
 import { DeployIcon, MySpinner, UploadIcon } from "~/components/ui-elements";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import LatestDeploy from "./LatestDeploy";
 
 const DeployModal = () => (
@@ -63,11 +64,19 @@ const UploadButton = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div>
       <div
         className="relative inline-flex cursor-pointer items-center gap-3 rounded-sm border border-blue-500 bg-blue-100 py-1 px-3 text-blue-500 transition-colors duration-75 ease-in-out hover:bg-blue-200"
-        onClick={() => deployMutation.mutate()}
+        onClick={() => {
+          if (!isAdmin) {
+            return;
+          }
+
+          deployMutation.mutate();
+        }}
       >
         <span>
           <UploadIcon />

@@ -6,6 +6,7 @@ import { useAlbumContext } from "~/components/+my-pages/album/_context";
 import { MyMenu, MyModal, MyToast, WithTooltip } from "~/components/ui-display";
 import { ComponentMenuIcon, DeleteIcon } from "~/components/ui-elements";
 import { WarningPanel } from "~/components/ui-written";
+import useIsAdmin from "~/hooks/useIsAdmin";
 import CoverImage from "./CoverImage";
 
 const MetaAndControls = () => {
@@ -46,22 +47,20 @@ const MetaAndControls = () => {
 
 export default MetaAndControls;
 
-const AlbumMenu = () => {
-  return (
-    <MyMenu
-      button={
-        <div className="text-gray-300 transition-colors duration-75 ease-in-out hover:!text-gray-600 group-hover:text-gray-400">
-          <ComponentMenuIcon />
-        </div>
-      }
-      styles={{ itemsWrapper: "right-0" }}
-    >
-      <div>
-        <DeleteAlbumModal />
+const AlbumMenu = () => (
+  <MyMenu
+    button={
+      <div className="text-gray-300 transition-colors duration-75 ease-in-out hover:!text-gray-600 group-hover:text-gray-400">
+        <ComponentMenuIcon />
       </div>
-    </MyMenu>
-  );
-};
+    }
+    styles={{ itemsWrapper: "right-0" }}
+  >
+    <div>
+      <DeleteAlbumModal />
+    </div>
+  </MyMenu>
+);
 
 const DeleteAlbumModal = () => {
   const album = useAlbumContext();
@@ -91,6 +90,8 @@ const DeleteAlbumModal = () => {
     },
   });
 
+  const isAdmin = useIsAdmin();
+
   return (
     <MyModal.DefaultButtonAndPanel
       button={({ openModal }) => (
@@ -109,6 +110,7 @@ const DeleteAlbumModal = () => {
         <WarningPanel
           callback={{
             func: () =>
+              isAdmin &&
               deleteAlbumMutation.mutate(
                 {
                   album: { id: album.id, index: album.index },
@@ -165,6 +167,8 @@ const PublishToggleBadge = () => {
 
   const hasRequiredPublishFields = Boolean(album.coverImageId);
 
+  const isAdmin = useIsAdmin();
+
   return (
     <WithTooltip
       text={
@@ -188,6 +192,7 @@ const PublishToggleBadge = () => {
              : "cursor-default bg-gray-50 text-base-300"
          }`}
         onClick={() =>
+          isAdmin &&
           hasRequiredPublishFields &&
           publishMutation.mutate({
             albumId: album.id,
