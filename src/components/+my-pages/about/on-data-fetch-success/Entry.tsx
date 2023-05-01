@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { api } from "~/utils/api";
 import { ContentBodyLayout } from "~/components/layouts/ContentBody";
 import { DataTextAreaForm } from "~/components/ui-compounds";
-import { MyToast } from "~/components/ui-display";
+import { MyToast, WithTooltip } from "~/components/ui-display";
 import useIsAdmin from "~/hooks/useIsAdmin";
 
 const OnDataFetchSuccess = () => (
@@ -59,21 +59,23 @@ const BodyText = () => {
   const isAdmin = useIsAdmin();
 
   return (
-    <div>
-      <DataTextAreaForm
-        onSubmit={({ inputValue, onSuccess }) => {
-          if (!isAdmin) {
-            return;
-          }
+    <WithTooltip text="click to edit text">
+      <div className="font-serif-3 text-xl">
+        <DataTextAreaForm
+          onSubmit={({ inputValue, onSuccess }) => {
+            if (!isAdmin) {
+              return;
+            }
 
-          updateTitleMutation.mutate(
-            { data: { text: inputValue } },
-            { onSuccess },
-          );
-        }}
-        initialValue={aboutText.body}
-        placeholder="Edit about main text..."
-      />
-    </div>
+            updateTitleMutation.mutate(
+              { data: { text: inputValue } },
+              { onSuccess },
+            );
+          }}
+          initialValue={aboutText.body}
+          placeholder="Edit about main text..."
+        />
+      </div>
+    </WithTooltip>
   );
 };

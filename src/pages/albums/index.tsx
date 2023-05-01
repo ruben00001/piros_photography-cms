@@ -2,6 +2,7 @@ import AlbumsPageContent from "~/components/+my-pages/albums/index";
 import Layout from "~/components/layouts";
 
 // TODO: Create test album + video, etc and make suer guest can't delete, modify, etc.
+// TODO: Guest session ends on leave site
 
 export default function AlbumsPage() {
   return (

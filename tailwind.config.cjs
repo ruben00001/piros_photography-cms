@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { fontFamily } = require("tailwindcss/defaultTheme");
+
 /** @type {import('tailwindcss').Config} */
 const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -23,6 +26,14 @@ const config = {
         ["my-error"]: "hsl(28 94.4% 92.9%)",
         ["my-error-content"]: "hsl(16 100% 56.1%)",
         ["overlay-light"]: "rgba(237, 242, 247, 0.2)",
+      },
+      fontFamily: {
+        sans: ["var(--font-my-sans)", ...fontFamily.sans],
+        ["sans-secondary"]: ["var(--font-my-sans-2)", ...fontFamily.sans],
+        ["sans-3"]: ["var(--font-my-sans-3)", ...fontFamily.sans],
+        serif: ["var(--font-my-serif)", ...fontFamily.serif],
+        ["serif-secondary"]: ["var(--font-my-serif-2)", ...fontFamily.serif],
+        ["serif-3"]: ["var(--font-my-serif-3)", ...fontFamily.serif],
       },
       fontSize: {
         mid: "15px",

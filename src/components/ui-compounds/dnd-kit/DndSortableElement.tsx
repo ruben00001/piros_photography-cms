@@ -62,7 +62,7 @@ export const DndSortableElement = ({
             <button
               className="text-2xl"
               style={{
-                cursor: isAdmin
+                cursor: !isAdmin
                   ? "not-allowed"
                   : isDragging
                   ? "grabbing"

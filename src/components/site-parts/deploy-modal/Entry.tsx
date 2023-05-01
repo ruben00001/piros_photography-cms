@@ -30,28 +30,26 @@ const ModalButton = () => {
   );
 };
 
-const Panel = () => {
-  return (
-    <div className="relative w-[600px] max-w-[90vw] rounded-2xl bg-white p-6 text-left shadow-xl">
-      <h3 className="border-b border-b-base-300 pb-sm leading-6 text-base-content">
-        Upload changes
-      </h3>
-      <div className="mt-4">
-        <p className="text-sm text-gray-600">
-          When you&apos;re ready to upload any changes you&apos;ve made, press
-          the upload button below.
-        </p>
-        <p className="mt-1 text-sm text-gray-400">
-          The process usually takes 2-5 minutes.
-        </p>
-      </div>
-      <div className="mt-8">
-        <UploadButton />
-      </div>
-      <LatestDeploy />
+const Panel = () => (
+  <div className="relative w-[600px] max-w-[90vw] rounded-2xl bg-white p-6 text-left shadow-xl">
+    <h3 className="border-b border-b-base-300 pb-sm leading-6 text-base-content">
+      Upload changes
+    </h3>
+    <div className="mt-4">
+      <p className="text-sm text-gray-600">
+        When you&apos;re ready to upload any changes you&apos;ve made, press the
+        upload button below.
+      </p>
+      <p className="mt-1 text-sm text-gray-400">
+        The process usually takes 2-5 minutes.
+      </p>
     </div>
-  );
-};
+    <div className="mt-8">
+      <UploadButton />
+    </div>
+    <LatestDeploy />
+  </div>
+);
 
 const UploadButton = () => {
   const latestDeployQuery = api.vercel.getLatestDeploy.useQuery(undefined, {
@@ -69,8 +67,8 @@ const UploadButton = () => {
   return (
     <div>
       <div
-        className={`relative inline-flex cursor-pointer items-center gap-3 rounded-sm border border-blue-500 bg-blue-100 py-1 px-3 text-blue-500 transition-colors duration-75 ease-in-out hover:bg-blue-200 ${
-          !isAdmin ? "cursor-not-allowed" : ""
+        className={`relative inline-flex items-center gap-3 rounded-sm border border-blue-500 bg-blue-100 py-1 px-3 text-blue-500 transition-colors duration-75 ease-in-out hover:bg-blue-200 ${
+          !isAdmin ? "cursor-not-allowed" : "cursor-pointer"
         }`}
         onClick={() => {
           if (!isAdmin) {

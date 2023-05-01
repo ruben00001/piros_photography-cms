@@ -61,6 +61,11 @@ const StatusMenuContent = () => {
   return (
     <div className="bg-white p-6">
       <h3>{role === "GUEST" ? "Guest" : "Admin"}</h3>
+      {role === "GUEST" ? (
+        <p className="mt-xxs text-sm font-light text-gray-400">
+          Site is in <span className="font-sans-3 font-medium">view mode</span>.
+        </p>
+      ) : null}
       <div className="mt-6 ml-[20px] flex flex-col gap-4">
         <div
           className="flex cursor-pointer items-center gap-7 rounded-lg py-1 px-4 hover:bg-gray-100"

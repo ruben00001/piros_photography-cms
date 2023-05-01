@@ -106,12 +106,14 @@ const TextInput = ({
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const isAdmin = useIsAdmin();
+
   return (
     <>
       <div
         className={`relative z-10 box-content flex h-full items-stretch rounded-sm border py-1 pr-xs transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
           isChange ? "border-yellow-300" : "border-transparent"
-        }`}
+        } `}
       >
         <p className="invisible absolute whitespace-nowrap" ref={dummyInputRef}>
           {value.length ? value : placeholder}
@@ -119,7 +121,7 @@ const TextInput = ({
         <input
           className={`z-10 bg-transparent pr-xs outline-none transition-transform duration-100 ease-in-out focus:translate-x-2  ${
             isChange ? "translate-x-2" : ""
-          } `}
+          } ${!isAdmin ? "cursor-not-allowed" : ""}`}
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
@@ -141,6 +143,7 @@ const TextInput = ({
           style={{
             width: inputWidth > minWidth ? inputWidth : minWidth,
           }}
+          disabled={!isAdmin}
           ref={inputRef}
         />
       </div>

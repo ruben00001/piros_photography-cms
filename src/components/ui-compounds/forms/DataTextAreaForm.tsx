@@ -3,6 +3,7 @@ import DOMPurify from "dompurify";
 import ReactTextareaAutosize from "react-textarea-autosize";
 
 import { WithTooltip } from "~/components/ui-display";
+import useIsAdmin from "~/hooks/useIsAdmin";
 
 export const DataTextAreaForm = ({
   initialValue = "",
@@ -37,6 +38,8 @@ export const DataTextAreaForm = ({
     });
   };
 
+  const isAdmin = useIsAdmin();
+
   return (
     <WithTooltip
       text={tooltipText || ""}
@@ -59,7 +62,7 @@ export const DataTextAreaForm = ({
         <ReactTextareaAutosize
           className={`relative z-10 box-border h-full w-full min-w-[200px] max-w-full rounded-sm border bg-transparent py-1 transition-all duration-75  ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 focus-within:px-xs ${
             isChange ? "border-yellow-300 px-xs" : "border-transparent"
-          }`}
+          } ${!isAdmin ? "cursor-not-allowed" : ""}`}
           value={value}
           onSubmit={() => {
             handleSubmit();
@@ -68,6 +71,7 @@ export const DataTextAreaForm = ({
             setValue(event.target.value);
           }}
           placeholder={placeholder}
+          disabled={!isAdmin}
         />
         {isChange ? (
           <div className="flex justify-between">

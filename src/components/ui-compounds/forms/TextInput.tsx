@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import useIsAdmin from "~/hooks/useIsAdmin";
+
 export const TextInput = ({
   setValue,
   value,
@@ -32,6 +34,8 @@ export const TextInput = ({
   const showPressEnterMessage =
     showPressEnter && isChange && localIsFocused && value.length;
 
+  const isAdmin = useIsAdmin();
+
   return (
     <div
       className={`relative z-10 box-content flex h-full w-[300px] max-w-full items-stretch rounded-sm border  py-1 transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
@@ -43,7 +47,9 @@ export const TextInput = ({
       <input
         className={`z-10 w-full bg-transparent pr-xs text-gray-600 outline-none transition-transform duration-100 ease-in-out focus:translate-x-2 ${
           styles?.input || ""
-        } ${showBorderOnBlur && value.length ? "translate-x-2" : ""} `}
+        } ${showBorderOnBlur && value.length ? "translate-x-2" : ""} ${
+          !isAdmin ? "cursor-not-allowed" : ""
+        }`}
         id={id}
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -68,6 +74,7 @@ export const TextInput = ({
             onBlur();
           }
         }}
+        disabled={true}
       ></input>
       {showPressEnterMessage ? (
         <div className="absolute -top-1 right-0 z-10 -translate-y-full rounded-sm bg-white bg-opacity-60 py-xxxs px-xs">

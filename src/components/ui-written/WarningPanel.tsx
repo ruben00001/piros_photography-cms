@@ -1,3 +1,4 @@
+import useIsAdmin from "~/hooks/useIsAdmin";
 import { MyTransition } from "../ui-display";
 import { MySpinner } from "../ui-elements";
 import { ErrorIcon, InfoIcon, TickIcon } from "../ui-elements/PhosphorIcons";
@@ -16,6 +17,8 @@ export const WarningPanel = ({
   };
   text: { title: string; body: string };
 }) => {
+  const isAdmin = useIsAdmin();
+
   return (
     <div
       id="alert-additional-content-4"
@@ -42,9 +45,11 @@ export const WarningPanel = ({
         </button>
         <button
           type="button"
-          className="my-btn my-btn-action"
+          className={`my-btn my-btn-action ${
+            !isAdmin ? "cursor-not-allowed" : ""
+          }`}
           data-dismiss-target="#alert-additional-content-4"
-          onClick={() => callback.func({ closeModal })}
+          onClick={() => isAdmin && callback.func({ closeModal })}
         >
           Confirm
         </button>
