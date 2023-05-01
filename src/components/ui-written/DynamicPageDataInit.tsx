@@ -45,17 +45,6 @@ export const DynamicPageDataInit = ({
     );
   }
 
-  if (!isDocument) {
-    return (
-      <div className="my-screen-center">
-        <div className="max-w-xl">
-          <h3 className="font-medium">That page doesn&apos;t exist</h3>
-          <p className="mt-xs text-gray-600">Redirecting...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (isError) {
     return (
       <div className="my-screen-center">
@@ -67,6 +56,17 @@ export const DynamicPageDataInit = ({
             Try refreshing the page. If the problem persists and it&apos;s not
             to do with the internet, contact the developer.
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isDocument) {
+    return (
+      <div className="my-screen-center">
+        <div className="max-w-xl">
+          <h3 className="font-medium">That page doesn&apos;t exist</h3>
+          <p className="mt-xs text-gray-600">Redirecting...</p>
         </div>
       </div>
     );

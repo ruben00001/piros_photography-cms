@@ -12,7 +12,7 @@ export const CollapsableSection = ({
 }: {
   children: ReactElement;
   showSectionText?: string;
-  margin: {
+  margin?: {
     bottom?: {
       open?: number;
       close?: number;
@@ -32,7 +32,7 @@ export const CollapsableSection = ({
     useMeasure<HTMLDivElement>();
 
   const [springs, api] = useSpring(() => ({
-    config: { tension: 280, friction: 60 },
+    config: { tension: 280, friction: 70 },
     onChange: () => setSpringAtRest(false),
     onRest: () => setSpringAtRest(true),
   }));
@@ -40,14 +40,16 @@ export const CollapsableSection = ({
   const openSection = () => {
     api.start({
       from: { height: "0px" },
-      to: { height: `${sectionContentHeight}px` },
+      to: { height: `${sectionContentHeight + (margin?.bottom?.open || 0)}px` },
     });
     setIsOpen(true);
   };
 
   const closeSection = () => {
     api.start({
-      from: { height: `${sectionContentHeight}px` },
+      from: {
+        height: `${sectionContentHeight + (margin?.bottom?.open || 0)}px`,
+      },
       to: { height: "0px" },
     });
     setIsOpen(false);
@@ -55,13 +57,13 @@ export const CollapsableSection = ({
 
   return (
     <div
-      className="group/collapse relative"
+      className="relative"
       style={{
-        minHeight: openSectionTextHeight + (margin.bottom?.close || 0),
-        paddingBottom: margin.bottom?.open || 0,
+        minHeight: openSectionTextHeight + (margin?.bottom?.close || 0),
+        // paddingBottom: margin?.bottom?.open || 0,
       }}
     >
-      <animated.div style={{ overflowY: "hidden", ...springs }}>
+      <animated.div className="" style={{ overflowY: "hidden", ...springs }}>
         <div ref={sectionContentRef}>{sectionContent}</div>
       </animated.div>
       <WithTooltip
@@ -70,22 +72,24 @@ export const CollapsableSection = ({
         isDisabled={!isOpen}
         placement="top-start"
       >
-        <div
-          className="absolute -left-xs top-0 -translate-x-full cursor-pointer text-gray-200 transition-colors duration-100 ease-in-out hover:!text-gray-600 group-hover/collapse:text-gray-300"
-          onClick={isOpen ? closeSection : openSection}
-        >
-          {isOpen ? <CaretDownIcon /> : <CaretRightIcon />}
+        <div className="group/collapse absolute top-0 left-0 ">
+          <div
+            className="absolute -left-xs top-0 -translate-x-full cursor-pointer text-gray-200 transition-colors duration-75 ease-in-out hover:!text-gray-600 group-hover/collapse:text-gray-600"
+            onClick={isOpen ? closeSection : openSection}
+          >
+            {isOpen ? <CaretDownIcon /> : <CaretRightIcon />}
+          </div>
+          <div
+            className={`-translate-y-[1px] cursor-pointer whitespace-nowrap bg-white text-xs text-gray-300 transition-colors duration-75 ease-in-out hover:!text-gray-600 group-hover/collapse:text-gray-600 ${
+              springAtRest && !isOpen ? "z-30 opacity-100" : "-z-10 opacity-0"
+            }`}
+            onClick={openSection}
+            ref={openSectionTextRef}
+          >
+            {showSectionText}
+          </div>
         </div>
       </WithTooltip>
-      <div
-        className={`absolute top-0 left-0 -translate-y-[1px] cursor-pointer whitespace-nowrap bg-white text-xs text-gray-300 transition-colors duration-150 ease-in-out hover:!text-gray-600 ${
-          springAtRest && !isOpen ? "z-30 opacity-100" : "-z-10 opacity-0"
-        }`}
-        onClick={openSection}
-        ref={openSectionTextRef}
-      >
-        {showSectionText}
-      </div>
     </div>
   );
 };

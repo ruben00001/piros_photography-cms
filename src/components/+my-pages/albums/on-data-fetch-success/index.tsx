@@ -10,16 +10,8 @@ const OnDataFetchSuccess = () => {
   return (
     <Layout.ContentBody maxWidth={1800}>
       <div className="p-lg">
-        <div>
-          {!allAlbums!.length ? (
-            <div className="mt-lg">
-              <Empty />
-            </div>
-          ) : (
-            <div className="mt-lg">
-              <Populated />
-            </div>
-          )}
+        <div className="mt-lg">
+          {!allAlbums!.length ? <Empty /> : <Populated />}
         </div>
       </div>
     </Layout.ContentBody>

@@ -3,7 +3,11 @@ import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
 import { AlbumProvider } from "~/components/+my-pages/albums/_context";
-import { DataTextInputForm, DndKit } from "~/components/ui-compounds";
+import {
+  CollapsableSection,
+  DataTextInputForm,
+  DndKit,
+} from "~/components/ui-compounds";
 import { MyToast } from "~/components/ui-display";
 import {
   getReorderedEntities,
@@ -22,10 +26,8 @@ const Populated = () => {
   const albums = data as NonNullable<typeof data>;
 
   return (
-    <div>
-      <div className="">
-        <Titles />
-      </div>
+    <>
+      <Titles />
       <div className="mt-lg max-w-[400px]">
         <AddAlbum />
       </div>
@@ -38,17 +40,22 @@ const Populated = () => {
           ))}
         </DndSortableWrapper>
       </div>
-    </div>
+    </>
   );
 };
 
 export default Populated;
 
 const Titles = () => (
-  <div>
+  <>
     <Title />
-    <SubTitle />
-  </div>
+    <CollapsableSection
+      margin={{ bottom: { open: 10 } }}
+      showSectionText="Show subtitle"
+    >
+      <SubTitle />
+    </CollapsableSection>
+  </>
 );
 
 const Title = () => {
@@ -71,7 +78,7 @@ const Title = () => {
   const isAdmin = useIsAdmin();
 
   return (
-    <div className="text-6xl">
+    <div className="text-6xl tracking-wider">
       <DataTextInputForm
         input={{ initialValue: pageText.title, placeholder: "Page title..." }}
         onSubmit={({ inputValue, onSuccess }) =>

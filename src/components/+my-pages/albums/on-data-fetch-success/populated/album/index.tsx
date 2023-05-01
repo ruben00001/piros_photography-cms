@@ -80,7 +80,7 @@ const TitleInput = () => {
   const isAdmin = useIsAdmin();
 
   return (
-    <div className="mb-xs text-2xl">
+    <div className="mb-xs font-sans-secondary text-xl uppercase tracking-wider">
       <DataTextInputForm
         onSubmit={({ inputValue, onSuccess }) =>
           isAdmin &&

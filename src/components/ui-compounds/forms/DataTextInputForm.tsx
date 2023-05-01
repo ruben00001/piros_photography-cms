@@ -70,6 +70,7 @@ export const DataTextInputForm = ({
             isChange={isChange}
             minWidth={minWidth}
             setIsFocused={setInputIsFocused}
+            isFocused={inputIsFocused}
           />
         </div>
       </form>
@@ -86,6 +87,7 @@ const TextInput = ({
   trailingSpace = 20,
   autoFocus = false,
   setIsFocused,
+  isFocused,
 }: {
   value: string;
   setValue: (value: string) => void;
@@ -95,6 +97,7 @@ const TextInput = ({
   minWidth?: number;
   trailingSpace?: number;
   autoFocus?: boolean;
+  isFocused: boolean;
 }) => {
   const [isBlurredOnInitialRender, setIsBlurredOnInitialRender] =
     useState(false);
@@ -111,9 +114,9 @@ const TextInput = ({
   return (
     <>
       <div
-        className={`relative z-10 box-content flex h-full items-stretch rounded-sm border py-1 pr-xs transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
+        className={`relative z-10 box-content flex h-full items-stretch rounded-sm border pr-xs transition-colors duration-75 ease-in-out focus-within:border-base-300 focus-within:bg-gray-50 ${
           isChange ? "border-yellow-300" : "border-transparent"
-        } `}
+        } ${isChange || isFocused ? "mb-1 py-1" : ""}`}
       >
         <p className="invisible absolute whitespace-nowrap" ref={dummyInputRef}>
           {value.length ? value : placeholder}

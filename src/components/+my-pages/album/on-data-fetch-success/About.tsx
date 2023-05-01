@@ -2,15 +2,19 @@ import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
 import { useAlbumContext } from "~/components/+my-pages/album/_context";
-import { DataTextAreaForm, DataTextInputForm } from "~/components/ui-compounds";
+import {
+  CollapsableSection,
+  DataTextAreaForm,
+  DataTextInputForm,
+} from "~/components/ui-compounds";
 import { MyToast } from "~/components/ui-display";
 import useIsAdmin from "~/hooks/useIsAdmin";
 
 const About = () => (
-  <div>
+  <>
     <Title />
     <Description />
-  </div>
+  </>
 );
 
 export default About;
@@ -71,22 +75,24 @@ const Description = () => {
   const isAdmin = useIsAdmin();
 
   return (
-    <div className="max-w-[700px] font-serif text-lg">
-      <DataTextAreaForm
-        onSubmit={({ inputValue, onSuccess }) =>
-          isAdmin &&
-          updateDescriptionMutation.mutate(
-            {
-              albumId: album.id,
-              updatedDescription: inputValue,
-            },
-            { onSuccess },
-          )
-        }
-        tooltipText="click to edit"
-        initialValue={album.description}
-        placeholder="Album description (optional)"
-      />
-    </div>
+    <CollapsableSection showSectionText="Show album description">
+      <div className="max-w-[700px] font-serif text-lg">
+        <DataTextAreaForm
+          onSubmit={({ inputValue, onSuccess }) =>
+            isAdmin &&
+            updateDescriptionMutation.mutate(
+              {
+                albumId: album.id,
+                updatedDescription: inputValue,
+              },
+              { onSuccess },
+            )
+          }
+          tooltipText="click to edit"
+          initialValue={album.description}
+          placeholder="Album description (optional)"
+        />
+      </div>
+    </CollapsableSection>
   );
 };
