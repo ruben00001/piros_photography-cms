@@ -30,7 +30,14 @@ const HomePage = () => {
           </div>
           <h5 className="font-bold">
             Welcome
-            {isGuest ? <span className="text-blue-400"> Guest</span> : ""}
+            {isGuest ? (
+              <span className="text-blue-400">
+                {" "}
+                {session.data.user.name || "Guest"}
+              </span>
+            ) : (
+              ""
+            )}
           </h5>
           {welcomeShown ? (
             <p className="mt-xs mb-sm text-gray-500">
@@ -50,6 +57,8 @@ export default HomePage;
 const WelcomeModal = () => {
   const [isOpen, setIsOpen] = useState(true);
 
+  const { data: sessionData } = useSession();
+
   const welcomeShown = localStorage.getItem(welcomeKey) === "true";
 
   if (welcomeShown) {
@@ -66,7 +75,10 @@ const WelcomeModal = () => {
       <div className="relative  max-w-[90vw] rounded-lg bg-white p-6 text-left shadow-xl">
         <h5 className="font-bold">
           Welcome
-          <span className="text-blue-400"> Guest</span>
+          <span className="text-blue-400">
+            {" "}
+            {sessionData?.user.name || "Guest"}
+          </span>
         </h5>
         <div className="mt-sm flex flex-col gap-1 text-gray-500">
           <p>
@@ -77,7 +89,7 @@ const WelcomeModal = () => {
         </div>
         <div className="mt-4 flex justify-end">
           <button
-            className="rounded-md border py-1 px-3 text-sm transition-all duration-75 ease-in-out hover:bg-gray-50"
+            className="rounded-md border py-1 px-3 text-sm tracking-wide text-gray-700 transition-all duration-75 ease-in-out hover:bg-gray-50"
             onClick={handleCloseModal}
             type="button"
           >

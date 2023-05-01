@@ -59,6 +59,7 @@ model User {
     albumImageLike     AlbumImageLike[]
     banReason          String?
     banDate            DateTime?
+    password           String?
 }
 
 model Admin {

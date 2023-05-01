@@ -44,9 +44,18 @@ const StatusButton = () => {
 
   return (
     <WithTooltip text="user menu">
-      <div className="cursor-pointer text-sm tracking-wide text-blue-400">
-        <span>{role.slice(0, 1)}</span>
-        <span className="lowercase">{role.slice(1, role.length)}</span>
+      <div className="cursor-pointer text-sm tracking-wide">
+        {role === "GUEST" && data?.user.name ? (
+          <div className="">
+            <span className="text-blue-400">{data.user.name}</span>
+            <span className="text-gray-400"> as guest</span>
+          </div>
+        ) : (
+          <div className="text-blue-400">
+            <span>{role.slice(0, 1)}</span>
+            <span className="lowercase">{role.slice(1, role.length)}</span>
+          </div>
+        )}
       </div>
     </WithTooltip>
   );
@@ -54,13 +63,20 @@ const StatusButton = () => {
 
 const StatusMenuContent = () => {
   const { data } = useSession();
+  console.log("data:", data);
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const role = data!.user.role;
 
   return (
     <div className="bg-white p-6">
-      <h3>{role === "GUEST" ? "Guest" : "Admin"}</h3>
+      <h3>
+        {role === "GUEST"
+          ? data?.user.name
+            ? data.user.name
+            : "Guest"
+          : "Admin"}
+      </h3>
       {role === "GUEST" ? (
         <p className="mt-xxs text-sm font-light text-gray-400">
           Site is in <span className="font-sans-3 font-medium">view mode</span>.

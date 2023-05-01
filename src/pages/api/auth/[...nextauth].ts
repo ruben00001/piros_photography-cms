@@ -139,11 +139,13 @@ export function requestWrapper(
           password: { label: "Guest Password", type: "password" },
         },
         async authorize(credentials) {
-          if (credentials?.password !== env.GUEST_PASSWORD) return null;
+          const password = credentials?.password;
+
+          if (!password?.length) return null;
 
           const user = await prisma.user.findFirst({
             where: {
-              role: "GUEST",
+              AND: [{ role: "GUEST" }, { password }],
             },
           });
 
