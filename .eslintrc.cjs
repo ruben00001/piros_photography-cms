@@ -17,7 +17,7 @@ const config = {
     tsconfigRootDir: __dirname,
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "cypress"],
   extends: [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
