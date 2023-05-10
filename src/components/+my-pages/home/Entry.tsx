@@ -39,7 +39,7 @@ const HomePage = () => {
               ""
             )}
           </h5>
-          {welcomeShown ? (
+          {isGuest && welcomeShown ? (
             <p className="mt-xs mb-sm text-gray-500">
               As a guest, you&apos;re in view mode.
             </p>
@@ -47,7 +47,7 @@ const HomePage = () => {
           <PageLinks />
         </div>
       </Layout.ContentBody>
-      <WelcomeModal />
+      {isGuest && !welcomeShown ? <WelcomeModal /> : null}
     </>
   );
 };
@@ -58,12 +58,6 @@ const WelcomeModal = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   const { data: sessionData } = useSession();
-
-  const welcomeShown = localStorage.getItem(welcomeKey) === "true";
-
-  if (welcomeShown) {
-    return null;
-  }
 
   const handleCloseModal = () => {
     setIsOpen(false);
