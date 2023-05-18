@@ -16,7 +16,7 @@ import {
 } from "~/helpers/process-data";
 import { findEntityById } from "~/helpers/query-data";
 import useIsAdmin from "~/hooks/useIsAdmin";
-import AlbumImage from "./image";
+import AlbumImage from "./image/+Entry";
 
 const Populated = () => {
   const album = useAlbumContext();

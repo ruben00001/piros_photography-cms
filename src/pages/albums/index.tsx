@@ -1,4 +1,4 @@
-import AlbumsPageContent from "~/components/+my-pages/albums/index";
+import AlbumsPageContent from "~/components/+my-pages/albums/+Entry";
 import Layout from "~/components/layouts";
 
 const AlbumsPage = () => (

@@ -1,4 +1,4 @@
-import AlbumPage from "~/components/+my-pages/album";
+import AlbumPage from "~/components/+my-pages/album/+Entry";
 import Layout from "~/components/layouts";
 
 export default function Page() {

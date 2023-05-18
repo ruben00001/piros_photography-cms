@@ -15,14 +15,14 @@
     @apply rounded-md border py-xxs px-[0.75rem] text-sm capitalize transition-colors duration-75 ease-in-out;
   }
   .my-btn-neutral {
-    @apply border border-base-200 text-gray-500 hover:bg-base-200;
+    @apply border-base-200 hover:bg-base-200 border text-gray-500;
   }
   .my-btn-action {
     @apply bg-secondary text-secondary-content hover:bg-secondary-focus;
   }
 
   .my-hover-bg {
-    @apply transition-colors duration-75 ease-in-out hover:bg-base-200;
+    @apply hover:bg-base-200 transition-colors duration-75 ease-in-out;
   }
   .my-group-hover-child-opacity {
     @apply opacity-0 transition-opacity duration-75 ease-in-out group-hover:opacity-100;

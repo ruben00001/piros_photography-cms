@@ -1,6 +1,6 @@
 import { api } from "~/utils/api";
 import { PageDataInit } from "~/components/ui-written";
-import OnDataFetchSuccess from "./on-data-fetch-success";
+import OnDataFetchSuccess from "./on-data-fetch-success/+Entry";
 
 const AlbumsPage = () => {
   const {

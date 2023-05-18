@@ -1,21 +1,16 @@
 import { useState } from "react";
 import { animated, useSpring } from "@react-spring/web";
-import produce from "immer";
 import { createPortal } from "react-dom";
-import { toast } from "react-toastify";
 import { useMeasure } from "react-use";
 
-import { api } from "~/utils/api";
-import {
-  useAlbumContext,
-  useAlbumImageContext,
-} from "~/components/+my-pages/album/_context";
+import { useAlbumImageContext } from "~/components/+my-pages/album/_context";
 import { MyCldImage } from "~/components/containers";
 import { DataTextAreaForm, DataTextInputForm } from "~/components/ui-compounds";
-import { MyModal, MyToast } from "~/components/ui-display";
+import { MyModal } from "~/components/ui-display";
 import { CycleLeftIcon, CycleRightIcon } from "~/components/ui-elements";
 import { calcImageDimensionsToFitToScreen } from "~/helpers/general";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import useIfAdmin from "~/hooks/useIfAdmin";
+import { useUpdateDescription, useUpdateTitle } from "../_hooks";
 
 const OpenedImage = () => (
   <>
@@ -44,6 +39,8 @@ const CloseButton = () => {
     document.body,
   );
 };
+
+// □ refactor: below jsx - duplication of description
 
 const DescriptionPanel = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -132,58 +129,21 @@ const DescriptionPanel = () => {
 };
 
 const Title = () => {
-  const album = useAlbumContext();
   const albumImage = useAlbumImageContext();
 
-  const utils = api.useContext();
-
-  const updateTitleMutation = api.albumImage.updateTitle.useMutation({
-    async onMutate({ albumImageId, updatedTitle }) {
-      const prevData = utils.album.albumPageGetOne.getData();
-
-      await utils.album.albumPageGetOne.cancel();
-
-      utils.album.albumPageGetOne.setData({ albumId: album.id }, (currData) => {
-        if (!currData) {
-          return prevData;
-        }
-
-        const updated = produce(currData, (draft) => {
-          const albumImageIndex = draft.images.findIndex(
-            (albumImage) => albumImage.id === albumImageId,
-          );
-          const image = draft.images[albumImageIndex];
-          if (!image) {
-            return;
-          }
-          image.title = updatedTitle;
-        });
-
-        return updated;
-      });
-    },
-    onSuccess: () => {
-      toast(<MyToast text="Title updated" type="success" />);
-    },
-    onError: () => {
-      toast(
-        <MyToast text="Something went wrong updating the title" type="error" />,
-      );
-    },
-  });
-
-  const isAdmin = useIsAdmin();
+  const ifAdmin = useIfAdmin();
+  const updateTitle = useUpdateTitle();
 
   return (
     <DataTextInputForm
       onSubmit={({ inputValue, onSuccess }) =>
-        isAdmin &&
-        updateTitleMutation.mutate(
-          {
-            albumImageId: albumImage.id,
-            updatedTitle: inputValue,
-          },
-          { onSuccess },
+        ifAdmin(() =>
+          updateTitle(
+            {
+              title: inputValue,
+            },
+            { onSuccess },
+          ),
         )
       }
       input={{
@@ -196,66 +156,22 @@ const Title = () => {
 };
 
 const Description = () => {
-  const album = useAlbumContext();
   const albumImage = useAlbumImageContext();
 
-  const utils = api.useContext();
-
-  const updateDescriptionMutation =
-    api.albumImage.updateDescription.useMutation({
-      async onMutate({ albumImageId, updatedDescription }) {
-        const prevData = utils.album.albumPageGetOne.getData();
-
-        await utils.album.albumPageGetOne.cancel();
-
-        utils.album.albumPageGetOne.setData(
-          { albumId: album.id },
-          (currData) => {
-            if (!currData) {
-              return prevData;
-            }
-
-            const updated = produce(currData, (draft) => {
-              const albumImageIndex = draft.images.findIndex(
-                (albumImage) => albumImage.id === albumImageId,
-              );
-              const image = draft.images[albumImageIndex];
-              if (!image) {
-                return;
-              }
-              image.description = updatedDescription;
-            });
-
-            return updated;
-          },
-        );
-      },
-      onSuccess: () => {
-        toast(<MyToast text="Description updated" type="success" />);
-      },
-      onError: () => {
-        toast(
-          <MyToast
-            text="Something went wrong updating the description"
-            type="error"
-          />,
-        );
-      },
-    });
-
-  const isAdmin = useIsAdmin();
+  const ifAdmin = useIfAdmin();
+  const updateDescription = useUpdateDescription();
 
   return (
     <div className="overflow-x-hidden">
       <DataTextAreaForm
         onSubmit={({ inputValue, onSuccess }) =>
-          isAdmin &&
-          updateDescriptionMutation.mutate(
-            {
-              albumImageId: albumImage.id,
-              updatedDescription: inputValue,
-            },
-            { onSuccess },
+          ifAdmin(() =>
+            updateDescription(
+              {
+                description: inputValue,
+              },
+              { onSuccess },
+            ),
           )
         }
         tooltipText="Click to update description"

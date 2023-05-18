@@ -2,7 +2,7 @@
 import { api } from "~/utils/api";
 import { DynamicPageDataInit } from "~/components/ui-written";
 import useDynamicRouteParams from "~/hooks/useDynamicRouteParams";
-import OnDataFetchSuccess from "./on-data-fetch-success";
+import OnDataFetchSuccess from "./on-data-fetch-success/+Entry";
 
 const AlbumPage = () => {
   const params = useDynamicRouteParams();

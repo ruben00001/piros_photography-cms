@@ -60,36 +60,40 @@ export const CollapsableSection = ({
       className="relative"
       style={{
         minHeight: openSectionTextHeight + (margin?.bottom?.close || 0),
-        // paddingBottom: margin?.bottom?.open || 0,
       }}
     >
-      <animated.div className="" style={{ overflowY: "hidden", ...springs }}>
+      <animated.div
+        className="z-10"
+        style={{ overflowY: "hidden", ...springs }}
+      >
         <div ref={sectionContentRef}>{sectionContent}</div>
       </animated.div>
-      <WithTooltip
-        text="hide section"
-        type="action"
-        isDisabled={!isOpen}
-        placement="top-start"
-      >
-        <div className="group/collapse absolute top-0 left-0 ">
+      <div className="group/collapse absolute top-0 left-0">
+        <WithTooltip
+          text="hide section"
+          type="action"
+          isDisabled={!isOpen}
+          placement="top-start"
+        >
           <div
             className="absolute -left-xs top-0 -translate-x-full cursor-pointer text-gray-200 transition-colors duration-75 ease-in-out hover:!text-gray-600 group-hover/collapse:text-gray-600"
             onClick={isOpen ? closeSection : openSection}
           >
             {isOpen ? <CaretDownIcon /> : <CaretRightIcon />}
           </div>
-          <div
-            className={`-translate-y-[1px] cursor-pointer whitespace-nowrap bg-white text-xs text-gray-300 transition-colors duration-75 ease-in-out hover:!text-gray-600 group-hover/collapse:text-gray-600 ${
-              springAtRest && !isOpen ? "z-30 opacity-100" : "-z-10 opacity-0"
-            }`}
-            onClick={openSection}
-            ref={openSectionTextRef}
-          >
-            {showSectionText}
-          </div>
+        </WithTooltip>
+        <div
+          className={`-translate-y-[1px] cursor-pointer whitespace-nowrap bg-white text-xs text-gray-300 transition-colors duration-75 ease-in-out hover:!text-gray-600 group-hover/collapse:text-gray-600  ${
+            springAtRest && !isOpen
+              ? "z-30 opacity-100"
+              : "pointer-events-none -z-10 hidden opacity-0"
+          }`}
+          onClick={openSection}
+          ref={openSectionTextRef}
+        >
+          {showSectionText}
         </div>
-      </WithTooltip>
+      </div>
     </div>
   );
 };

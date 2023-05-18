@@ -5,5 +5,23 @@
   "editor.acceptSuggestionOnCommitCharacter": false,
   "workbench.editor.labelFormat": "short",
   "css.lint.unknownAtRules": "ignore",
-  "editor.codeActionsOnSave": { "source.fixAll.eslint": true }
+  "editor.codeActionsOnSave": { "source.fixAll.eslint": true },
+  "restoreTerminals.terminals": [
+    {
+      "splitTerminals": [
+        {
+          "name": "localhost",
+          "commands": ["yarn dev"],
+          "shouldRunCommands": false
+        }
+      ]
+    },
+    {
+      "splitTerminals": [
+        {
+          "name": "git"
+        }
+      ]
+    }
+  ]
 }

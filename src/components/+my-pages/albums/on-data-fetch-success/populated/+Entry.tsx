@@ -16,8 +16,7 @@ import {
 } from "~/helpers/process-data";
 import { findEntityById } from "~/helpers/query-data";
 import useIsAdmin from "~/hooks/useIsAdmin";
-import AddAlbum from "./AddAlbum";
-import Album from "./album";
+import Album from "./album/+Entry";
 
 const Populated = () => {
   const { data } = api.album.albumsPageGetAll.useQuery(undefined, {
@@ -28,9 +27,6 @@ const Populated = () => {
   return (
     <>
       <Titles />
-      <div className="mt-lg max-w-[400px]">
-        <AddAlbum />
-      </div>
       <div className="mt-lg grid grid-cols-2 gap-xl">
         <DndSortableWrapper>
           {albums.map((album) => (

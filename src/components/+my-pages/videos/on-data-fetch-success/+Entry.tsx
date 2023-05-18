@@ -2,8 +2,9 @@
 
 import { api } from "~/utils/api";
 import Layout from "~/components/layouts";
+import AddVideo from "./AddVideo";
 import Populated from "./populated/Entry";
-import Unpopulated from "./unpopulated";
+import Unpopulated from "./unpopulated/Entry";
 
 const OnDataFetchSuccess = () => {
   const { data } = api.youtubeVideo.getAll.useQuery();
@@ -16,16 +17,11 @@ const OnDataFetchSuccess = () => {
           The layout below is for editing purposes and isn&apos;t necessarily
           meant as a visual representation of the page that visitors will see.
         </p>
-        <div>
-          {!data!.length ? (
-            <div className="mt-lg">
-              <Unpopulated />
-            </div>
-          ) : (
-            <div className="mt-lg">
-              <Populated />
-            </div>
-          )}
+        <div className="mt-lg max-w-[400px]">
+          <AddVideo />
+        </div>
+        <div className="mt-lg">
+          {!data!.length ? <Unpopulated /> : <Populated />}
         </div>
       </div>
     </Layout.ContentBody>

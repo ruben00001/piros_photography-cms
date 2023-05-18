@@ -17,12 +17,14 @@ const OnDataFetchSuccess = ({ album }: { album: Album }) => (
         >
           <MetaAndControls />
         </CollapsableSection>
-        <CollapsableSection
-          showSectionText="Show add album image button"
-          margin={{ bottom: { close: 0 } }}
-        >
-          <AddImageButton />
-        </CollapsableSection>
+        <div className="mt-lg">
+          <CollapsableSection
+            showSectionText="Show add album image button"
+            margin={{ bottom: { close: 0 } }}
+          >
+            <AddImageButton />
+          </CollapsableSection>
+        </div>
         <div className="mt-lg">
           <About />
           <Images />

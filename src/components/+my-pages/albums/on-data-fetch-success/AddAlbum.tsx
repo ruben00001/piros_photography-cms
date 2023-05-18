@@ -13,7 +13,9 @@ import {
 } from "~/components/ui-elements";
 import useIsAdmin from "~/hooks/useIsAdmin";
 
-const AddAlbum = ({ centerButton }: { centerButton?: boolean }) => {
+// □ refactor: add album same as add video on videos page
+
+const AddAlbum = () => {
   const [formIsOpen, setFormIsOpen] = useState(false);
 
   const [formRef, { height: formHeight }] = useMeasure<HTMLDivElement>();
@@ -40,20 +42,18 @@ const AddAlbum = ({ centerButton }: { centerButton?: boolean }) => {
 
   return (
     <>
-      <div className={centerButton ? "flex justify-center" : ""}>
-        <button
-          className={`my-btn-action group mb-lg  flex items-center gap-xs rounded-md py-1.5 px-sm text-white ${
-            formIsOpen ? "opacity-75" : ""
-          }`}
-          onClick={() => !formIsOpen && openForm()}
-          type="button"
-        >
-          <span className="text-sm">
-            <PlusIcon weight="bold" />
-          </span>
-          <span className="text-sm font-medium">New album</span>
-        </button>
-      </div>
+      <button
+        className={`my-btn-action group mb-sm flex items-center gap-xs rounded-md py-1.5 px-sm text-white ${
+          formIsOpen ? "pointer-events-none cursor-auto opacity-75" : ""
+        }`}
+        onClick={() => !formIsOpen && openForm()}
+        type="button"
+      >
+        <span className="text-sm">
+          <PlusIcon weight="bold" />
+        </span>
+        <span className="text-sm font-medium">New album</span>
+      </button>
       <animated.div style={{ overflowY: "hidden", ...springs }}>
         <div ref={formRef}>
           <TitleForm closeForm={closeForm} />
@@ -108,7 +108,7 @@ const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
 
   return (
     <form
-      className="relative flex flex-col gap-lg"
+      className="relative"
       onSubmit={(e) => {
         e.preventDefault();
 
@@ -119,18 +119,16 @@ const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
         handleSubmit();
       }}
     >
-      <div className="flex min-w-[300px] flex-col gap-lg rounded-md border px-4">
-        <h3 className="border-b border-b-base-300 pt-4 pb-sm leading-6 text-base-content">
-          Create album
-        </h3>
-        <div className="relative rounded-sm border bg-gray-50 py-1 pr-sm">
+      <div className="min-w-[250px] rounded-md">
+        <p className="mb-xs text-sm text-gray-300">Create new album</p>
+        <div className="relative mb-sm rounded-sm border bg-gray-50 py-1 pr-sm">
           <div
             className={`transition-transform duration-75 ease-in-out  ${
               isFocused || !value.length ? "translate-x-xs" : "translate-x-0"
             }`}
           >
             <input
-              className="w-full bg-transparent"
+              className="w-full bg-transparent text-base"
               placeholder="Album title"
               value={value}
               onChange={(e) => setValue(e.target.value)}
@@ -153,7 +151,12 @@ const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
           >
             Cancel
           </button>
-          <button className="my-btn my-btn-action" type="submit">
+          <button
+            className={`my-btn my-btn-action ${
+              !isAdmin ? "cursor-not-allowed" : ""
+            }`}
+            type="submit"
+          >
             Submit
           </button>
         </div>
