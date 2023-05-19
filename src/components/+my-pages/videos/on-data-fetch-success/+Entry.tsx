@@ -17,7 +17,7 @@ const OnDataFetchSuccess = () => {
           The layout below is for editing purposes and isn&apos;t necessarily
           meant as a visual representation of the page that visitors will see.
         </p>
-        <div className="mt-lg max-w-[400px]">
+        <div className="mt-lg">
           <AddVideo />
         </div>
         <div className="mt-lg">

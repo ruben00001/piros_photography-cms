@@ -4,6 +4,10 @@ import { toast } from "react-toastify";
 import { useMeasure } from "react-use";
 
 import { api } from "~/utils/api";
+import {
+  CollapsableSectionWithButton,
+  CreateEntityFormWithSingleInput2 as CreateEntityFormWithSingleInput,
+} from "~/components/ui-compounds";
 import { MyToast, MyTransition } from "~/components/ui-display";
 import {
   ErrorIcon,
@@ -11,11 +15,85 @@ import {
   PlusIcon,
   TickIcon,
 } from "~/components/ui-elements";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import useAdmin from "~/hooks/useAdmin";
 
 // □ refactor: add album same as add video on videos page
-
 const AddAlbum = () => {
+  const { data: allAlbums, refetch: refetchAlbums } =
+    api.album.albumsPageGetAll.useQuery();
+
+  const createAlbumMutation = api.album.create.useMutation({
+    onError: () => {
+      toast(<MyToast text="Error creating album" type="error" />);
+    },
+  });
+
+  const handleSubmit = ({
+    closeForm,
+    inputValue,
+    resetForm,
+  }: {
+    inputValue: string;
+    resetForm: () => void;
+    closeForm: () => void;
+  }) => {
+    if (!inputValue.length) {
+      return;
+    }
+
+    createAlbumMutation.mutate(
+      { title: inputValue, index: allAlbums?.length },
+      {
+        async onSuccess() {
+          await refetchAlbums();
+
+          setTimeout(() => {
+            resetForm();
+
+            closeForm();
+
+            toast(<MyToast text="Album created" type="success" />);
+
+            setTimeout(() => {
+              createAlbumMutation.reset();
+            }, 200);
+          }, 450);
+        },
+      },
+    );
+  };
+
+  const { ifAdmin, isAdmin } = useAdmin();
+
+  return (
+    <CollapsableSectionWithButton buttonText="New album">
+      {({ closeSection: closeForm }) => (
+        <CreateEntityFormWithSingleInput
+          onSubmit={(inputValue, resetForm) =>
+            ifAdmin(() => handleSubmit({ closeForm, inputValue, resetForm }))
+          }
+        >
+          <CreateEntityFormWithSingleInput.Title text="Create new album" />
+          <CreateEntityFormWithSingleInput.Input>
+            <CreateEntityFormWithSingleInput.Input.Inner
+              placeholder="Album title"
+              setValue={() => null}
+              value={""}
+            />
+          </CreateEntityFormWithSingleInput.Input>
+          <CreateEntityFormWithSingleInput.Controls
+            onCancel={closeForm}
+            submitIsDisabled={false}
+          />
+        </CreateEntityFormWithSingleInput>
+      )}
+    </CollapsableSectionWithButton>
+  );
+};
+
+export default AddAlbum;
+
+const AddAlbumOLD = () => {
   const [formIsOpen, setFormIsOpen] = useState(false);
 
   const [formRef, { height: formHeight }] = useMeasure<HTMLDivElement>();
@@ -63,8 +141,6 @@ const AddAlbum = () => {
   );
 };
 
-export default AddAlbum;
-
 const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -104,7 +180,7 @@ const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
     );
   };
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin, isAdmin } = useAdmin();
 
   return (
     <form
@@ -112,11 +188,7 @@ const TitleForm = ({ closeForm }: { closeForm: () => void }) => {
       onSubmit={(e) => {
         e.preventDefault();
 
-        if (!isAdmin) {
-          return;
-        }
-
-        handleSubmit();
+        ifAdmin(() => handleSubmit());
       }}
     >
       <div className="min-w-[250px] rounded-md">

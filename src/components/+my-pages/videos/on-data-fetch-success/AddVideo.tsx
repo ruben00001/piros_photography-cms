@@ -1,72 +1,117 @@
-import { useState } from "react";
-import { Transition } from "@headlessui/react";
-import { animated, useSpring } from "@react-spring/web";
-import { toast } from "react-toastify";
-import { useMeasure } from "react-use";
-
 import { api } from "~/utils/api";
-import { MyToast, WithTooltip } from "~/components/ui-display";
 import {
-  ErrorIcon,
-  HelpIcon,
-  MySpinner,
-  PlusIcon,
-  TickIcon,
-} from "~/components/ui-elements";
+  CollapsableSectionWithButton,
+  CreateEntityFormWithSingleInput,
+  MutationStatusOverlay,
+} from "~/components/ui-compounds";
+import { WithTooltip } from "~/components/ui-display";
+import { HelpIcon } from "~/components/ui-elements";
 import { checkIsYoutubeUrl } from "~/helpers/youtube";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import useAdmin from "~/hooks/useAdmin";
+import useToast from "~/hooks/useToast";
 
 const AddVideo = () => {
-  const [formIsOpen, setFormIsOpen] = useState(false);
-
-  const [formRef, { height: formHeight }] = useMeasure<HTMLDivElement>();
-
-  const [springs, api] = useSpring(() => ({
-    config: { tension: 280, friction: 60 },
-    from: { height: "0px", opacity: 0 },
-  }));
-
-  const openForm = () => {
-    api.start({
-      from: { height: "0px", opacity: 0 },
-      to: { height: `${formHeight + 10}px`, opacity: 100 },
-    });
-    setFormIsOpen(true);
-  };
-  const closeForm = () => {
-    api.start({
-      from: { height: `${formHeight + 10}px`, opacity: 100 },
-      to: { height: "0px", opacity: 0 },
-    });
-    setFormIsOpen(false);
-  };
-
   return (
-    <>
-      <button
-        className={`my-btn-action group mb-sm flex items-center gap-xs rounded-md py-1.5 px-sm text-white ${
-          formIsOpen ? "pointer-events-none cursor-auto opacity-75" : ""
-        }`}
-        onClick={() => !formIsOpen && openForm()}
-        type="button"
-      >
-        <span className="text-sm">
-          <PlusIcon weight="bold" />
-        </span>
-        <span className="text-sm font-medium">Add video</span>
-      </button>
-      <animated.div style={{ overflowY: "hidden", ...springs }}>
-        <div ref={formRef}>
-          <YoutubeUrlForm closeForm={closeForm} />
-        </div>
-      </animated.div>
-    </>
+    <CollapsableSectionWithButton buttonText="Add video">
+      {({ closeSection }) => <YoutubeUrlForm closeForm={closeSection} />}
+    </CollapsableSectionWithButton>
   );
 };
 
 export default AddVideo;
 
 const YoutubeUrlForm = ({ closeForm }: { closeForm: () => void }) => {
+  const { data: allVideos, refetch: refetchVideos } =
+    api.youtubeVideo.getAll.useQuery();
+
+  const toast = useToast();
+
+  const addVideoMutation = api.youtubeVideo.create.useMutation({
+    onError() {
+      toast.error("Error creating video");
+    },
+  });
+
+  const { ifAdmin, isAdmin } = useAdmin();
+
+  const handleSubmit = (inputValue: string, resetForm: () => void) => {
+    const inputValueIsInvalidYoutubeURL =
+      inputValue.length && !checkIsYoutubeUrl(inputValue);
+
+    if (!inputValue.length || inputValueIsInvalidYoutubeURL) {
+      return;
+    }
+
+    addVideoMutation.mutate(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      { index: allVideos!.length, youtubeUrl: inputValue },
+      {
+        async onSuccess() {
+          await refetchVideos();
+
+          setTimeout(() => {
+            resetForm();
+
+            closeForm();
+
+            toast.success("Video added");
+
+            setTimeout(() => {
+              addVideoMutation.reset();
+            }, 200);
+          }, 450);
+        },
+      },
+    );
+  };
+
+  return (
+    <CreateEntityFormWithSingleInput
+      mutationStatusOverlay={
+        <MutationStatusOverlay
+          status={addVideoMutation.status}
+          text={{
+            creating: "Adding video",
+            error: "Error creating video",
+            success: "Video created",
+          }}
+        />
+      }
+      onCancelButtonClick={closeForm}
+      onSubmit={(...args) => ifAdmin(() => handleSubmit(...args))}
+      submitIsDisabled={(inputValue) =>
+        !isAdmin || checkIsYoutubeUrl(inputValue)
+      }
+      text={{ placeholder: "Youtube url", title: "Add new video" }}
+      elements={{
+        input: <YoutubeURLHelp />,
+        inputMessage: (
+          <p className="text-xs text-my-alert-content">
+            Input isn&apos;t a valid youtube url
+          </p>
+        ),
+      }}
+      computeIsInputError={(inputValue) =>
+        Boolean(inputValue.length && !checkIsYoutubeUrl(inputValue))
+      }
+    />
+  );
+};
+
+const YoutubeURLHelp = () => {
+  return (
+    <WithTooltip
+      text="simply copy the url from the url bar of a youtube video"
+      type="info"
+    >
+      <span className="absolute -right-sm top-1/2 -translate-y-1/2 translate-x-full cursor-help rounded-full p-xxs text-gray-400 hover:bg-gray-100">
+        <HelpIcon />
+      </span>
+    </WithTooltip>
+  );
+};
+
+/* const YoutubeUrlFormOld = ({ closeForm }: { closeForm: () => void }) => {
   const [inputValue, setInputValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
@@ -228,15 +273,4 @@ const CreateStatusPanel = ({
   );
 };
 
-const YoutubeURLHelp = () => {
-  return (
-    <WithTooltip
-      text="simply copy the url from the url bar of a youtube video"
-      type="info"
-    >
-      <span className="absolute -right-sm top-1/2 -translate-y-1/2 translate-x-full cursor-help rounded-full p-xxs text-gray-400 hover:bg-gray-100">
-        <HelpIcon />
-      </span>
-    </WithTooltip>
-  );
-};
+ */

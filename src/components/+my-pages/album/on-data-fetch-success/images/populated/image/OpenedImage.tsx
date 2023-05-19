@@ -9,7 +9,7 @@ import { DataTextAreaForm, DataTextInputForm } from "~/components/ui-compounds";
 import { MyModal } from "~/components/ui-display";
 import { CycleLeftIcon, CycleRightIcon } from "~/components/ui-elements";
 import { calcImageDimensionsToFitToScreen } from "~/helpers/general";
-import useIfAdmin from "~/hooks/useIfAdmin";
+import useAdmin from "~/hooks/useAdmin";
 import { useUpdateDescription, useUpdateTitle } from "../_hooks";
 
 const OpenedImage = () => (
@@ -131,7 +131,7 @@ const DescriptionPanel = () => {
 const Title = () => {
   const albumImage = useAlbumImageContext();
 
-  const ifAdmin = useIfAdmin();
+  const { ifAdmin } = useAdmin();
   const updateTitle = useUpdateTitle();
 
   return (
@@ -158,7 +158,7 @@ const Title = () => {
 const Description = () => {
   const albumImage = useAlbumImageContext();
 
-  const ifAdmin = useIfAdmin();
+  const { ifAdmin } = useAdmin();
   const updateDescription = useUpdateDescription();
 
   return (
