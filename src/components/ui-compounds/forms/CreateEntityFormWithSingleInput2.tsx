@@ -1,4 +1,50 @@
-import { useState, type FormEvent, type ReactElement } from "react";
+import { createContext, useContext, useState, type ReactElement } from "react";
+
+import { checkObjectHasField } from "~/helpers/general";
+import { useFocus } from "~/hooks/useFocused";
+
+type ComponentState = {
+  inputValue: string;
+  setInputValue: (inputValue: string) => void;
+  resetForm: () => void;
+};
+
+const ComponentContext = createContext<ComponentState>({} as ComponentState);
+
+const ComponentProvider = ({
+  children,
+}: {
+  children: ReactElement | ((args: ComponentState) => ReactElement);
+}) => {
+  const [inputValue, setInputValue] = useState("");
+
+  const resetForm = () => {
+    setInputValue("");
+  };
+
+  const value: ComponentState = {
+    inputValue,
+    setInputValue,
+    resetForm,
+  };
+
+  return (
+    <ComponentContext.Provider value={value}>
+      {typeof children === "function" ? children(value) : children}
+    </ComponentContext.Provider>
+  );
+};
+
+const useComponentContext = () => {
+  const context = useContext(ComponentContext);
+
+  const contextIsPopulated = checkObjectHasField(context);
+  if (!contextIsPopulated) {
+    throw new Error("useComponentContext must be used within its provider!");
+  }
+
+  return context;
+};
 
 export function CreateEntityFormWithSingleInput2({
   onSubmit,
@@ -7,26 +53,27 @@ export function CreateEntityFormWithSingleInput2({
   children: ReactElement | null | (ReactElement | null)[];
   onSubmit: (value: string, resetForm: () => void) => void;
 }) {
-  const [inputValue, setInputValue] = useState("");
-
-  const resetForm = () => {
-    setInputValue("");
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!inputValue.length) {
-      return;
-    }
-
-    onSubmit(inputValue, resetForm);
-  };
-
   return (
-    <form className="relative w-full" onSubmit={handleSubmit}>
-      <div className="min-w-[250px] max-w-[400px] rounded-md">{children}</div>
-    </form>
+    <ComponentProvider>
+      {({ inputValue, resetForm }) => (
+        <form
+          className="relative w-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+
+            if (!inputValue.length) {
+              return;
+            }
+
+            onSubmit(inputValue, resetForm);
+          }}
+        >
+          <div className="min-w-[250px] max-w-[400px] rounded-md">
+            {children}
+          </div>
+        </form>
+      )}
+    </ComponentProvider>
   );
 }
 
@@ -36,7 +83,13 @@ const Title = ({ text }: { text: string }) => (
 
 CreateEntityFormWithSingleInput2.Title = Title;
 
-function Input({
+function Input({ children }: { children: ReactElement }) {
+  return children;
+}
+
+CreateEntityFormWithSingleInput2.Input = Input;
+
+function InputWrapper({
   containerStyles,
   children,
 }: {
@@ -54,36 +107,25 @@ function Input({
   );
 }
 
-CreateEntityFormWithSingleInput2.Input = Input;
+Input.Wrapper = InputWrapper;
 
-const InputInner = ({
-  value,
-  placeholder,
-  setValue,
-}: {
-  value: string;
-  placeholder: string;
-  setValue: (value: string) => void;
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
+const InputInner = ({ placeholder }: { placeholder: string }) => {
+  const { focusHandlers, isFocused } = useFocus();
+
+  const { inputValue, setInputValue } = useComponentContext();
 
   return (
     <div
       className={`transition-transform duration-75 ease-in-out ${
-        isFocused || !value.length ? "translate-x-xs" : "translate-x-0"
+        isFocused || !inputValue.length ? "translate-x-xs" : "translate-x-0"
       }`}
     >
       <input
         className="w-full bg-transparent text-base"
         placeholder={placeholder}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onFocus={() => {
-          setIsFocused(true);
-        }}
-        onBlur={() => {
-          setIsFocused(false);
-        }}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        {...focusHandlers}
         type="text"
         autoComplete="off"
       />
@@ -91,7 +133,7 @@ const InputInner = ({
   );
 };
 
-Input.Inner = InputInner;
+Input.Input = InputInner;
 
 const FormControls = ({
   onCancel,
@@ -106,7 +148,7 @@ const FormControls = ({
     </button>
     <button
       className={`my-btn my-btn-action ${
-        !submitIsDisabled ? "cursor-not-allowed" : ""
+        submitIsDisabled ? "cursor-not-allowed" : ""
       }`}
       type="submit"
     >

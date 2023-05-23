@@ -1,6 +1,6 @@
 import { api } from "~/utils/api";
 import {
-  CollapsableSectionWithButton,
+  AccordionWithButton,
   CreateEntityFormWithSingleInput,
   MutationStatusOverlay,
 } from "~/components/ui-compounds";
@@ -12,9 +12,11 @@ import useToast from "~/hooks/useToast";
 
 const AddVideo = () => {
   return (
-    <CollapsableSectionWithButton buttonText="Add video">
-      {({ closeSection }) => <YoutubeUrlForm closeForm={closeSection} />}
-    </CollapsableSectionWithButton>
+    <AccordionWithButton buttonText="Add video">
+      {({ closeForm: closeSection }) => (
+        <YoutubeUrlForm closeForm={closeSection} />
+      )}
+    </AccordionWithButton>
   );
 };
 

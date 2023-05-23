@@ -4,11 +4,11 @@ import { useMeasure } from "react-use";
 
 import { PlusIcon } from "~/components/ui-elements";
 
-export const CollapsableSectionWithButton = ({
+export const AccordionWithButton = ({
   children,
   buttonText,
 }: {
-  children: (arg0: { closeSection: () => void }) => ReactElement;
+  children: (arg0: { closeForm: () => void }) => ReactElement;
   buttonText: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,7 +50,7 @@ export const CollapsableSectionWithButton = ({
         <span className="text-sm font-medium">{buttonText}</span>
       </button>
       <animated.div style={{ overflowY: "hidden", ...springs }}>
-        <div ref={sectionRef}>{children({ closeSection })}</div>
+        <div ref={sectionRef}>{children({ closeForm: closeSection })}</div>
       </animated.div>
     </>
   );
