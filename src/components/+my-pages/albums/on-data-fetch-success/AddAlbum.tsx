@@ -1,11 +1,10 @@
 import { api } from "~/utils/api";
 import {
   AccordionWithButton,
-  CreateEntityFormWithSingleInput2 as CreateEntityForm,
+  CreateEntityForm,
   MutationStatusOverlay,
 } from "~/components/ui-compounds";
-import useAdmin from "~/hooks/useAdmin";
-import useToast from "~/hooks/useToast";
+import { useAdmin, useToast } from "~/hooks";
 
 const AddAlbum = () => {
   const { data: allAlbums, refetch: refetchAlbums } =
@@ -62,22 +61,26 @@ const AddAlbum = () => {
             ifAdmin(() => handleSubmit({ closeForm, inputValue, resetForm }))
           }
         >
-          <CreateEntityForm.Title text="Create new album" />
-          <CreateEntityForm.Input.Wrapper>
-            <CreateEntityForm.Input.Input placeholder="Album title" />
-          </CreateEntityForm.Input.Wrapper>
-          <CreateEntityForm.Controls
-            onCancel={closeForm}
-            submitIsDisabled={!isAdmin}
-          />
-          <MutationStatusOverlay
-            status={createAlbumMutation.status}
-            text={{
-              creating: "Adding album",
-              error: "Error creating album",
-              success: "Album created",
-            }}
-          />
+          {({ inputValue }) => (
+            <>
+              <CreateEntityForm.Title text="Create new album" />
+              <CreateEntityForm.Input.Wrapper>
+                <CreateEntityForm.Input.Input placeholder="Album title" />
+              </CreateEntityForm.Input.Wrapper>
+              <CreateEntityForm.Controls
+                onCancel={closeForm}
+                submitIsDisabled={!isAdmin || !inputValue.length}
+              />
+              <MutationStatusOverlay
+                status={createAlbumMutation.status}
+                text={{
+                  creating: "Adding album",
+                  error: "Error creating album",
+                  success: "Album created",
+                }}
+              />
+            </>
+          )}
         </CreateEntityForm>
       )}
     </AccordionWithButton>

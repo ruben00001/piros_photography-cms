@@ -1,56 +1,20 @@
-import { createContext, useContext, useState, type ReactElement } from "react";
+import { type ReactElement } from "react";
 
-import { checkObjectHasField } from "~/helpers/general";
 import { useFocus } from "~/hooks/useFocused";
+import { type MyPick } from "~/types/utilities";
+import {
+  ComponentProvider,
+  useComponentContext,
+  type ComponentState,
+} from "./Context";
 
-type ComponentState = {
-  inputValue: string;
-  setInputValue: (inputValue: string) => void;
-  resetForm: () => void;
-};
-
-const ComponentContext = createContext<ComponentState>({} as ComponentState);
-
-const ComponentProvider = ({
-  children,
-}: {
-  children: ReactElement | ((args: ComponentState) => ReactElement);
-}) => {
-  const [inputValue, setInputValue] = useState("");
-
-  const resetForm = () => {
-    setInputValue("");
-  };
-
-  const value: ComponentState = {
-    inputValue,
-    setInputValue,
-    resetForm,
-  };
-
-  return (
-    <ComponentContext.Provider value={value}>
-      {typeof children === "function" ? children(value) : children}
-    </ComponentContext.Provider>
-  );
-};
-
-const useComponentContext = () => {
-  const context = useContext(ComponentContext);
-
-  const contextIsPopulated = checkObjectHasField(context);
-  if (!contextIsPopulated) {
-    throw new Error("useComponentContext must be used within its provider!");
-  }
-
-  return context;
-};
-
-export function CreateEntityFormWithSingleInput2({
+export function CreateEntityForm({
   onSubmit,
   children,
 }: {
-  children: ReactElement | null | (ReactElement | null)[];
+  children:
+    | ReactElement
+    | ((args: MyPick<ComponentState, "inputValue">) => ReactElement);
   onSubmit: (value: string, resetForm: () => void) => void;
 }) {
   return (
@@ -69,7 +33,9 @@ export function CreateEntityFormWithSingleInput2({
           }}
         >
           <div className="min-w-[250px] max-w-[400px] rounded-md">
-            {children}
+            {typeof children === "function"
+              ? children({ inputValue })
+              : children}
           </div>
         </form>
       )}
@@ -81,13 +47,13 @@ const Title = ({ text }: { text: string }) => (
   <p className="mb-xs text-sm text-gray-300">{text}</p>
 );
 
-CreateEntityFormWithSingleInput2.Title = Title;
+CreateEntityForm.Title = Title;
 
 function Input({ children }: { children: ReactElement }) {
   return children;
 }
 
-CreateEntityFormWithSingleInput2.Input = Input;
+CreateEntityForm.Input = Input;
 
 function InputWrapper({
   containerStyles,
@@ -157,4 +123,4 @@ const FormControls = ({
   </div>
 );
 
-CreateEntityFormWithSingleInput2.Controls = FormControls;
+CreateEntityForm.Controls = FormControls;

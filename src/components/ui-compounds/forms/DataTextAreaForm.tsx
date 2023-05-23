@@ -3,7 +3,7 @@ import DOMPurify from "dompurify";
 import ReactTextareaAutosize from "react-textarea-autosize";
 
 import { WithTooltip } from "~/components/ui-display";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin } from "~/hooks";
 
 export const DataTextAreaForm = ({
   initialValue = "",
@@ -38,7 +38,7 @@ export const DataTextAreaForm = ({
     });
   };
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <WithTooltip

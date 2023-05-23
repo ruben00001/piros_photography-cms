@@ -15,7 +15,7 @@ import {
   sortByIndex,
 } from "~/helpers/process-data";
 import { findEntityById } from "~/helpers/query-data";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin } from "~/hooks";
 import Album from "./album/+Entry";
 
 const Populated = () => {
@@ -71,17 +71,18 @@ const Title = () => {
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <div className="text-6xl tracking-wider">
       <DataTextInputForm
         input={{ initialValue: pageText.title, placeholder: "Page title..." }}
         onSubmit={({ inputValue, onSuccess }) =>
-          isAdmin &&
-          updateTitleMutation.mutate(
-            { data: { text: inputValue } },
-            { onSuccess },
+          ifAdmin(() =>
+            updateTitleMutation.mutate(
+              { data: { text: inputValue } },
+              { onSuccess },
+            ),
           )
         }
         tooltip={{ text: "click to update page title" }}
@@ -110,7 +111,7 @@ const SubTitle = () => {
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <div className="text-2xl">
@@ -120,10 +121,11 @@ const SubTitle = () => {
           placeholder: "Page subtitle (optional)...",
         }}
         onSubmit={({ inputValue, onSuccess }) =>
-          isAdmin &&
-          updateTitleMutation.mutate(
-            { data: { text: inputValue } },
-            { onSuccess },
+          ifAdmin(() =>
+            updateTitleMutation.mutate(
+              { data: { text: inputValue } },
+              { onSuccess },
+            ),
           )
         }
         tooltip={{ text: "click to update page subtitle" }}
@@ -186,42 +188,41 @@ const DndSortableWrapper = ({ children }: { children: ReactElement[] }) => {
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <DndKit.Context
       elementIds={mapIds(albums)}
-      onReorder={({ activeId, overId }) => {
-        if (!isAdmin) {
-          return;
-        }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const activeAlbum = findEntityById(albums, activeId)!;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const overAlbum = findEntityById(albums, overId)!;
+      onReorder={({ activeId, overId }) =>
+        ifAdmin(() => {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const activeAlbum = findEntityById(albums, activeId)!;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const overAlbum = findEntityById(albums, overId)!;
 
-        const noChange = activeAlbum.id === overAlbum.id;
+          const noChange = activeAlbum.id === overAlbum.id;
 
-        if (noChange) {
-          return;
-        }
+          if (noChange) {
+            return;
+          }
 
-        reorderMutation.mutate({
-          activeAlbum: {
-            id: activeId,
-            index: activeAlbum.index,
-          },
-          albums: albums.map((album) => ({
-            id: album.id,
-            index: album.index,
-          })),
-          overAlbum: {
-            id: overId,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            index: overAlbum.index,
-          },
-        });
-      }}
+          reorderMutation.mutate({
+            activeAlbum: {
+              id: activeId,
+              index: activeAlbum.index,
+            },
+            albums: albums.map((album) => ({
+              id: album.id,
+              index: album.index,
+            })),
+            overAlbum: {
+              id: overId,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              index: overAlbum.index,
+            },
+          });
+        })
+      }
     >
       {children}
     </DndKit.Context>

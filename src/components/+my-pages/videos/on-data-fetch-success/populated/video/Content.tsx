@@ -8,7 +8,7 @@ import { DataTextAreaForm, DataTextInputForm } from "~/components/ui-compounds";
 import { MyToast } from "~/components/ui-display";
 import { VideoIFrame } from "~/components/ui-elements";
 import { getYoutubeEmbedUrlFromId } from "~/helpers/youtube";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin } from "~/hooks";
 
 const Content = () => (
   <div className="flex justify-center">
@@ -62,7 +62,7 @@ const Title = () => {
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <div className="max-w-[80%] text-xl">
@@ -130,7 +130,7 @@ const Description = () => {
       },
     });
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <div className="mb-xs w-[90%] font-serif text-lg">

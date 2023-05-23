@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
+
 import { checkObjectHasField } from "~/helpers/general";
 
-const useDynamicRouteParams = () => {
+export const useDynamicRouteParams = () => {
   const router = useRouter();
   const query = router.query;
   const idParam = query.id as string | undefined;
@@ -14,5 +15,3 @@ const useDynamicRouteParams = () => {
         idParam,
       };
 };
-
-export default useDynamicRouteParams;

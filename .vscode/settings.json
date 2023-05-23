@@ -11,7 +11,7 @@
       "splitTerminals": [
         {
           "name": "localhost",
-          "commands": ["yarn dev"],
+          "commands": ["pnpm dev"],
           "shouldRunCommands": false
         }
       ]

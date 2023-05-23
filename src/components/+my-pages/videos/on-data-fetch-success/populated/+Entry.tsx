@@ -12,13 +12,13 @@ import {
   sortByIndex,
 } from "~/helpers/process-data";
 import { findEntityById } from "~/helpers/query-data";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin } from "~/hooks";
 import Video from "./video/+Entry";
 
 const Videos = () => {
   const { data } = api.youtubeVideo.getAll.useQuery();
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <div className="mt-md flex justify-center">
@@ -101,7 +101,7 @@ const DndSortableWrapper = ({ children }: { children: ReactElement[] }) => {
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <DndKit.Context
