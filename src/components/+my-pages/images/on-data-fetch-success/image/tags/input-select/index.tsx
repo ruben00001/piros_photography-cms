@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { type ImageTag } from "@prisma/client";
-import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
 import { useImageContext } from "~/components/+my-pages/images/_context";
 import { TextInput } from "~/components/ui-compounds";
-import { MyToast, WithTooltip } from "~/components/ui-display";
+import { WithTooltip } from "~/components/ui-display";
 import { arrayDivergence } from "~/helpers/query-data";
-import useHovered from "~/hooks/useHovered";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useHovered, useToast } from "~/hooks";
 
 function InputSelect() {
   const [inputIsFocused, setInputIsFocused] = useState(false);
@@ -56,6 +54,8 @@ function Input({ setIsFocused, updateValue, value }: InputProps) {
 
   const image = useImageContext();
 
+  const toast = useToast();
+
   const addTagMutation = api.image.addTag.useMutation({
     onSuccess: async () => {
       updateValue("");
@@ -63,14 +63,14 @@ function Input({ setIsFocused, updateValue, value }: InputProps) {
       await refetchImages();
       await refetchImageTags();
 
-      toast(<MyToast text="Tag added" type="success" />);
+      toast.success("Tag added");
     },
-    onError: () => {
-      toast(<MyToast text="Something went wrong adding tag" type="error" />);
+    onError() {
+      toast.error("Something went wrong adding tag");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <div className="relative inline-block">
@@ -133,19 +133,21 @@ function Select({ input }: SelectProps) {
     { enabled: false },
   );
 
+  const toast = useToast();
+
   const addTagMutation = api.image.addTag.useMutation({
-    onSuccess: async () => {
+    async onSuccess() {
       await refetchImages();
       await refetchImageTags();
 
-      toast(<MyToast text="Tag added" type="success" />);
+      toast.success("Tag added");
     },
-    onError: () => {
-      toast(<MyToast text="Something went wrong adding tag" type="error" />);
+    onError() {
+      toast.error("Something went wrong adding tag");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin, isAdmin } = useAdmin();
 
   return (
     <div
@@ -173,16 +175,14 @@ function Select({ input }: SelectProps) {
                 className={`cursor-pointer rounded-sm py-xxs px-xs hover:bg-base-200 ${
                   !isAdmin ? "cursor-not-allowed" : ""
                 }`}
-                onClick={() => {
-                  if (!isAdmin) {
-                    return;
-                  }
-
-                  addTagMutation.mutate({
-                    data: { text: tag.text },
-                    where: { imageId: image.id },
-                  });
-                }}
+                onClick={() =>
+                  ifAdmin(() => {
+                    addTagMutation.mutate({
+                      data: { text: tag.text },
+                      where: { imageId: image.id },
+                    });
+                  })
+                }
               >
                 <div>
                   <p className="text-base-content">{tag.text}</p>

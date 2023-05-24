@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import produce from "immer";
-import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
 import { ContentBodyLayout } from "~/components/layouts/ContentBody";
 import { DataTextAreaForm } from "~/components/ui-compounds";
-import { MyToast, WithTooltip } from "~/components/ui-display";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { WithTooltip } from "~/components/ui-display";
+import { useAdmin, useToast } from "~/hooks";
 
 const OnDataFetchSuccess = () => (
   <ContentBodyLayout>
@@ -30,6 +29,8 @@ const BodyText = () => {
 
   const apiUtils = api.useContext();
 
+  const toast = useToast();
+
   const updateTitleMutation = api.aboutPage.updateBody.useMutation({
     async onMutate(mutationInput) {
       const prevData = apiUtils.aboutPage.getText.getData();
@@ -48,30 +49,28 @@ const BodyText = () => {
         return updatedData;
       });
     },
-    onError: () => {
-      toast(<MyToast text="Error updating text" type="error" />);
+    onError() {
+      toast.error("Error updating text");
     },
-    onSuccess: () => {
-      toast(<MyToast text="Text updated" type="success" />);
+    onSuccess() {
+      toast.success("Text updated");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <WithTooltip text="click to edit text">
       <div className="font-serif-3 text-xl">
         <DataTextAreaForm
-          onSubmit={({ inputValue, onSuccess }) => {
-            if (!isAdmin) {
-              return;
-            }
-
-            updateTitleMutation.mutate(
-              { data: { text: inputValue } },
-              { onSuccess },
-            );
-          }}
+          onSubmit={({ inputValue, onSuccess }) =>
+            ifAdmin(() => {
+              updateTitleMutation.mutate(
+                { data: { text: inputValue } },
+                { onSuccess },
+              );
+            })
+          }
           initialValue={aboutText.body}
           placeholder="Edit about main text..."
         />

@@ -1,8 +1,7 @@
 import { useEffect, type ReactElement } from "react";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 
-import { MyToast } from "../ui-display";
+import { useToast } from "~/hooks";
 import { MySpinner } from "../ui-elements";
 
 export const DynamicPageDataInit = ({
@@ -20,12 +19,14 @@ export const DynamicPageDataInit = ({
 }) => {
   const router = useRouter();
 
+  const toast = useToast();
+
   useEffect(() => {
     if (isLoading || isDocument) {
       return;
     }
 
-    toast(<MyToast text="Page doesn't exist. Redirecting..." type="error" />);
+    toast.error("Page doesn't exist. Redirecting...");
 
     setTimeout(() => {
       void router.push(redirectTo);

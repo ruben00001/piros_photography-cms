@@ -10,8 +10,7 @@ import { api } from "~/utils/api";
 import { TextInput } from "~/components/ui-compounds";
 import { WithTooltip } from "~/components/ui-display";
 import { arrayDivergence, findEntityById } from "~/helpers/query-data";
-import useHovered from "~/hooks/useHovered";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useHovered } from "~/hooks";
 
 type Props = {
   parent: {
@@ -85,17 +84,12 @@ function Input({ input, parent }: InputProps) {
     { enabled: false },
   );
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   const handleSubmit = async () => {
-    if (!isAdmin) {
-      return;
-    }
-
     const matchingTagQuery = await findTagWithText();
 
     if (matchingTagQuery.data === undefined) {
-      // show error in ui
       return;
     }
 
@@ -121,7 +115,7 @@ function Input({ input, parent }: InputProps) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          void handleSubmit();
+          ifAdmin(() => void handleSubmit());
         }}
       >
         <div className="relative text-sm">
@@ -164,7 +158,7 @@ function Select({ input, allImageTags, parent }: SelectProps) {
     ? unrelatedData
     : unrelatedData.filter((tag) => tag.text.includes(input.value));
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin, isAdmin } = useAdmin();
 
   return (
     <div
@@ -190,12 +184,11 @@ function Select({ input, allImageTags, parent }: SelectProps) {
                 className={`cursor-pointer rounded-sm py-xxs px-xs hover:bg-base-200 ${
                   !isAdmin ? "cursor-not-allowed" : ""
                 }`}
-                onClick={() => {
-                  if (!isAdmin) {
-                    return;
-                  }
-                  parent.addTagTo(tag.id);
-                }}
+                onClick={() =>
+                  ifAdmin(() => {
+                    parent.addTagTo(tag.id);
+                  })
+                }
               >
                 <div>
                   <p className="text-base-content">{tag.text}</p>

@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { useState } from "react";
-import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
 import Layout from "~/components/layouts";
@@ -11,35 +10,32 @@ import {
   type OnUploadImage,
 } from "~/components/site-parts/select-or-upload-image";
 import { SearchInput } from "~/components/ui-compounds";
-import { MyModal, MyToast } from "~/components/ui-display";
+import { MyModal } from "~/components/ui-display";
 import { UploadIcon } from "~/components/ui-elements";
 import { fuzzySearch } from "~/helpers/query-data";
+import { useToast } from "~/hooks";
 import { ImageProvider } from "../_context";
 import Image from "./image/Entry";
 
-const OnDataFetchSuccess = () => {
-  return (
-    <Layout.ContentBody maxWidth={1800}>
-      <div className="p-lg">
-        <h1 className="text-xl text-gray-400">Images Page</h1>
-        <p className="mt-xxs text-sm text-gray-300">
-          Edit images: add and delete; add and remove tags.
-        </p>
+const OnDataFetchSuccess = () => (
+  <Layout.ContentBody maxWidth={1800}>
+    <div className="p-lg">
+      <h1 className="text-xl text-gray-400">Images Page</h1>
+      <p className="mt-xxs text-sm text-gray-300">
+        Edit images: add and delete; add and remove tags.
+      </p>
+      <div className="mt-lg">
+        <div>
+          <UploadNew />
+        </div>
         <div className="mt-lg">
-          <div>
-            <UploadNew />
-          </div>
-          <div className="mt-lg">
-            <p className="mt-xxs mb-xs text-sm text-gray-300">
-              Uploaded images
-            </p>
-            <Images />
-          </div>
+          <p className="mt-xxs mb-xs text-sm text-gray-300">Uploaded images</p>
+          <Images />
         </div>
       </div>
-    </Layout.ContentBody>
-  );
-};
+    </div>
+  </Layout.ContentBody>
+);
 
 export default OnDataFetchSuccess;
 
@@ -82,16 +78,18 @@ const useUploadImage = (): OnUploadImage => {
     },
   );
 
+  const toast = useToast();
+
   const createImageMutation = api.image.create.useMutation({
-    onSuccess: async () => {
+    async onSuccess() {
       await refetchImages();
 
       setTimeout(() => {
-        toast(<MyToast text="added image" type="success" />);
+        toast.success("added image");
       }, 650);
     },
-    onError: () => {
-      toast(<MyToast text="Something went wrong adding image" type="error" />);
+    onError() {
+      toast.error("Something went wrong adding image");
     },
   });
 

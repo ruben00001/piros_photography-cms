@@ -1,14 +1,11 @@
-import { toast } from "react-toastify";
-
 import { api } from "~/utils/api";
 import {
   SelectOrUploadImageMenu,
   type OnSelectImage,
   type OnUploadImage,
 } from "~/components/site-parts/select-or-upload-image";
-import { MyToast } from "~/components/ui-display";
 import { PlusIcon } from "~/components/ui-elements";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 import { useAlbumContext } from "../_context/AlbumState";
 
 const AddImageButton = () => {
@@ -43,25 +40,28 @@ const useAddUploadedImageToAlbum = (): OnSelectImage => {
     },
   );
 
+  const toast = useToast();
+
   const addBodyImageMutation = api.album.addImage.useMutation({
-    onSuccess: async () => {
+    async onSuccess() {
       await refetchAlbum();
 
-      toast(<MyToast text="added image" type="success" />);
+      toast.success("Added image");
     },
-    onError: () => {
-      toast(<MyToast text="Something went wrong adding image" type="error" />);
+    onError() {
+      toast.error("Something went wrong adding image");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return ({ imageId }) =>
-    isAdmin &&
-    addBodyImageMutation.mutate({
-      data: { image: { id: imageId, index: album.images.length } },
-      where: { albumId: album.id },
-    });
+    ifAdmin(() =>
+      addBodyImageMutation.mutate({
+        data: { image: { id: imageId, index: album.images.length } },
+        where: { albumId: album.id },
+      }),
+    );
 };
 
 const useAddUploadImageToAlbum = (): OnUploadImage => {
@@ -74,23 +74,23 @@ const useAddUploadImageToAlbum = (): OnUploadImage => {
     },
   );
 
+  const toast = useToast();
+
   const createImageAndAddToAlbumMutation =
     api.imageAndAlbumTransaction.createImageAndAddToBody.useMutation({
-      onSuccess: async () => {
+      async onSuccess() {
         await refetchAlbum();
 
         setTimeout(() => {
-          toast(<MyToast text="added image" type="success" />);
+          toast.success("Added image");
         }, 650);
       },
-      onError: () => {
-        toast(
-          <MyToast text="Something went wrong adding image" type="error" />,
-        );
+      onError() {
+        toast.success("Something went wrong adding image");
       },
     });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return ({
     cloudinary_public_id,
@@ -99,15 +99,21 @@ const useAddUploadImageToAlbum = (): OnUploadImage => {
     onSuccess,
     tagIds,
   }) =>
-    isAdmin &&
-    createImageAndAddToAlbumMutation.mutate(
-      {
-        data: {
-          image: { cloudinary_public_id, naturalHeight, naturalWidth, tagIds },
-          albumImage: { index: album.images.length },
+    ifAdmin(() =>
+      createImageAndAddToAlbumMutation.mutate(
+        {
+          data: {
+            image: {
+              cloudinary_public_id,
+              naturalHeight,
+              naturalWidth,
+              tagIds,
+            },
+            albumImage: { index: album.images.length },
+          },
+          where: { albumId: album.id },
         },
-        where: { albumId: album.id },
-      },
-      { onSuccess },
+        { onSuccess },
+      ),
     );
 };

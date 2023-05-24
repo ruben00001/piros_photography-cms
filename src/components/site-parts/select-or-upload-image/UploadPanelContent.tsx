@@ -1,9 +1,7 @@
 import { useState, type ChangeEvent } from "react";
 import NextImage from "next/image";
-import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
-import { MyToast } from "~/components/ui-display";
 import {
   ErrorIcon,
   FileImageIcon,
@@ -15,7 +13,7 @@ import {
   useStringArrStateContext as useTagsIdContext,
 } from "~/context/StringArrState";
 import { handleUploadImage } from "~/helpers/cloudinary";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 import Tags from "./tags";
 
 export type OnUploadImage = (arg0: {
@@ -68,12 +66,9 @@ const UploadFunctionality = ({
     { enabled: false },
   );
 
-  const isAdmin = useIsAdmin();
+  const toast = useToast();
 
   const handleCreateImage = async () => {
-    if (!isAdmin) {
-      return;
-    }
     if (!imageFile || !imageDimensions) {
       return;
     }
@@ -106,7 +101,7 @@ const UploadFunctionality = ({
           setTimeout(() => {
             closeModal();
 
-            toast(<MyToast text="uploaded image" type="success" />);
+            toast.success("uploaded image");
           }, 500);
         },
       });
@@ -114,6 +109,8 @@ const UploadFunctionality = ({
       setCreateImageStatus("error");
     }
   };
+
+  const { ifAdmin, isAdmin } = useAdmin();
 
   return (
     <div>
@@ -141,7 +138,7 @@ const UploadFunctionality = ({
             className={`my-btn my-btn-action ${
               !isAdmin ? "cursor-not-allowed" : ""
             }`}
-            onClick={() => void handleCreateImage()}
+            onClick={() => ifAdmin(() => void handleCreateImage())}
             type="button"
           >
             Upload

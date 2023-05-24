@@ -10,6 +10,9 @@ export const useToast = () => {
     error(text: string) {
       toast(<MyToast type="error" text={text} />);
     },
+    info(text: string) {
+      toast(<MyToast type="info" text={text} />);
+    },
   };
 
   return myToast;

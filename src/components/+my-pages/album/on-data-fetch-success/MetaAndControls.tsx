@@ -1,12 +1,11 @@
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
 import { useAlbumContext } from "~/components/+my-pages/album/_context";
-import { MyMenu, MyModal, MyToast, WithTooltip } from "~/components/ui-display";
+import { MyMenu, MyModal, WithTooltip } from "~/components/ui-display";
 import { ComponentMenuIcon, DeleteIcon } from "~/components/ui-elements";
 import { WarningPanel } from "~/components/ui-written";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 import CoverImage from "./CoverImage";
 
 const MetaAndControls = () => {
@@ -74,10 +73,12 @@ const DeleteAlbumModal = () => {
     },
   );
 
+  const toast = useToast();
+
   const deleteAlbumMutation = api.album.delete.useMutation({
-    onSuccess: async () => {
-      toast(<MyToast text="deleted album" type="success" />);
-      toast(<MyToast text="redirecting..." type="info" />);
+    async onSuccess() {
+      toast.success("Deleted album");
+      toast.info("Redirecting...");
 
       await refetchAlbums();
 
@@ -85,12 +86,12 @@ const DeleteAlbumModal = () => {
         void router.push("/albums");
       }, 400);
     },
-    onError: () => {
-      toast(<MyToast text="delete album failed" type="error" />);
+    onError() {
+      toast.error("Delete album failed");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <MyModal.DefaultButtonAndPanel
@@ -110,16 +111,17 @@ const DeleteAlbumModal = () => {
         <WarningPanel
           callback={{
             func: () =>
-              isAdmin &&
-              deleteAlbumMutation.mutate(
-                {
-                  album: { id: album.id, index: album.index },
-                },
-                {
-                  onSuccess() {
-                    closeModal();
+              ifAdmin(() =>
+                deleteAlbumMutation.mutate(
+                  {
+                    album: { id: album.id, index: album.index },
                   },
-                },
+                  {
+                    onSuccess() {
+                      closeModal();
+                    },
+                  },
+                ),
               ),
           }}
           closeModal={closeModal}
@@ -143,31 +145,24 @@ const PublishToggleBadge = () => {
     },
   );
 
+  const toast = useToast();
+
   const publishMutation = api.album.updatePublishStatus.useMutation({
-    onSuccess: async () => {
+    async onSuccess() {
       await refetchAlbum();
-      toast(
-        <MyToast
-          text={
-            album.published ? "Album unpublished" : "Album set to published"
-          }
-          type="success"
-        />,
+
+      toast.success(
+        album.published ? "Album unpublished" : "Album set to published",
       );
     },
-    onError: () => {
-      toast(
-        <MyToast
-          text="Something went wrong updating publish status"
-          type="error"
-        />,
-      );
+    onError() {
+      toast.error("Something went wrong updating publish status");
     },
   });
 
   const hasRequiredPublishFields = Boolean(album.coverImageId);
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <WithTooltip
@@ -192,12 +187,14 @@ const PublishToggleBadge = () => {
              : "cursor-default bg-gray-50 text-base-300"
          }`}
         onClick={() =>
-          isAdmin &&
-          hasRequiredPublishFields &&
-          publishMutation.mutate({
-            albumId: album.id,
-            isPublished: album.published ? false : true,
-          })
+          ifAdmin(
+            () =>
+              hasRequiredPublishFields &&
+              publishMutation.mutate({
+                albumId: album.id,
+                isPublished: album.published ? false : true,
+              }),
+          )
         }
       >
         {album.published ? "published" : "draft"}
@@ -205,26 +202,3 @@ const PublishToggleBadge = () => {
     </WithTooltip>
   );
 };
-
-/* const PublishedErrorMessage = () => {
-  const album = useAlbumContext();
-
-  if (!album.published) {
-    return null;
-  }
-
-  const hasRequiredPublishFields =
-    album.coverImageId && album.title && album.images.length;
-
-  if (hasRequiredPublishFields) {
-    return null;
-  }
-
-  return (
-    <div>
-      <h4>This album is published but is missing required fields</h4>
-      <p>It won't be shown on the site.</p>
-    </div>
-  );
-};
- */

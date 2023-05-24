@@ -49,8 +49,10 @@ const Title = ({ text }: { text: string }) => (
 
 CreateEntityForm.Title = Title;
 
-function Input({ children }: { children: ReactElement }) {
-  return children;
+function Input() {
+  throw new Error(
+    "CreateEntityForm.Input should not be used as a component - it exists for naming purposes only.",
+  );
 }
 
 CreateEntityForm.Input = Input;

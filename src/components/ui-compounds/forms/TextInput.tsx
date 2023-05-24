@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin } from "~/hooks";
 
 export const TextInput = ({
   setValue,
@@ -10,7 +10,7 @@ export const TextInput = ({
   onFocus,
   placeholder,
   showBorderOnBlur,
-  showPressEnter,
+  showPressEnter: showPressEnterIsEnabled,
   isChange = true,
   styles,
 }: {
@@ -32,9 +32,9 @@ export const TextInput = ({
   const [localIsFocused, setLocalIsFocused] = useState(false);
 
   const showPressEnterMessage =
-    showPressEnter && isChange && localIsFocused && value.length;
+    showPressEnterIsEnabled && isChange && localIsFocused && value.length;
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <div

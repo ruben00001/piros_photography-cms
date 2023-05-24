@@ -1,5 +1,4 @@
 import { type ReactElement } from "react";
-import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
 import { AlbumProvider } from "~/components/+my-pages/albums/_context";
@@ -8,14 +7,13 @@ import {
   DataTextInputForm,
   DndKit,
 } from "~/components/ui-compounds";
-import { MyToast } from "~/components/ui-display";
 import {
   getReorderedEntities,
   mapIds,
   sortByIndex,
 } from "~/helpers/process-data";
 import { findEntityById } from "~/helpers/query-data";
-import { useAdmin } from "~/hooks";
+import { useAdmin, useToast } from "~/hooks";
 import Album from "./album/+Entry";
 
 const Populated = () => {
@@ -60,14 +58,14 @@ const Title = () => {
   });
   const pageText = data as NonNullable<typeof data>;
 
+  const toast = useToast();
+
   const updateTitleMutation = api.albumsPage.updateTitle.useMutation({
-    onSuccess: () => {
-      toast(<MyToast text="Title updated" type="success" />);
+    onSuccess() {
+      toast.success("Title updated");
     },
-    onError: () => {
-      toast(
-        <MyToast text="Something went wrong updating the title" type="error" />,
-      );
+    onError() {
+      toast.error("Something went wrong updating the title");
     },
   });
 
@@ -97,17 +95,14 @@ const SubTitle = () => {
   });
   const pageText = data as NonNullable<typeof data>;
 
+  const toast = useToast();
+
   const updateTitleMutation = api.albumsPage.updateSubTitle.useMutation({
-    onSuccess: () => {
-      toast(<MyToast text="Subtitle updated" type="success" />);
+    onSuccess() {
+      toast.success("Subtitle updated");
     },
-    onError: () => {
-      toast(
-        <MyToast
-          text="Something went wrong updating the subtitle"
-          type="error"
-        />,
-      );
+    onError() {
+      toast.error("Something went wrong updating the subtitle");
     },
   });
 
@@ -141,6 +136,8 @@ const DndSortableWrapper = ({ children }: { children: ReactElement[] }) => {
   const albums = data as NonNullable<typeof data>;
 
   const apiUtils = api.useContext();
+
+  const toast = useToast();
 
   const reorderMutation = api.album.reorder.useMutation({
     onMutate: ({ activeAlbum, albums, overAlbum }) => {
@@ -181,10 +178,10 @@ const DndSortableWrapper = ({ children }: { children: ReactElement[] }) => {
       }
       apiUtils.album.albumsPageGetAll.setData(undefined, ctx.prevData);
 
-      toast(<MyToast text="Error reordering albums" type="error" />);
+      toast.error("Error reordering albums");
     },
-    onSuccess: () => {
-      toast(<MyToast text="Albums reordered" type="success" />);
+    onSuccess() {
+      toast.success("Albums reordered");
     },
   });
 

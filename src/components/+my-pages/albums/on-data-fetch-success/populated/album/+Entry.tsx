@@ -1,14 +1,13 @@
 import Link from "next/link";
 import produce from "immer";
-import { toast } from "react-toastify";
 import { useMeasure } from "react-use";
 
 import { api } from "~/utils/api";
 import { useAlbumContext } from "~/components/+my-pages/albums/_context";
 import { DataTextInputForm, DndKit } from "~/components/ui-compounds";
-import { MyToast, WithTooltip } from "~/components/ui-display";
+import { WithTooltip } from "~/components/ui-display";
 import { GoToPageIcon } from "~/components/ui-elements";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 import CoverImage from "./CoverImage";
 import AlbumMenu from "./Menu";
 
@@ -42,6 +41,8 @@ const TitleInput = () => {
 
   const apiUtils = api.useContext();
 
+  const toast = useToast();
+
   const updateTitle = api.album.updateTitle.useMutation({
     async onMutate(mutationInput) {
       const prevData = apiUtils.album.albumsPageGetAll.getData();
@@ -69,24 +70,25 @@ const TitleInput = () => {
         return updatedData;
       });
     },
-    onError: () => {
-      toast(<MyToast text="Error updating title" type="error" />);
+    onError() {
+      toast.error("Error updating title");
     },
-    onSuccess: () => {
-      toast(<MyToast text="Title updated" type="success" />);
+    onSuccess() {
+      toast.success("Title updated");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <div className="mb-xs font-sans-secondary text-xl uppercase tracking-wider">
       <DataTextInputForm
         onSubmit={({ inputValue, onSuccess }) =>
-          isAdmin &&
-          updateTitle.mutate(
-            { albumId: album.id, updatedTitle: inputValue },
-            { onSuccess },
+          ifAdmin(() =>
+            updateTitle.mutate(
+              { albumId: album.id, updatedTitle: inputValue },
+              { onSuccess },
+            ),
           )
         }
         input={{ initialValue: album.title, placeholder: "Album title..." }}

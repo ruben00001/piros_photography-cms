@@ -8,7 +8,7 @@ import { SearchInput } from "~/components/ui-compounds";
 import { WithTooltip } from "~/components/ui-display";
 import { calcImageDimensions } from "~/helpers/general";
 import { fuzzySearch } from "~/helpers/query-data";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin } from "~/hooks";
 
 export type OnSelectImage = (arg0: { imageId: string }) => void;
 
@@ -20,29 +20,27 @@ export const UploadedPanelContent = ({
 }: {
   onSelectImage: OnSelectImage;
   closeModal: () => void;
-}) => {
-  return (
-    <div className="relative flex h-[700px] max-h-[70vh] w-[90vw] max-w-[1200px] flex-col rounded-2xl bg-white p-6 text-left shadow-xl">
-      <h3 className="border-b border-b-base-300 pb-sm leading-6 text-base-content">
-        Uploaded Images
-      </h3>
-      <div className="mt-md flex-grow overflow-y-auto">
-        <ImagesStatusWrapper>
-          <Images onSelectImage={onSelectImage} closeModal={closeModal} />
-        </ImagesStatusWrapper>
-      </div>
-      <div className="mt-xl">
-        <button
-          className="my-btn my-btn-neutral"
-          type="button"
-          onClick={() => closeModal()}
-        >
-          close
-        </button>
-      </div>
+}) => (
+  <div className="relative flex h-[700px] max-h-[70vh] w-[90vw] max-w-[1200px] flex-col rounded-2xl bg-white p-6 text-left shadow-xl">
+    <h3 className="border-b border-b-base-300 pb-sm leading-6 text-base-content">
+      Uploaded Images
+    </h3>
+    <div className="mt-md flex-grow overflow-y-auto">
+      <ImagesStatusWrapper>
+        <Images onSelectImage={onSelectImage} closeModal={closeModal} />
+      </ImagesStatusWrapper>
     </div>
-  );
-};
+    <div className="mt-xl">
+      <button
+        className="my-btn my-btn-neutral"
+        type="button"
+        onClick={() => closeModal()}
+      >
+        close
+      </button>
+    </div>
+  </div>
+);
 
 const ImagesStatusWrapper = ({ children }: { children: ReactElement }) => {
   const { isError, isLoading } = api.image.uploadPanelGetAll.useQuery();
@@ -140,21 +138,19 @@ const Image = ({
   const [containerRef, { width: containerWidth }] =
     useMeasure<HTMLDivElement>();
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin, isAdmin } = useAdmin();
 
   return (
     <div
       className={`my-hover-bg flex aspect-square flex-col rounded-lg border border-base-200 p-sm ${
         !isAdmin ? "cursor-not-allowed" : ""
       }`}
-      onClick={() => {
-        if (!isAdmin) {
-          return;
-        }
-
-        onSelectImage({ imageId: image.id });
-        closeModal();
-      }}
+      onClick={() =>
+        ifAdmin(() => {
+          onSelectImage({ imageId: image.id });
+          closeModal();
+        })
+      }
       ref={containerRef}
     >
       {containerWidth ? (
