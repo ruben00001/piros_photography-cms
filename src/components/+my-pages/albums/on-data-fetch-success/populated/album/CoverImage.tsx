@@ -1,5 +1,3 @@
-import { toast } from "react-toastify";
-
 import { api } from "~/utils/api";
 import { useAlbumContext } from "~/components/+my-pages/albums/_context";
 import { MyCldImage } from "~/components/containers";
@@ -8,9 +6,10 @@ import {
   type OnSelectImage,
   type OnUploadImage,
 } from "~/components/site-parts/select-or-upload-image";
-import { MyToast, WithTooltip } from "~/components/ui-display";
+import { WithTooltip } from "~/components/ui-display";
 import { ImageIcon } from "~/components/ui-elements";
 import { ImagePlaceholder } from "~/components/ui-written";
+import { useAdmin, useToast } from "~/hooks";
 
 const CoverImage = ({ containerWidth }: { containerWidth: number }) => {
   const album = useAlbumContext();
@@ -91,19 +90,16 @@ const useUploadedImage = (): OnSelectImage => {
     },
   );
 
+  const toast = useToast();
+
   const updateCoverImageMutation = api.album.updateCoverImage.useMutation({
     onSuccess: async () => {
       await refetchAlbum();
 
-      toast(<MyToast text="updated cover image" type="success" />);
+      toast.success("updated cover image");
     },
-    onError: () => {
-      toast(
-        <MyToast
-          text="Something went wrong updating cover image"
-          type="error"
-        />,
-      );
+    onError() {
+      toast.error("Something went wrong updating cover image");
     },
   });
 
@@ -124,21 +120,23 @@ const useUploadImage = (): OnUploadImage => {
     },
   );
 
+  const toast = useToast();
+
   const createImageAndAddToAlbumMutation =
     api.imageAndAlbumTransaction.createImageAndUpdateCoverImage.useMutation({
       onSuccess: async () => {
         await refetchAlbum();
 
         setTimeout(() => {
-          toast(<MyToast text="added image" type="success" />);
+          toast.success("added image");
         }, 650);
       },
-      onError: () => {
-        toast(
-          <MyToast text="Something went wrong adding image" type="error" />,
-        );
+      onError() {
+        toast.error("Something went wrong adding image");
       },
     });
+
+  const { ifAdmin } = useAdmin();
 
   return ({
     cloudinary_public_id,
@@ -147,13 +145,20 @@ const useUploadImage = (): OnUploadImage => {
     onSuccess,
     tagIds,
   }) =>
-    createImageAndAddToAlbumMutation.mutate(
-      {
-        data: {
-          image: { cloudinary_public_id, naturalHeight, naturalWidth, tagIds },
+    ifAdmin(() =>
+      createImageAndAddToAlbumMutation.mutate(
+        {
+          data: {
+            image: {
+              cloudinary_public_id,
+              naturalHeight,
+              naturalWidth,
+              tagIds,
+            },
+          },
+          where: { albumId: album.id },
         },
-        where: { albumId: album.id },
-      },
-      { onSuccess },
+        { onSuccess },
+      ),
     );
 };

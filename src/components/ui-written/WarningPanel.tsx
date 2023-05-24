@@ -1,4 +1,4 @@
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin } from "~/hooks";
 import { MyTransition } from "../ui-display";
 import { MySpinner } from "../ui-elements";
 import { ErrorIcon, InfoIcon, TickIcon } from "../ui-elements/PhosphorIcons";
@@ -17,7 +17,7 @@ export const WarningPanel = ({
   };
   text: { title: string; body: string };
 }) => {
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <div

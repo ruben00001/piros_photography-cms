@@ -3,7 +3,7 @@
 import { api } from "~/utils/api";
 import Layout from "~/components/layouts";
 import AddVideo from "./AddVideo";
-import Populated from "./populated/Entry";
+import Populated from "./populated/+Entry";
 import Unpopulated from "./unpopulated/Entry";
 
 const OnDataFetchSuccess = () => {

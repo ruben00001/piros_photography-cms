@@ -1,5 +1,3 @@
-import { toast } from "react-toastify";
-
 import { api } from "~/utils/api";
 import { MyCldImage } from "~/components/containers";
 import {
@@ -7,11 +5,11 @@ import {
   type OnSelectImage,
   type OnUploadImage,
 } from "~/components/site-parts/select-or-upload-image";
-import { MyToast, WithTooltip } from "~/components/ui-display";
+import { WithTooltip } from "~/components/ui-display";
 import { ImageIcon } from "~/components/ui-elements";
 import { ImagePlaceholder } from "~/components/ui-written";
 import { calcImageDimensions } from "~/helpers/general";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 import { useAlbumContext } from "../_context/AlbumState";
 
 const CoverImage = () => {
@@ -96,30 +94,28 @@ const useUploadedImage = (): OnSelectImage => {
     },
   );
 
+  const toast = useToast();
+
   const updateCoverImageMutation = api.album.updateCoverImage.useMutation({
-    onSuccess: async () => {
+    async onSuccess() {
       await refetchAlbum();
 
-      toast(<MyToast text="updated cover image" type="success" />);
+      toast.success("updated cover image");
     },
-    onError: () => {
-      toast(
-        <MyToast
-          text="Something went wrong updating cover image"
-          type="error"
-        />,
-      );
+    onError() {
+      toast.error("Something went wrong updating cover image");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return ({ imageId }) =>
-    isAdmin &&
-    updateCoverImageMutation.mutate({
-      albumId: album.id,
-      imageId,
-    });
+    ifAdmin(() =>
+      updateCoverImageMutation.mutate({
+        albumId: album.id,
+        imageId,
+      }),
+    );
 };
 
 const useUploadImage = (): OnUploadImage => {
@@ -132,23 +128,23 @@ const useUploadImage = (): OnUploadImage => {
     },
   );
 
+  const toast = useToast();
+
   const createImageAndAddToAlbumMutation =
     api.imageAndAlbumTransaction.createImageAndUpdateCoverImage.useMutation({
-      onSuccess: async () => {
+      async onSuccess() {
         await refetchAlbum();
 
         setTimeout(() => {
-          toast(<MyToast text="added image" type="success" />);
+          toast.success("Added image");
         }, 650);
       },
-      onError: () => {
-        toast(
-          <MyToast text="Something went wrong adding image" type="error" />,
-        );
+      onError() {
+        toast.error("Something went wrong adding image");
       },
     });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return ({
     cloudinary_public_id,
@@ -157,14 +153,20 @@ const useUploadImage = (): OnUploadImage => {
     onSuccess,
     tagIds,
   }) =>
-    isAdmin &&
-    createImageAndAddToAlbumMutation.mutate(
-      {
-        data: {
-          image: { cloudinary_public_id, naturalHeight, naturalWidth, tagIds },
+    ifAdmin(() =>
+      createImageAndAddToAlbumMutation.mutate(
+        {
+          data: {
+            image: {
+              cloudinary_public_id,
+              naturalHeight,
+              naturalWidth,
+              tagIds,
+            },
+          },
+          where: { albumId: album.id },
         },
-        where: { albumId: album.id },
-      },
-      { onSuccess },
+        { onSuccess },
+      ),
     );
 };

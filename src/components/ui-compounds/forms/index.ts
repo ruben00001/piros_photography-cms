@@ -3,5 +3,5 @@ export * from "./DataTextInputForm";
 export * from "./SearchInput";
 export * from "./TextInput";
 export * from "./CreateEntityFormWithSingleInput";
-export * from "./CreateEntityFormWithSingleInput2";
+export * from "./create-entity-form";
 export * from "./MutationStatusOverlay";

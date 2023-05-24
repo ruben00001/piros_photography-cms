@@ -1,6 +1,6 @@
-import useIsAdmin from "./useIsAdmin";
+import { useIsAdmin } from "./useIsAdmin";
 
-const useAdmin = () => {
+export const useAdmin = () => {
   const isAdmin = useIsAdmin();
 
   return {
@@ -13,5 +13,3 @@ const useAdmin = () => {
     },
   };
 };
-
-export default useAdmin;

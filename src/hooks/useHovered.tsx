@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useHovered = () => {
+export const useHovered = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return [
@@ -14,5 +14,3 @@ const useHovered = () => {
     },
   ] as const;
 };
-
-export default useHovered;

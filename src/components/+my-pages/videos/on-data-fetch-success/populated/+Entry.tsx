@@ -1,24 +1,22 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { type ReactElement } from "react";
-import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
 import { VideoProvider } from "~/components/+my-pages/videos/_context";
 import { DndKit } from "~/components/ui-compounds";
-import { MyToast } from "~/components/ui-display";
 import {
   getReorderedEntities,
   mapIds,
   sortByIndex,
 } from "~/helpers/process-data";
 import { findEntityById } from "~/helpers/query-data";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 import Video from "./video/+Entry";
 
 const Videos = () => {
   const { data } = api.youtubeVideo.getAll.useQuery();
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <div className="mt-md flex justify-center">
@@ -54,6 +52,8 @@ const DndSortableWrapper = ({ children }: { children: ReactElement[] }) => {
   const videos = data as NonNullable<typeof data>;
 
   const apiUtils = api.useContext();
+
+  const toast = useToast();
 
   const reorderMutation = api.youtubeVideo.reorder.useMutation({
     onMutate: (mutationInput) => {
@@ -94,14 +94,14 @@ const DndSortableWrapper = ({ children }: { children: ReactElement[] }) => {
       }
       apiUtils.youtubeVideo.getAll.setData(undefined, ctx.prevData);
 
-      toast(<MyToast text="Error reordering videos" type="error" />);
+      toast.error("Error reordering videos");
     },
-    onSuccess: () => {
-      toast(<MyToast text="Videos reordered" type="success" />);
+    onSuccess() {
+      toast.success("Videos reordered");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <DndKit.Context

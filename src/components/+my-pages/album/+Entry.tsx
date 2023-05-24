@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { api } from "~/utils/api";
 import { DynamicPageDataInit } from "~/components/ui-written";
-import useDynamicRouteParams from "~/hooks/useDynamicRouteParams";
+import { useDynamicRouteParams } from "~/hooks";
 import OnDataFetchSuccess from "./on-data-fetch-success/+Entry";
 
 const AlbumPage = () => {

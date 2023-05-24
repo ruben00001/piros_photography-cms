@@ -1,5 +1,3 @@
-import { toast } from "react-toastify";
-
 import { api } from "~/utils/api";
 import { useAlbumContext } from "~/components/+my-pages/album/_context";
 import {
@@ -7,8 +5,7 @@ import {
   DataTextAreaForm,
   DataTextInputForm,
 } from "~/components/ui-compounds";
-import { MyToast } from "~/components/ui-display";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 
 const About = () => (
   <>
@@ -22,32 +19,30 @@ export default About;
 const Title = () => {
   const album = useAlbumContext();
 
+  const toast = useToast();
+
   const updateTitle = api.album.updateTitle.useMutation({
-    onSuccess: () => {
-      toast(<MyToast text="Title updated" type="success" />);
+    onSuccess() {
+      toast.success("Title updated");
     },
-    onError: () => {
-      toast(
-        <MyToast text="Something went wrong updating the title" type="error" />,
-      );
+    onError() {
+      toast.error("Something went wrong updating the title");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <div className="text-2xl">
       <DataTextInputForm
-        onSubmit={({ inputValue, onSuccess }) => {
-          if (!isAdmin) {
-            return;
-          }
-
-          updateTitle.mutate(
-            { albumId: album.id, updatedTitle: inputValue },
-            { onSuccess },
-          );
-        }}
+        onSubmit={({ inputValue, onSuccess }) =>
+          ifAdmin(() => {
+            updateTitle.mutate(
+              { albumId: album.id, updatedTitle: inputValue },
+              { onSuccess },
+            );
+          })
+        }
         input={{ initialValue: album.title, placeholder: "Album title..." }}
         tooltip={{ text: "update title" }}
       />
@@ -58,34 +53,32 @@ const Title = () => {
 const Description = () => {
   const album = useAlbumContext();
 
+  const toast = useToast();
+
   const updateDescriptionMutation = api.album.updateDescription.useMutation({
-    onSuccess: () => {
-      toast(<MyToast text="Description updated" type="success" />);
+    onSuccess() {
+      toast.success("Description updated");
     },
-    onError: () => {
-      toast(
-        <MyToast
-          text="Something went wrong updating the description"
-          type="error"
-        />,
-      );
+    onError() {
+      toast.error("Something went wrong updating the description");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <CollapsableSection showSectionText="Show album description">
       <div className="max-w-[700px] font-serif text-lg">
         <DataTextAreaForm
           onSubmit={({ inputValue, onSuccess }) =>
-            isAdmin &&
-            updateDescriptionMutation.mutate(
-              {
-                albumId: album.id,
-                updatedDescription: inputValue,
-              },
-              { onSuccess },
+            ifAdmin(() =>
+              updateDescriptionMutation.mutate(
+                {
+                  albumId: album.id,
+                  updatedDescription: inputValue,
+                },
+                { onSuccess },
+              ),
             )
           }
           tooltipText="click to edit"

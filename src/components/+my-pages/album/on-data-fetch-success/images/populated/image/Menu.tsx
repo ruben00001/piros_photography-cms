@@ -1,5 +1,3 @@
-import { toast } from "react-toastify";
-
 import { api } from "~/utils/api";
 import {
   useAlbumContext,
@@ -10,23 +8,21 @@ import {
   type OnSelectImage,
   type OnUploadImage,
 } from "~/components/site-parts/select-or-upload-image";
-import { MyModal, MyToast, WithTooltip } from "~/components/ui-display";
+import { MyModal, WithTooltip } from "~/components/ui-display";
 import { DeleteIcon, ExpandIcon, ImageIcon } from "~/components/ui-elements";
 import { WarningPanel } from "~/components/ui-written";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 import OpenedImage from "./OpenedImage";
 
-const Menu = () => {
-  return (
-    <div
-      className={`absolute right-1 top-1 z-20 flex items-center gap-sm rounded-md bg-white py-xxs px-xs opacity-0 shadow-lg transition-opacity duration-75 ease-in-out hover:!opacity-100 group-hover/albumImage:opacity-50`}
-    >
-      <ChangeImageMenu />
-      <OpenAlbumImageModal />
-      <DeleteModal />
-    </div>
-  );
-};
+const Menu = () => (
+  <div
+    className={`absolute right-1 top-1 z-20 flex items-center gap-sm rounded-md bg-white py-xxs px-xs opacity-0 shadow-lg transition-opacity duration-75 ease-in-out hover:!opacity-100 group-hover/albumImage:opacity-50`}
+  >
+    <ChangeImageMenu />
+    <OpenAlbumImageModal />
+    <DeleteModal />
+  </div>
+);
 
 export default Menu;
 
@@ -51,25 +47,23 @@ const ChangeImageMenu = () => {
   );
 };
 
-const OpenAlbumImageModal = () => {
-  return (
-    <MyModal.DefaultButtonAndPanel
-      button={({ openModal }) => (
-        <div
-          className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:brightness-90 group-hover/albumImage:text-base-content"
-          onClick={openModal}
-        >
-          <WithTooltip text="Open image" yOffset={15}>
-            <span className="">
-              <ExpandIcon />
-            </span>
-          </WithTooltip>
-        </div>
-      )}
-      panelContent={() => <OpenedImage />}
-    />
-  );
-};
+const OpenAlbumImageModal = () => (
+  <MyModal.DefaultButtonAndPanel
+    button={({ openModal }) => (
+      <div
+        className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:brightness-90 group-hover/albumImage:text-base-content"
+        onClick={openModal}
+      >
+        <WithTooltip text="Open image" yOffset={15}>
+          <span className="">
+            <ExpandIcon />
+          </span>
+        </WithTooltip>
+      </div>
+    )}
+    panelContent={() => <OpenedImage />}
+  />
+);
 
 const DeleteModal = () => {
   const album = useAlbumContext();
@@ -82,18 +76,20 @@ const DeleteModal = () => {
     },
   );
 
+  const toast = useToast();
+
   const deleteMutation = api.album.deleteImage.useMutation({
-    onSuccess: async () => {
+    async onSuccess() {
       await refetchAlbum();
 
-      toast(<MyToast text="deleted image" type="success" />);
+      toast.success("deleted image");
     },
-    onError: () => {
-      toast(<MyToast text="delete image failed" type="error" />);
+    onError() {
+      toast.error("delete image failed");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <MyModal.DefaultButtonAndPanel
@@ -113,11 +109,12 @@ const DeleteModal = () => {
         <WarningPanel
           callback={{
             func: () =>
-              isAdmin &&
-              deleteMutation.mutate({
-                data: { index: albumImage.index },
-                where: { albumId: album.id, imageId: albumImage.id },
-              }),
+              ifAdmin(() =>
+                deleteMutation.mutate({
+                  data: { index: albumImage.index },
+                  where: { albumId: album.id, imageId: albumImage.id },
+                }),
+              ),
           }}
           closeModal={closeModal}
           text={{
@@ -141,16 +138,16 @@ const useUploadedImage = (): OnSelectImage => {
     },
   );
 
+  const toast = useToast();
+
   const addBodyImageMutation = api.album.updateImage.useMutation({
-    onSuccess: async () => {
+    async onSuccess() {
       await refetchAlbum();
 
-      toast(<MyToast text="changed image" type="success" />);
+      toast.success("changed image");
     },
-    onError: () => {
-      toast(
-        <MyToast text="Something went wrong changing image" type="error" />,
-      );
+    onError() {
+      toast.error("Something went wrong changing image");
     },
   });
 
@@ -172,21 +169,23 @@ const useUploadImage = (): OnUploadImage => {
     },
   );
 
+  const toast = useToast();
+
   const createImageAndAddToAlbumMutation =
     api.imageAndAlbumTransaction.createImageAndUpdateBodyImage.useMutation({
       onSuccess: async () => {
         await refetchAlbum();
 
         setTimeout(() => {
-          toast(<MyToast text="changed image" type="success" />);
+          toast.success("changed image");
         }, 650);
       },
       onError: () => {
-        toast(
-          <MyToast text="Something went wrong adding image" type="error" />,
-        );
+        toast.error("Something went wrong adding image");
       },
     });
+
+  const { ifAdmin } = useAdmin();
 
   return ({
     cloudinary_public_id,
@@ -195,13 +194,20 @@ const useUploadImage = (): OnUploadImage => {
     onSuccess,
     tagIds,
   }) =>
-    createImageAndAddToAlbumMutation.mutate(
-      {
-        data: {
-          image: { cloudinary_public_id, naturalHeight, naturalWidth, tagIds },
+    ifAdmin(() =>
+      createImageAndAddToAlbumMutation.mutate(
+        {
+          data: {
+            image: {
+              cloudinary_public_id,
+              naturalHeight,
+              naturalWidth,
+              tagIds,
+            },
+          },
+          where: { albumId: album.id, imageId: albumImage.id },
         },
-        where: { albumId: album.id, imageId: albumImage.id },
-      },
-      { onSuccess },
+        { onSuccess },
+      ),
     );
 };

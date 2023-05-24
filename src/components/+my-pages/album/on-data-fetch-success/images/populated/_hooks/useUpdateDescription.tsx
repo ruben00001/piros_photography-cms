@@ -4,7 +4,7 @@ import {
   useAlbumImageContext,
 } from "~/components/+my-pages/album/_context";
 import { updateAlbumImageProperty } from "~/helpers/update-data/album";
-import useToast from "~/hooks/useToast";
+import { useToast } from "~/hooks";
 
 export const useUpdateDescription = () => {
   const album = useAlbumContext();
@@ -12,7 +12,7 @@ export const useUpdateDescription = () => {
 
   const utils = api.useContext();
 
-  const myToast = useToast();
+  const toast = useToast();
 
   const updateDescriptionMutation =
     api.albumImage.updateDescription.useMutation({
@@ -38,10 +38,10 @@ export const useUpdateDescription = () => {
         );
       },
       onSuccess() {
-        myToast.success("Description updated");
+        toast.success("Description updated");
       },
       onError() {
-        myToast.error("Something went wrong updating the description");
+        toast.error("Something went wrong updating the description");
       },
     });
 

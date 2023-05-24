@@ -1,14 +1,12 @@
 import produce from "immer";
-import { toast } from "react-toastify";
 import { useMeasure } from "react-use";
 
 import { api } from "~/utils/api";
 import { useVideoContext } from "~/components/+my-pages/videos/_context";
 import { DataTextAreaForm, DataTextInputForm } from "~/components/ui-compounds";
-import { MyToast } from "~/components/ui-display";
 import { VideoIFrame } from "~/components/ui-elements";
 import { getYoutubeEmbedUrlFromId } from "~/helpers/youtube";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 
 const Content = () => (
   <div className="flex justify-center">
@@ -26,6 +24,8 @@ const Title = () => {
   const video = useVideoContext();
 
   const apiUtils = api.useContext();
+
+  const toast = useToast();
 
   const updateTitleMutation = api.youtubeVideo.updateTitle.useMutation({
     async onMutate(mutationInput) {
@@ -54,15 +54,15 @@ const Title = () => {
         return updatedData;
       });
     },
-    onError: () => {
-      toast(<MyToast text="Error updating title" type="error" />);
+    onError() {
+      toast.error("Error updating title");
     },
-    onSuccess: () => {
-      toast(<MyToast text="Title updated" type="success" />);
+    onSuccess() {
+      toast.success("Title updated");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <div className="max-w-[80%] text-xl">
@@ -94,6 +94,8 @@ const Description = () => {
 
   const apiUtils = api.useContext();
 
+  const toast = useToast();
+
   const updateDescriptionMutation =
     api.youtubeVideo.updateDescription.useMutation({
       async onMutate(mutationInput) {
@@ -122,15 +124,15 @@ const Description = () => {
           return updatedData;
         });
       },
-      onError: () => {
-        toast(<MyToast text="Error updating description" type="error" />);
+      onError() {
+        toast.error("Error updating description");
       },
-      onSuccess: () => {
-        toast(<MyToast text="Description updated" type="success" />);
+      onSuccess() {
+        toast.success("Description updated");
       },
     });
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <div className="mb-xs w-[90%] font-serif text-lg">

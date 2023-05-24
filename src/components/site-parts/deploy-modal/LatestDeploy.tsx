@@ -4,7 +4,7 @@ import { api, type RouterOutputs } from "~/utils/api";
 import { WithTooltip } from "~/components/ui-display";
 import { InfoIcon, RefreshIcon, SpinnerIcon } from "~/components/ui-elements";
 import { timeAgo } from "~/helpers/time-ago";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin } from "~/hooks";
 
 const LatestDeploy = () => {
   const latestDeployQuery = api.vercel.getLatestDeploy.useQuery(undefined, {
@@ -12,7 +12,7 @@ const LatestDeploy = () => {
     refetchOnWindowFocus: false,
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin, isAdmin } = useAdmin();
 
   return (
     <div className="mt-8">
@@ -31,15 +31,14 @@ const LatestDeploy = () => {
                   ? "cursor-auto opacity-40"
                   : "opacity-100"
               } ${!isAdmin ? "cursor-not-allowed" : ""}`}
-              onClick={() => {
-                if (!isAdmin) {
-                  return;
-                }
-                if (latestDeployQuery.isFetching) {
-                  return;
-                }
-                void latestDeployQuery.refetch();
-              }}
+              onClick={() =>
+                ifAdmin(() => {
+                  if (latestDeployQuery.isFetching) {
+                    return;
+                  }
+                  void latestDeployQuery.refetch();
+                })
+              }
             >
               <RefreshIcon />
             </button>
@@ -77,33 +76,31 @@ export default LatestDeploy;
 
 type Deploy = RouterOutputs["vercel"]["getLatestDeploy"];
 
-const LatestDeployData = ({ data }: { data: NonNullable<Deploy> }) => {
-  return (
-    <div className="flex items-center gap-12">
-      <div className="flex items-center gap-2">
-        <span
-          className={`aspect-square w-[8px] rounded-full ${
-            data.readyState === "READY"
-              ? "bg-my-success-content"
-              : data.readyState === "ERROR"
-              ? "bg-my-error-content"
-              : data.readyState === "CANCELED"
-              ? "bg-gray-400"
-              : "bg-blue-500"
-          }`}
-        />
-        <p className="text-sm font-medium capitalize text-gray-600">
-          <span>{data.readyState.slice(0, 1)}</span>
-          <span className="lowercase">
-            {data.readyState.slice(1, data.readyState.length)}
-          </span>
-        </p>
-      </div>
-      <div>
-        <p className="text-sm text-gray-500">
-          {timeAgo(new Date(data.createdAt))}
-        </p>
-      </div>
+const LatestDeployData = ({ data }: { data: NonNullable<Deploy> }) => (
+  <div className="flex items-center gap-12">
+    <div className="flex items-center gap-2">
+      <span
+        className={`aspect-square w-[8px] rounded-full ${
+          data.readyState === "READY"
+            ? "bg-my-success-content"
+            : data.readyState === "ERROR"
+            ? "bg-my-error-content"
+            : data.readyState === "CANCELED"
+            ? "bg-gray-400"
+            : "bg-blue-500"
+        }`}
+      />
+      <p className="text-sm font-medium capitalize text-gray-600">
+        <span>{data.readyState.slice(0, 1)}</span>
+        <span className="lowercase">
+          {data.readyState.slice(1, data.readyState.length)}
+        </span>
+      </p>
     </div>
-  );
-};
+    <div>
+      <p className="text-sm text-gray-500">
+        {timeAgo(new Date(data.createdAt))}
+      </p>
+    </div>
+  </div>
+);

@@ -1,10 +1,9 @@
 import { type ImageTag } from "@prisma/client";
-import { toast } from "react-toastify";
 
 import { api } from "~/utils/api";
-import { MyToast, WithTooltip } from "~/components/ui-display";
+import { WithTooltip } from "~/components/ui-display";
 import { RemoveIcon } from "~/components/ui-elements";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 import { useImageContext } from "../../../_context";
 import InputSelect from "./input-select";
 
@@ -50,19 +49,21 @@ const Tag = ({ tag }: { tag: ImageTag }) => {
     { enabled: false },
   );
 
+  const toast = useToast();
+
   const removeTagMutation = api.image.removeTag.useMutation({
-    onSuccess: async () => {
+    async onSuccess() {
       await refetchImages();
       await refetchImageTags();
 
-      toast(<MyToast text="Tag removed" type="success" />);
+      toast.success("Tag removed");
     },
-    onError: () => {
-      toast(<MyToast text="Something went wrong remvoing tag" type="error" />);
+    onError() {
+      toast.error("Something went wrong remvoing tag");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin } = useAdmin();
 
   return (
     <div className="group relative rounded-md border border-base-200 transition-colors duration-75 ease-in-out hover:border-base-300">
@@ -74,11 +75,12 @@ const Tag = ({ tag }: { tag: ImageTag }) => {
           <span
             className="absolute top-0 right-0 z-10 origin-bottom-left -translate-y-3 translate-x-3 cursor-pointer rounded-full bg-white p-1 text-xs text-gray-400 opacity-0 transition-all duration-75 ease-in-out hover:scale-110 hover:bg-warning hover:text-warning-content group-hover:opacity-100"
             onClick={() =>
-              isAdmin &&
-              removeTagMutation.mutate({
-                data: { tagId: tag.id },
-                where: { imageId: image.id },
-              })
+              ifAdmin(() =>
+                removeTagMutation.mutate({
+                  data: { tagId: tag.id },
+                  where: { imageId: image.id },
+                }),
+              )
             }
           >
             <RemoveIcon />

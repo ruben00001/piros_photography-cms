@@ -9,7 +9,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import { WithTooltip } from "~/components/ui-display";
 import { GrabHandleIcon } from "~/components/ui-elements";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin } from "~/hooks";
 
 export const DndSortableElement = ({
   isDisabled = false,
@@ -25,7 +25,7 @@ export const DndSortableElement = ({
   const animateLayoutChanges: AnimateLayoutChanges = (args) =>
     defaultAnimateLayoutChanges({ ...args });
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   const {
     attributes,

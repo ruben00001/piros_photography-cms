@@ -1,11 +1,9 @@
-import { toast } from "react-toastify";
-
 import { api } from "~/utils/api";
 import { useVideoContext } from "~/components/+my-pages/videos/_context";
-import { MyMenu, MyModal, MyToast, WithTooltip } from "~/components/ui-display";
+import { MyMenu, MyModal, WithTooltip } from "~/components/ui-display";
 import { ComponentMenuIcon, DeleteIcon } from "~/components/ui-elements";
 import { WarningPanel } from "~/components/ui-written";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 
 const VideoMenu = () => (
   <div className="absolute right-xs top-xs z-30 opacity-0 transition-opacity duration-75 ease-in-out group-hover/video:opacity-100">
@@ -38,18 +36,20 @@ const DeleteModal = () => {
     },
   );
 
+  const toast = useToast();
+
   const deleteMutation = api.youtubeVideo.delete.useMutation({
-    onSuccess: async () => {
+    async onSuccess() {
       await refetchVideos();
 
-      toast(<MyToast text="deleted video" type="success" />);
+      toast.success("deleted video");
     },
-    onError: () => {
-      toast(<MyToast text="delete video failed" type="error" />);
+    onError() {
+      toast.error("delete video failed");
     },
   });
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <MyModal.DefaultButtonAndPanel

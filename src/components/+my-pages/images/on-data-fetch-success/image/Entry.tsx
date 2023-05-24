@@ -1,16 +1,15 @@
-import { toast } from "react-toastify";
 import { useMeasure } from "react-use";
 
 import { api } from "~/utils/api";
 import { MyCldImage } from "~/components/containers";
-import { MyModal, MyToast, WithTooltip } from "~/components/ui-display";
+import { MyModal, WithTooltip } from "~/components/ui-display";
 import { DeleteIcon, ExpandIcon, TagIcon } from "~/components/ui-elements";
 import { WarningPanel } from "~/components/ui-written";
 import {
   calcImageDimensions,
   calcImageDimensionsToFitToScreen,
 } from "~/helpers/general";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin, useToast } from "~/hooks";
 import { useImageContext } from "../../_context";
 import Tags from "./tags";
 
@@ -130,20 +129,22 @@ const MenuDeleteModal = () => {
     },
   );
 
+  const toast = useToast();
+
   const deleteMutation = api.image.delete.useMutation({
-    onSuccess: async () => {
+    async onSuccess() {
       await refetchImages();
 
-      toast(<MyToast text="deleted image" type="success" />);
+      toast.success("deleted image");
     },
-    onError: () => {
-      toast(<MyToast text="delete image failed" type="error" />);
+    onError() {
+      toast.error("delete image failed");
     },
   });
 
   const isUsed = image._count.albumCoverImages || image._count.albumImages;
 
-  const isAdmin = useIsAdmin();
+  const { ifAdmin, isAdmin } = useAdmin();
 
   return (
     <MyModal.DefaultButtonAndPanel
@@ -170,16 +171,17 @@ const MenuDeleteModal = () => {
         <WarningPanel
           callback={{
             func: () =>
-              isAdmin &&
-              deleteMutation.mutate(
-                {
-                  imageId: image.id,
-                },
-                {
-                  onSuccess() {
-                    closeModal();
+              ifAdmin(() =>
+                deleteMutation.mutate(
+                  {
+                    imageId: image.id,
                   },
-                },
+                  {
+                    onSuccess() {
+                      closeModal();
+                    },
+                  },
+                ),
               ),
           }}
           closeModal={closeModal}

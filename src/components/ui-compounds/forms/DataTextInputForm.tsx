@@ -3,7 +3,7 @@ import DOMPurify from "dompurify";
 import { useMeasure } from "react-use";
 
 import { WithTooltip, type TooltipProps } from "~/components/ui-display";
-import useIsAdmin from "~/hooks/useIsAdmin";
+import { useAdmin } from "~/hooks";
 import { type MyOmit } from "~/types/utilities";
 
 export const DataTextInputForm = ({
@@ -43,7 +43,7 @@ export const DataTextInputForm = ({
 
   const containerRef = useRef<HTMLFormElement>(null);
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <WithTooltip
@@ -109,7 +109,7 @@ const TextInput = ({
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const isAdmin = useIsAdmin();
+  const { isAdmin } = useAdmin();
 
   return (
     <>

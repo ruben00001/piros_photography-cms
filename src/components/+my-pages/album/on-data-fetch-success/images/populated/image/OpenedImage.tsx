@@ -9,7 +9,7 @@ import { DataTextAreaForm, DataTextInputForm } from "~/components/ui-compounds";
 import { MyModal } from "~/components/ui-display";
 import { CycleLeftIcon, CycleRightIcon } from "~/components/ui-elements";
 import { calcImageDimensionsToFitToScreen } from "~/helpers/general";
-import useAdmin from "~/hooks/useAdmin";
+import { useAdmin } from "~/hooks";
 import { useUpdateDescription, useUpdateTitle } from "../_hooks";
 
 const OpenedImage = () => (

@@ -4,7 +4,7 @@ import {
   useAlbumImageContext,
 } from "~/components/+my-pages/album/_context";
 import { updateAlbumImageProperty } from "~/helpers/update-data/album";
-import useToast from "~/hooks/useToast";
+import { useToast } from "~/hooks";
 
 export const useUpdateTitle = () => {
   const album = useAlbumContext();
@@ -12,7 +12,7 @@ export const useUpdateTitle = () => {
 
   const utils = api.useContext();
 
-  const myToast = useToast();
+  const toast = useToast();
 
   const updateTitleMutation = api.albumImage.updateTitle.useMutation({
     async onMutate({ albumImageId, updatedTitle }) {
@@ -34,10 +34,10 @@ export const useUpdateTitle = () => {
       });
     },
     onSuccess() {
-      myToast.success("Title updated");
+      toast.success("Title updated");
     },
     onError() {
-      myToast.error("Something went wrong updating the title");
+      toast.error("Something went wrong updating the title");
     },
   });
 
