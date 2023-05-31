@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { api } from "~/utils/api";
 import Layout from "~/components/layouts";
+import { AddFirstAlbumIcon } from "~/components/ui-elements";
 import AddAlbum from "./AddAlbum";
 import Populated from "./populated/+Entry";
-import Unpopulated from "./unpopulated/+Entry";
 
 const OnDataFetchSuccess = () => {
   const { data: allAlbums } = api.album.albumsPageGetAll.useQuery();
@@ -23,3 +23,11 @@ const OnDataFetchSuccess = () => {
 };
 
 export default OnDataFetchSuccess;
+
+const Unpopulated = () => (
+  <Layout.Unpopulated
+    icon={<AddFirstAlbumIcon weight="light" />}
+    subTitle="Create first album"
+    title="No albums"
+  />
+);

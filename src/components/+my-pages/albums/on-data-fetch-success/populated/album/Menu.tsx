@@ -1,27 +1,21 @@
 import { api } from "~/utils/api";
 import { useAlbumContext } from "~/components/+my-pages/albums/_context";
-import { MyMenu, MyModal, WithTooltip } from "~/components/ui-display";
-import { ComponentMenuIcon, DeleteIcon } from "~/components/ui-elements";
+import {
+  DeleteEntityButton,
+  EntityCardSeeMoreMenu,
+} from "~/components/ui-compounds";
+import { MyMenu, MyModal } from "~/components/ui-display";
 import { WarningPanel } from "~/components/ui-written";
 import { useAdmin, useToast } from "~/hooks";
 
 const AlbumMenu = () => (
-  <div className="absolute right-xs top-xs z-30 opacity-0 transition-opacity duration-75 ease-in-out group-hover/album:opacity-100">
-    <MyMenu
-      button={({ isOpen }) => (
-        <WithTooltip text="Album menu" placement="top" isDisabled={isOpen}>
-          <div className="transition-colors duration-75 ease-in-out hover:!text-gray-700 group-hover/album:text-gray-300">
-            <ComponentMenuIcon />
-          </div>
-        </WithTooltip>
-      )}
-      styles={{ itemsWrapper: "right-0" }}
-    >
-      <MyMenu.Item>
+  <EntityCardSeeMoreMenu entityName="Album">
+    <MyMenu.Item>
+      <div>
         <DeleteModal />
-      </MyMenu.Item>
-    </MyMenu>
-  </div>
+      </div>
+    </MyMenu.Item>
+  </EntityCardSeeMoreMenu>
 );
 
 export default AlbumMenu;
@@ -49,21 +43,16 @@ const DeleteModal = () => {
     },
   });
 
-  const { ifAdmin } = useAdmin();
+  const { ifAdmin, isAdmin } = useAdmin();
 
   return (
     <MyModal.DefaultButtonAndPanel
       button={({ openModal }) => (
-        <div
-          className="cursor-pointer rounded-md px-2 py-2 text-sm transition-all duration-75 ease-in-out hover:bg-my-alert"
+        <DeleteEntityButton
+          entityName="album"
+          isDisabled={!isAdmin}
           onClick={openModal}
-        >
-          <WithTooltip text="Delete album" yOffset={15}>
-            <span className="text-my-alert-content">
-              <DeleteIcon />
-            </span>
-          </WithTooltip>
-        </div>
+        />
       )}
       panelContent={({ closeModal }) => (
         <WarningPanel
