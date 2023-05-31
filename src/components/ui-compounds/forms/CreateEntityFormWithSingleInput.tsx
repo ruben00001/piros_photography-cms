@@ -1,27 +1,27 @@
 import { useState, type FormEvent, type ReactElement } from "react";
 
-export const CreateEntityFormWithSingleInput = ({
-  onSubmit,
-  text: { placeholder, title },
-  onCancelButtonClick,
-  submitIsDisabled,
-  mutationStatusOverlay,
-  elements,
+export const MyForm = ({
   computeIsInputError,
+  elements,
+  mutationStatusOverlay,
+  onCancelButtonClick,
+  onSubmit,
+  submitIsDisabled,
+  text: { placeholder, title },
 }: {
+  computeIsInputError?: (inputValue: string) => boolean;
+  elements?: {
+    input?: ReactElement;
+    inputMessage?: ReactElement;
+  };
+  mutationStatusOverlay: ReactElement;
+  onCancelButtonClick: () => void;
   onSubmit: (value: string, resetForm: () => void) => void;
   text: {
     title: string;
     placeholder: string;
   };
-  onCancelButtonClick: () => void;
   submitIsDisabled: (inputValue: string) => boolean;
-  mutationStatusOverlay: ReactElement;
-  elements?: {
-    input?: ReactElement;
-    inputMessage?: ReactElement;
-  };
-  computeIsInputError?: (inputValue: string) => boolean;
 }) => {
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -73,7 +73,6 @@ export const CreateEntityFormWithSingleInput = ({
             />
           </div>
         </div>
-        {/* below is wrong! */}
         {elements?.inputMessage ? isInputError && elements.inputMessage : null}
         <div className="mt-4 flex items-center justify-between pb-4">
           <button

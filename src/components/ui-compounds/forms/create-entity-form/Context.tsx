@@ -1,14 +1,12 @@
 import { createContext, useContext, useState, type ReactElement } from "react";
 
-import { checkObjectHasField } from "~/helpers/general";
-
 export type ComponentState = {
   inputValue: string;
   setInputValue: (inputValue: string) => void;
   resetForm: () => void;
 };
 
-const ComponentContext = createContext<ComponentState>({} as ComponentState);
+const ComponentContext = createContext<ComponentState | null>(null);
 
 export const ComponentProvider = ({
   children,
@@ -37,8 +35,7 @@ export const ComponentProvider = ({
 export const useComponentContext = () => {
   const context = useContext(ComponentContext);
 
-  const contextIsPopulated = checkObjectHasField(context);
-  if (!contextIsPopulated) {
+  if (!context) {
     throw new Error("useComponentContext must be used within its provider!");
   }
 
