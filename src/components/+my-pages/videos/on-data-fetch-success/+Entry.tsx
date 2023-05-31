@@ -2,9 +2,9 @@
 
 import { api } from "~/utils/api";
 import Layout from "~/components/layouts";
+import { AddFirstAlbumIcon } from "~/components/ui-elements";
 import AddVideo from "./AddVideo";
 import Populated from "./populated/+Entry";
-import Unpopulated from "./unpopulated/Entry";
 
 const OnDataFetchSuccess = () => {
   const { data } = api.youtubeVideo.getAll.useQuery();
@@ -21,7 +21,7 @@ const OnDataFetchSuccess = () => {
           <AddVideo />
         </div>
         <div className="mt-lg">
-          {!data!.length ? <Unpopulated /> : <Populated />}
+          {data!.length ? <Populated /> : <Unpopulated />}
         </div>
       </div>
     </Layout.ContentBody>
@@ -29,3 +29,11 @@ const OnDataFetchSuccess = () => {
 };
 
 export default OnDataFetchSuccess;
+
+const Unpopulated = () => (
+  <Layout.Unpopulated
+    icon={<AddFirstAlbumIcon weight="light" />}
+    subTitle="Add first video"
+    title="No videos"
+  />
+);

@@ -41,7 +41,7 @@ export const WarningPanel = ({
           className="my-btn my-btn-neutral"
           onClick={closeModal}
         >
-          Close
+          Cancel
         </button>
         <button
           type="button"
