@@ -63,7 +63,6 @@ const StatusButton = () => {
 
 const StatusMenuContent = () => {
   const { data } = useSession();
-  console.log("data:", data);
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const role = data!.user.role;
