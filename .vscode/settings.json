@@ -5,8 +5,10 @@
   "editor.acceptSuggestionOnCommitCharacter": false,
   "workbench.editor.labelFormat": "short",
   "css.lint.unknownAtRules": "ignore",
-  "editor.codeActionsOnSave": { "source.fixAll.eslint": true },
-  "restoreTerminals.terminals": [
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+  /*   "restoreTerminals.terminals": [
     {
       "splitTerminals": [
         {
@@ -23,5 +25,5 @@
         }
       ]
     }
-  ]
+  ] */
 }

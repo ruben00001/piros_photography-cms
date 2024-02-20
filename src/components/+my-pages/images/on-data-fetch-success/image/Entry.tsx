@@ -11,6 +11,7 @@ import {
 } from "~/helpers/general";
 import { useAdmin, useToast } from "~/hooks";
 import { useImageContext } from "../../_context";
+import { ImageMenu } from "./_containers";
 import Tags from "./tags";
 
 const Image = () => {
@@ -42,7 +43,11 @@ const Image = () => {
         </div>
       ) : null}
       <UnusedBadge />
-      <ImageMenu />
+      <ImageMenu>
+        <EditTagsModal />
+        <OpenImageModal />
+        <MenuDeleteModal />
+      </ImageMenu>
     </div>
   );
 };
@@ -69,31 +74,14 @@ const UnusedBadge = () => {
   );
 };
 
-const ImageMenu = () => {
-  return (
-    <div
-      className={`absolute right-1 top-1 z-20 flex items-center gap-sm rounded-md bg-white py-xxs px-xs opacity-0 shadow-lg transition-opacity duration-75 ease-in-out hover:!opacity-100 group-hover/image:opacity-50`}
-    >
-      <EditTagsModal />
-      <OpenImageModal />
-      <MenuDeleteModal />
-    </div>
-  );
-};
-
 const OpenImageModal = () => (
   <MyModal.DefaultButtonAndPanel
     button={({ openModal }) => (
-      <WithTooltip text="Open image" yOffset={15}>
-        <div
-          className="cursor-pointer rounded-md px-2 py-2 text-sm text-base-300 transition-all duration-75 ease-in-out hover:bg-gray-100 hover:brightness-90 group-hover/image:text-base-content"
-          onClick={openModal}
-        >
-          <span className="">
-            <ExpandIcon />
-          </span>
-        </div>
-      </WithTooltip>
+      <ImageMenu.Button
+        icon={<ExpandIcon />}
+        onClick={openModal}
+        tooltipText="Open image"
+      />
     )}
     panelContent={() => <OpenedImage />}
   />
